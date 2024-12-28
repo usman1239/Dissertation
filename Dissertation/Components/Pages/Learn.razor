@@ -1,7 +1,64 @@
 ﻿@page "/learn"
+@rendermode InteractiveServer
 
-<h3>Learn</h3>
-<p> Welcome to the Learn Page </p>
+<link href="Styles/Learn.css" rel="stylesheet"/>
+
+<h1>Learn</h1>
+<p>Welcome to the Learn page! Explore the concepts and methodologies used in project management and software development.</p>
+
+<div class="collapsible-section">
+	<button @onclick='() => ToggleSection("Agile")'>Agile Methodologies</button>
+
+	@if (_isAgileOpen)
+	{
+		<div class="content">
+			<ul>
+				<li>
+					<NavLink href="/learn/scrum">Scrum</NavLink>
+				</li>
+				<li>
+					<NavLink href="/learn/kanban">Kanban</NavLink>
+				</li>
+			</ul>
+		</div>
+	}
+</div>
+
+<div class="collapsible-section">
+	<button @onclick='() => ToggleSection("SDPM")'>SDPM</button>
+	@if (_isSdpmOpen)
+	{
+		<div class="content">
+			<ul>
+				<li>
+					<NavLink href="/learn/planning">Planning</NavLink>
+				</li>
+				<li>
+					<NavLink href="/learn/execution">Execution</NavLink>
+				</li>
+				<li>
+					<NavLink href="/learn/monitoring-control">Monitoring and Control</NavLink>
+				</li>
+			</ul>
+		</div>
+	}
+</div>
+
 @code {
+	private bool _isAgileOpen;
+	private bool _isSdpmOpen;
+
+	private void ToggleSection(string section)
+	{
+		switch (section)
+		{
+			case "Agile":
+				_isAgileOpen = !_isAgileOpen;
+				break;
+			case "SDPM":
+				_isSdpmOpen = !_isSdpmOpen;
+				break;
+		}
+	}
 
 }
