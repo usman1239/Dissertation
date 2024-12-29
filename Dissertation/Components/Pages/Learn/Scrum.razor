@@ -1,0 +1,41 @@
+﻿@page "/learn/scrum"
+@rendermode InteractiveServer
+@inherits QuizCardBase
+
+<h1>Scrum</h1>
+<p>Scrum is an Agile methodology focused on iterative and incremental development.</p>
+
+<h2>Video Lesson</h2>
+<video controls>
+	<source src="Videos/scrum.mp4" type="video/mp4">
+	Your browser does not support the video tag.
+</video>
+
+
+<div class="quiz">
+	@if (QuestionIndex < Questions.Count)
+	{
+		<div class="quiz-header">
+			@Questions[QuestionIndex].QuestionTitle
+		</div>
+
+		<div class="quiz-body">
+			@foreach (var option in Questions[QuestionIndex].PossibleOptions)
+			{
+				<OptionCard Option="@option" OnOptionSelectedCallback="OptionSelected"></OptionCard>
+			}
+
+		</div>
+	}
+	else
+	{
+		<div class="display-score">
+			<h4>Your score: @Score</h4>
+		</div>
+
+		<div class="quiz-footer">
+			<button class="next-btn" @onclick="RestartQuiz"> Let's Play! </button>
+		</div>
+	}
+
+</div>
