@@ -1,10 +1,14 @@
 using Dissertation.Components;
+using Dissertation.Components.Pages;
+using Dissertation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddCustomServices();
 
 var app = builder.Build();
 

@@ -5,6 +5,10 @@ namespace Dissertation.Components.Pages;
 
 public class QuizCardBase : ComponentBase
 {
+    [Inject] public required IQuestionProvider QuestionProvider { get; set; }
+
+    [Parameter] public string Topic { get; set; } = string.Empty;
+
     public List<Question> Questions { get; set; } = [];
     protected int QuestionIndex;
     protected int Score;
@@ -12,13 +16,12 @@ public class QuizCardBase : ComponentBase
     protected override Task OnInitializedAsync()
     {
         LoadQuestions();
-
         return base.OnInitializedAsync();
     }
 
     protected void OptionSelected(string option)
     {
-        if (option.Equals(Questions[QuestionIndex].Answer))
+        if (option.Equals(Questions[QuestionIndex].Answer, StringComparison.OrdinalIgnoreCase))
             Score++;
 
         QuestionIndex++;
@@ -32,23 +35,6 @@ public class QuizCardBase : ComponentBase
 
     private void LoadQuestions()
     {
-        var questionOne = new Question
-        {
-            QuestionTitle = "How many letters does Scrum have?",
-            Answer = "5",
-            PossibleOptions = ["1", "2", "3", "5"]
-        };
-
-        var questionTwo = new Question
-        {
-            QuestionTitle = "What does Scrum mean?",
-            Answer = "44",
-            PossibleOptions = ["12", "22", "44", "50"]
-        };
-
-        Questions.AddRange(
-            new List<Question>
-                { questionOne, questionTwo }
-        );
+        Questions = QuestionProvider.GetQuestions(Topic);
     }
 }

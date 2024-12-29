@@ -1,41 +1,71 @@
-﻿@page "/learn/scrum"
+﻿@page "/learn/{PageTopic}"
+@using Dissertation.Models
+@using Dissertation.Models.Interfaces
 @rendermode InteractiveServer
 @inherits QuizCardBase
 
-<h1>Scrum</h1>
-<p>Scrum is an Agile methodology focused on iterative and incremental development.</p>
+@inject ITopicContentProvider ContentProvider
 
-<h2>Video Lesson</h2>
-<video controls>
-	<source src="Videos/scrum.mp4" type="video/mp4">
-	Your browser does not support the video tag.
-</video>
+@code {
+	[Parameter] public string PageTopic { get; set; } = string.Empty;
 
+	private TopicContent? _content;
 
-<div class="quiz">
-	@if (QuestionIndex < Questions.Count)
+	protected override void OnInitialized()
 	{
-		<div class="quiz-header">
-			@Questions[QuestionIndex].QuestionTitle
-		</div>
-
-		<div class="quiz-body">
-			@foreach (var option in Questions[QuestionIndex].PossibleOptions)
-			{
-				<OptionCard Option="@option" OnOptionSelectedCallback="OptionSelected"></OptionCard>
-			}
-
-		</div>
-	}
-	else
-	{
-		<div class="display-score">
-			<h4>Your score: @Score</h4>
-		</div>
-
-		<div class="quiz-footer">
-			<button class="next-btn" @onclick="RestartQuiz"> Let's Play! </button>
-		</div>
+		Topic = PageTopic;
+		_content = ContentProvider.GetContent(PageTopic);
 	}
 
-</div>
+}
+
+@if (_content is not null)
+{
+	<h1>@_content.TopicName</h1>
+	<p>@_content.Description</p>
+
+	@foreach (var paragraph in _content.Paragraphs)
+	{
+		<p>@paragraph</p>
+	}
+
+	<h2>Video Lesson</h2>
+	<video controls>
+		<source src="@_content.VideoPath" type="video/mp4">
+		Your browser does not support the video tag.
+	</video>
+
+	<h2>@_content.TopicName Quiz</h2>
+	<div class="quiz">
+		@if (QuestionIndex < Questions.Count)
+		{
+			<div class="quiz-header">
+				<h4>@Questions[QuestionIndex].QuestionTitle</h4>
+			</div>
+
+			<div class="quiz-body">
+				@foreach (var option in Questions[QuestionIndex].PossibleOptions)
+				{
+					<button class="quiz-option" @onclick="() => OptionSelected(option)">
+						@option
+					</button>
+				}
+			</div>
+		}
+		else
+		{
+			<div class="display-score">
+				<h4>Your score: @Score / @(Questions.Count)</h4>
+			</div>
+
+			<div class="quiz-footer">
+				<button class="restart-btn" @onclick="RestartQuiz">Restart Quiz</button>
+			</div>
+		}
+	</div>
+}
+else
+{
+	<h1>Topic not found</h1>
+	<p>Please check the topic name and try again.</p>
+}
