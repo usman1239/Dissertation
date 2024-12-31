@@ -1,10 +1,13 @@
 ﻿@page "/learn/{PageTopic}"
+@rendermode InteractiveServer
 @using Dissertation.Models
 @using Dissertation.Models.Interfaces
-@rendermode InteractiveServer
 @inherits QuizCardBase
 
 @inject ITopicContentProvider ContentProvider
+
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/DisplayLearnTopic.css" rel="stylesheet"/>
 
 @code {
 	[Parameter] public string PageTopic { get; set; } = string.Empty;
@@ -21,6 +24,7 @@
 
 @if (_content is not null)
 {
+	<PageTitle>@_content.TopicName</PageTitle>
 	<h1>@_content.TopicName</h1>
 	<p>@_content.Description</p>
 

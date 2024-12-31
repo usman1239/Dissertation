@@ -2,62 +2,26 @@
 @rendermode InteractiveServer
 
 <link href="Styles/Learn.css" rel="stylesheet"/>
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
+
+<PageTitle>Learn</PageTitle>
 
 <h1>Learn</h1>
 <p>Welcome to the Learn page! Explore the concepts and methodologies used in project management and software development.</p>
 
-<div class="collapsible-section">
-	<button @onclick='() => ToggleSection("Agile")'>Agile Methodologies</button>
-
-	@if (_isAgileOpen)
-	{
-		<div class="content">
-			<ul>
-				<li>
-					<NavLink href="/learn/scrum">Scrum</NavLink>
-				</li>
-				<li>
-					<NavLink href="/learn/kanban">Kanban</NavLink>
-				</li>
-			</ul>
-		</div>
-	}
+<div class="section-container">
+	<h2>Agile Methodologies</h2>
+	<div class="button-container">
+		<NavLink href="/learn/scrum" class="action-button">Scrum</NavLink>
+		<NavLink href="/learn/kanban" class="action-button">Kanban</NavLink>
+	</div>
 </div>
 
-<div class="collapsible-section">
-	<button @onclick='() => ToggleSection("SDPM")'>SDPM</button>
-	@if (_isSdpmOpen)
-	{
-		<div class="content">
-			<ul>
-				<li>
-					<NavLink href="/learn/planning">Planning</NavLink>
-				</li>
-				<li>
-					<NavLink href="/learn/execution">Execution</NavLink>
-				</li>
-				<li>
-					<NavLink href="/learn/monitoring-control">Monitoring and Control</NavLink>
-				</li>
-			</ul>
-		</div>
-	}
+<div class="section-container">
+	<h2>Software Development Project Management</h2>
+	<div class="button-container">
+		<NavLink href="/learn/planning" class="action-button">Planning</NavLink>
+		<NavLink href="/learn/execution" class="action-button">Execution</NavLink>
+	</div>
 </div>
-
-@code {
-	private bool _isAgileOpen;
-	private bool _isSdpmOpen;
-
-	private void ToggleSection(string section)
-	{
-		switch (section)
-		{
-			case "Agile":
-				_isAgileOpen = !_isAgileOpen;
-				break;
-			case "SDPM":
-				_isSdpmOpen = !_isSdpmOpen;
-				break;
-		}
-	}
-}

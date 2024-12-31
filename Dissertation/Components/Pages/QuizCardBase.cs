@@ -5,13 +5,13 @@ namespace Dissertation.Components.Pages;
 
 public class QuizCardBase : ComponentBase
 {
+    protected int QuestionIndex;
+    protected int Score;
     [Inject] public required IQuestionProvider QuestionProvider { get; set; }
 
     [Parameter] public string Topic { get; set; } = string.Empty;
 
     public List<Question> Questions { get; set; } = [];
-    protected int QuestionIndex;
-    protected int Score;
 
     protected override Task OnInitializedAsync()
     {

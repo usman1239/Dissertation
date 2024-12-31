@@ -42,7 +42,45 @@ public class QuestionProvider : IQuestionProvider
                         { "Increase profit", "Visualize workflow", "Add more team members", "Create deadlines" }
                 });
                 break;
+
+            case "PLANNING":
+                questions.Add(new Question
+                {
+                    QuestionTitle = "What is the purpose of planning?",
+                    Answer = "To set goals",
+                    PossibleOptions = new List<string>
+                    {
+                        "To set goals", "To waste time", "To make the team work harder", "To make the team work longer"
+                    }
+                });
+                questions.Add(new Question
+                {
+                    QuestionTitle = "What is the purpose of a sprint?",
+                    Answer = "To deliver a product increment",
+                    PossibleOptions = new List<string>
+                    {
+                        "To deliver a product increment", "To deliver a product",
+                        "To deliver a product increment and a product",
+                        "To deliver a product increment and a product increment"
+                    }
+                });
+                break;
+
+            case "EXECUTION":
+                questions.Add(new Question
+                {
+                    QuestionTitle = "What is the purpose of execution?",
+                    Answer = "To deliver the project",
+                    PossibleOptions = new List<string>
+                    {
+                        "To deliver the project", "To deliver the project increment",
+                        "To deliver the project increment and the project",
+                        "To deliver the project increment and the project increment"
+                    }
+                });
+                break;
         }
+
 
         return questions;
     }

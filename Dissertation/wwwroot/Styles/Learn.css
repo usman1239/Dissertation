@@ -1,46 +1,10 @@
-﻿ Collapsible button 
+﻿@import url(Animations.css);
 
-.collapsible-section {
-    background-color: #6a1b9a; 
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    margin-bottom: 10px;
-    outline: none;
-    padding: 15px;
-    text-align: left;
-    width: 100%;
+.section-container {
+    animation: fadeInUp 1.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
 }
-
- Active button state 
-
-.collapsible.active {
-    background-color: #4527a0;
-}
-
- Collapsible content 
-
-.content {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-left: 4px solid white;
-    border-radius: 5px;
-    display: none;
-    margin-bottom: 10px;
-    overflow: hidden;
-    padding: 0 15px;
-}
-
-.content ul {
-    list-style: none;
-    padding: 10px 0;
-}
-
-.content ul li { margin: 5px 0; }
-
-.content ul li a {
-    color: #ffdab9;
-    text-decoration: none;
-}
-
-.content ul li a:hover { text-decoration: underline; }
