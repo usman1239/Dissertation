@@ -1,6 +1,7 @@
 ﻿using Dissertation.Models;
+using Dissertation.Models.Learn;
 
-namespace Dissertation.Components.Pages;
+namespace Dissertation.Components.Pages.Learn;
 
 public interface IQuestionProvider
 {

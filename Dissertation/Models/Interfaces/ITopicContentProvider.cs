@@ -1,4 +1,6 @@
-﻿namespace Dissertation.Models.Interfaces;
+﻿using Dissertation.Models.Learn;
+
+namespace Dissertation.Models.Interfaces;
 
 public interface ITopicContentProvider
 {

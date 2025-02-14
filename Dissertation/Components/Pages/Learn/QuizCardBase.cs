@@ -1,7 +1,8 @@
 ﻿using Dissertation.Models;
+using Dissertation.Models.Learn;
 using Microsoft.AspNetCore.Components;
 
-namespace Dissertation.Components.Pages;
+namespace Dissertation.Components.Pages.Learn;
 
 public class QuizCardBase : ComponentBase
 {

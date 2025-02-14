@@ -1,4 +1,4 @@
-﻿namespace Dissertation.Models;
+﻿namespace Dissertation.Models.Learn;
 
 public class TopicContent
 {
