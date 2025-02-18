@@ -1,7 +1,9 @@
 ﻿@page "/challenge"
 @using Dissertation.View_Models
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject ChallengeViewModel ViewModel
+@attribute [Authorize]
 
 <link href="Styles/Main.css" rel="stylesheet"/>
 <link href="Styles/Home.css" rel="stylesheet"/>

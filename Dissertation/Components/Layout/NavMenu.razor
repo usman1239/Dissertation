@@ -1,43 +1,61 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Dissertation</a>
-    </div>
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Components.Authorization
+
+<div class="top-row ps-3 navbar navbar-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="">Dissertation</a>
+	</div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+	<nav class="flex-column">
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+				<span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+			</NavLink>
+		</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="counter">
+				<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+			</NavLink>
+		</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="weather">
+				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+			</NavLink>
+		</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="learn">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Learn 
-            </NavLink>
-        </div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="learn">
+				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Learn
+			</NavLink>
+		</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="challenge">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Challenge
-            </NavLink>
-        </div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="challenge">
+				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Challenge
+			</NavLink>
+		</div>
 
-    </nav>
+		<div>
+			<AuthorizeView>
+				<NotAuthorized>
+					<NavLink class="nav-link" href="/Identity/Account/Login">
+						<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
+					</NavLink>
+				</NotAuthorized>
+				<Authorized>
+					<p>Logged in as: @context.User.Identity.Name</p>
+					<NavLink class="nav-link" href="/Identity/Account/Logout">
+						<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logout
+					</NavLink>
+				</Authorized>
+			</AuthorizeView>
+		</div>
+
+	</nav>
 </div>
-
