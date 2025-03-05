@@ -11,6 +11,7 @@
 .action-button {
     background-color: red;
     border-radius: 5px;
+    box-shadow: 0 4px 6px #000000;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: white;
     font-size: 1.25rem;
@@ -22,6 +23,7 @@
 
 .action-button:hover {
     background-color: seagreen;
+    box-shadow: 0 6px 10px #000000;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
     transform: scale(1.1);
 }

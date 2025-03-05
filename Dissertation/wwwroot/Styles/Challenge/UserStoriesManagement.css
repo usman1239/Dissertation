@@ -1,0 +1,15 @@
+﻿h3 {
+    color: #333;
+    font-size: 1.8rem;
+}
+
+textarea { min-height: 150px; }
+
+ul li {
+    border-bottom: 1px solid #ddd;
+    padding: 0.5rem 0;
+}
+
+button { background-color: #ffc107; }
+
+button:hover:not(:disabled) { background-color: #e0a800; }

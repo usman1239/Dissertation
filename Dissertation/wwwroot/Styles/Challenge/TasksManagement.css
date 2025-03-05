@@ -1,0 +1,17 @@
+﻿h3 {
+    color: #333;
+    font-size: 1.8rem;
+}
+
+ul li {
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+}
+
+select, input { max-width: 250px; }
+
+button { background-color: #28a745; }
+
+button:hover:not(:disabled) { background-color: #218838; }

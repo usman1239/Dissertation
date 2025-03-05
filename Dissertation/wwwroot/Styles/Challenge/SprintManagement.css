@@ -1,0 +1,24 @@
+﻿h2 {
+    color: #333;
+    font-size: 2rem;
+}
+
+.alert-info {
+    background-color: #e9f7fe;
+    border-radius: 8px;
+    color: #31708f;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+}
+
+.list-group-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
