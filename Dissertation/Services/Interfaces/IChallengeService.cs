@@ -4,10 +4,12 @@ namespace Dissertation.Services.Interfaces;
 
 public interface IChallengeService
 {
-    public Task<List<Project>> GetProjectsAsync();
-    public Task<Project?> GetProjectWithScenariosAsync(int projectId);
-    public Task<List<Choice>> GetChoicesForScenarioAsync(int scenarioId);
-    public Task<Scenario?> GetScenarioByIdAsync(int scenarioId);
-    public Task<int> GetScenarioCountForPhaseAsync(Phase phase);
-    public Task<List<Scenario>> GetScenariosForPhaseAsync(Phase phase);
+    Task<List<Project>> GetAvailableProjectsAsync();
+    Task<List<UserProjectInstance>> LoadProjectsWithSavedProgressAsync(string? userId);
+    Task<UserProjectInstance?> GetProjectInstanceAsync(int projectId, string? userId);
+    Task AddUserProjectInstanceAsync(UserProjectInstance userProjectInstance);
+    Task AddSprintsToDbAsync(List<Sprint> sprints);
+    Task AddDevelopersToDbAsync(List<Developer> developers);
+    Task AddOrUpdateUserStoriesAndTasksAsync(List<UserStory> userStories);
+    Task<bool> DeleteSavedProjectInstanceAsync(int projectId, string? userId);
 }

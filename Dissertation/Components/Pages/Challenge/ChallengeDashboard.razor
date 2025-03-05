@@ -1,0 +1,63 @@
+﻿@page "/challenge"
+@using Dissertation.View_Models
+@using Microsoft.AspNetCore.Authorization
+@rendermode InteractiveServer
+@inject ChallengeDashboardViewModel ViewModel
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+<link rel="stylesheet" href="Styles/Challenge/ChallengeDashboard.css"/>
+
+
+<h2>Project Dashboard</h2>
+
+
+@if (ViewModel.CurrentProject == null)
+{
+	<p>No project selected. Please <MudLink href="/challenge/select-project">choose a project</MudLink>.</p>
+}
+else
+{
+	<h3>@ViewModel.CurrentProject.Project.Title</h3>
+	<h4>@ViewModel.CurrentProject.Project.Description</h4>
+	<p><strong>Budget:</strong> £@ViewModel.CurrentProject.Budget</p>
+
+	<nav>
+		<NavLink href="/challenge/team" class="nav-link" active-class="active">Manage Development Team</NavLink>
+		<NavLink href="/challenge/stories" class="nav-link" active-class="active">Manage User Stories</NavLink>
+		<NavLink href="/challenge/tasks" class="nav-link" active-class="active">Manage Tasks</NavLink>
+		<NavLink href="/challenge/sprints" class="nav-link" active-class="active">Manage Sprints</NavLink>
+	</nav>
+
+	<button disabled="@ViewModel.CanStartSprint()"
+	@onclick="StartSprintAndNavigate">
+		Start Sprint
+	</button>
+
+	<br/>
+
+	<button @onclick="GoBackToProjectsList">
+		Back to Projects List
+	</button>
+}
+
+@code {
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ViewModel.GetUser();
+		await ViewModel.LoadAvailableProjectsAsync();
+	}
+
+	private async Task StartSprintAndNavigate()
+	{
+		await ViewModel.StartSprint();
+
+		NavigationManager.NavigateTo("/challenge/sprints");
+	}
+
+	private void GoBackToProjectsList()
+	{
+		NavigationManager.NavigateTo("/challenge/select-project");
+	}
+
+}

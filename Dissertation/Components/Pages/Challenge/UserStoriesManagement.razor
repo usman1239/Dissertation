@@ -1,0 +1,55 @@
+﻿@page "/challenge/stories"
+@using Dissertation.View_Models
+@rendermode InteractiveServer
+@inject ChallengeDashboardViewModel ViewModel
+
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
+<link rel="stylesheet" href="Styles/Challenge/UserStoriesManagement.css"/>
+
+
+<h3>Create User Stories</h3>
+
+<div>
+	<h3>User Stories</h3>
+	<ul>
+		@foreach (var story in ViewModel.UserStories)
+		{
+			<li>@story.Title - Assigned to: @(story.AssignedTo?.Name ?? "Unassigned") -- Points: @story.StoryPoints</li>
+		}
+	</ul>
+	<textarea @bind="ViewModel.UserStory" placeholder="Write user story here..."></textarea>
+	<input type="number" @bind="ViewModel.StoryPoints" min="1" placeholder="Story Points"/>
+
+	<button disabled="@ViewModel.CanAddUserStory()"
+	        @onclick="ViewModel.AddUserStory">
+		Add User Story
+	</button>
+</div>
+
+<!-- Assign User Story to Developer -->
+<div>
+	<h3>Assign User Story</h3>
+	<select @bind="ViewModel.SelectedDeveloper">
+		<option value="">-- Select Developer --</option>
+		@foreach (var dev in ViewModel.Team)
+		{
+			<option value="@dev.Name">@dev.Name</option>
+		}
+	</select>
+	<select @bind="ViewModel.SelectedUserStory">
+		<option value="">-- Select User Story --</option>
+		@foreach (var story in ViewModel.UserStories)
+		{
+			<option value="@story.Title">@story.Title</option>
+		}
+	</select>
+	<button
+		disabled="@ViewModel.CanAssignStory()"
+		@onclick="ViewModel.AssignUserStoryToDeveloper">
+		Assign User Story
+	</button>
+</div>
+
+<div>
+	<NavLink href="/challenge" class="nav-link" active-class="active">⬅ Back to Dashboard</NavLink>
+</div>

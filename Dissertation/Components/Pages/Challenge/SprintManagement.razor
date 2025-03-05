@@ -1,0 +1,41 @@
+﻿@page "/challenge/sprints"
+@rendermode InteractiveServer
+@using Dissertation.View_Models
+@inject ChallengeDashboardViewModel ViewModel
+
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
+<link rel="stylesheet" href="Styles/Challenge/SprintManagement.css"/>
+
+
+<h2>Manage Sprints</h2>
+
+@if (!string.IsNullOrEmpty(ViewModel.SprintSummary))
+{
+	<div class="alert alert-info">
+		<h3>🚀 Sprint Summary</h3>
+		<pre>@ViewModel.SprintSummary</pre>
+	</div>
+}
+
+<h3>📌 Previous Sprints</h3>
+@if (ViewModel.Sprints.Any())
+{
+	<ul class="list-group">
+		@foreach (var sprint in ViewModel.Sprints)
+		{
+			<li class="list-group-item">
+				<h5>🚀 Sprint @sprint.SprintNumber Complete!</h5>
+				<pre>@sprint.Summary</pre>
+			</li>
+		}
+	</ul>
+}
+else
+{
+	<p>No completed sprints yet.</p>
+}
+
+
+<div>
+	<NavLink href="/challenge" class="nav-link" active-class="active">⬅ Back to Dashboard</NavLink>
+</div>

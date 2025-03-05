@@ -1,70 +1,70 @@
-﻿@page "/challenge"
-@using Dissertation.View_Models
-@using Microsoft.AspNetCore.Authorization
-@rendermode InteractiveServer
-@inject ChallengeViewModel ViewModel
-@attribute [Authorize]
+﻿@* @page "/vv" *@
+@* @using Dissertation.View_Models *@
+@* @using Microsoft.AspNetCore.Authorization *@
+@* @rendermode InteractiveServer *@
+@* @inject ChallengeViewModel ViewModel *@
+@* @attribute [Authorize] *@
 
-<link href="Styles/Main.css" rel="stylesheet"/>
-<link href="Styles/Home.css" rel="stylesheet"/>
-<link href="Styles/Learn.css" rel="stylesheet"/>
+@* <link href="Styles/Main.css" rel="stylesheet"/> *@
+@* <link href="Styles/Home.css" rel="stylesheet"/> *@
+@* <link href="Styles/Learn.css" rel="stylesheet"/> *@
 
-<h3>Challenge</h3>
+@* <h3>Challenge</h3> *@
 
-@if (!ViewModel.IsProjectSelected)
-{
-	<h4>Select a Project</h4>
-	@if (ViewModel.Projects.Count == 0)
-	{
-		<p>Loading projects...</p>
-	}
-	else
-	{
-		@foreach (var project in ViewModel.Projects)
-		{
-			<button @onclick="() => ViewModel.SelectProjectAsync(project.Id)">@project.Name</button>
-		}
-	}
-}
-else
-{
-	<h4>@ViewModel.SelectedProject?.Name</h4>
-	<p>@ViewModel.CurrentScenario?.Description</p>
-	<h4>@ViewModel.CurrentPhase</h4>
+@* @if (!ViewModel.IsProjectSelected) *@
+@* { *@
+@* 	<h4>Select a Project</h4> *@
+@* 	@if (ViewModel.Projects.Count == 0) *@
+@* 	{ *@
+@* 		<p>Loading projects...</p> *@
+@* 	} *@
+@* 	else *@
+@* 	{ *@
+@* 		@foreach (var project in ViewModel.Projects) *@
+@* 		{ *@
+@* 			<button @onclick="() => ViewModel.SelectProjectAsync(project.Id)">@project.Name</button> *@
+@* 		} *@
+@* 	} *@
+@* } *@
+@* else *@
+@* { *@
+@* 	<h4>@ViewModel.SelectedProject?.Name</h4> *@
+@* 	<p>@ViewModel.CurrentScenario?.Description</p> *@
+@* 	<h4>@ViewModel.CurrentPhase</h4> *@
 
-	@if (ViewModel.ShowPhaseSummary)
-	{
-		<h1>SUMMARY -</h1>
-		<h3>Well done! You scored @ViewModel.Score/@ViewModel.TotalQuestions in @ViewModel.CurrentPhase</h3>
-		<h3>Incorrect Attempts Made: @ViewModel.IncorrectAttempts</h3>
+@* 	@if (ViewModel.ShowPhaseSummary) *@
+@* 	{ *@
+@* 		<h1>SUMMARY -</h1> *@
+@* 		<h3>Well done! You scored @ViewModel.Score/@ViewModel.TotalQuestions in @ViewModel.CurrentPhase</h3> *@
+@* 		<h3>Incorrect Attempts Made: @ViewModel.IncorrectAttempts</h3> *@
 
-		<button @onclick="ViewModel.ProceedToNextPhase">Next Phase</button>
-	}
-	else
-	{
-		@if (ViewModel.Choices.Count > 0)
-		{
-			foreach (var choice in ViewModel.Choices)
-			{
-				<button @onclick="() => ViewModel.MakeChoiceAsync(choice.Id)">@choice.ChoiceText</button>
-			}
-		}
-		else
-		{
-			<p>No choices available.</p>
-		}
-	}
+@* 		<button @onclick="ViewModel.ProceedToNextPhase">Next Phase</button> *@
+@* 	} *@
+@* 	else *@
+@* 	{ *@
+@* 		@if (ViewModel.Choices.Count > 0) *@
+@* 		{ *@
+@* 			foreach (var choice in ViewModel.Choices) *@
+@* 			{ *@
+@* 				<button @onclick="() => ViewModel.MakeChoiceAsync(choice.Id)">@choice.ChoiceText</button> *@
+@* 			} *@
+@* 		} *@
+@* 		else *@
+@* 		{ *@
+@* 			<p>No choices available.</p> *@
+@* 		} *@
+@* 	} *@
 
-	@if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
-	{
-		<p>@ViewModel.ErrorMessage</p>
-	}
-}
+@* 	@if (!string.IsNullOrEmpty(ViewModel.ErrorMessage)) *@
+@* 	{ *@
+@* 		<p>@ViewModel.ErrorMessage</p> *@
+@* 	} *@
+@* } *@
 
-@code 
-{
-	protected override async Task OnInitializedAsync()
-	{
-		await ViewModel.LoadProjectsAsync();
-	}
-}
+@* @code  *@
+@* { *@
+@* 	protected override async Task OnInitializedAsync() *@
+@* 	{ *@
+@* 		await ViewModel.LoadProjectsAsync(); *@
+@* 	} *@
+@* } *@

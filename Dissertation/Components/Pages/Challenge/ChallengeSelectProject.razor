@@ -1,0 +1,90 @@
+﻿@page "/challenge/select-project"
+@using Dissertation.View_Models
+@inject ISnackbar Snackbar
+@rendermode InteractiveServer
+@inject ChallengeDashboardViewModel ViewModel
+@inject NavigationManager NavigationManager
+@inherits LayoutComponentBase
+<link rel="stylesheet" href="Styles/Challenge/ChallengeDashboard.css"/>
+
+<h2>Select a Project</h2>
+
+@if (ViewModel.SavedProjects.Any())
+{
+	<h3>Continue Saved Projects</h3>
+	<ul>
+		@foreach (var project in ViewModel.SavedProjects)
+		{
+			<li>
+				<h3>@project.Project.Title</h3>
+				<p>@project.Project.Description</p>
+				<p><strong>Budget:</strong> £@project.Budget</p>
+				<MudButton @onclick="() => ChooseProject(project.ProjectId, true)">Continue</MudButton>
+				<MudButton @onclick="() => DeleteProject(project.ProjectId)">Delete</MudButton>
+
+			</li>
+		}
+	</ul>
+}
+
+<br/>
+
+<h2>Choose A New Project</h2>
+<div>
+	<ul>
+		@foreach (var project in ViewModel.AvailableProjects)
+		{
+			<li>
+				<h3>@project!.Title</h3>
+				<p>@project.Description</p>
+				<p><strong>Budget:</strong> £@project.Budget</p>
+				<MudButton @onclick="() => ChooseProject(project.Id, false)">Select</MudButton>
+			</li>
+		}
+	</ul>
+</div>
+
+
+@code {
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ViewModel.LoadProjectsWithSavedProgress();
+		await ViewModel.LoadAvailableProjectsAsync();
+	}
+
+	private async Task ChooseProject(int projectId, bool isSavedProject)
+	{
+		await ViewModel.SelectProject(projectId, isSavedProject);
+
+		if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+		{
+			Snackbar.Add(ViewModel.ErrorMessage, Severity.Info, config =>
+			{
+				config.Icon = Icons.Material.Filled.Error;
+				config.VisibleStateDuration = 5000;
+				config.SnackbarVariant = Variant.Filled;
+			});
+		}
+		else
+		{
+			NavigationManager.NavigateTo("/challenge");
+		}
+	}
+
+	private async Task DeleteProject(int projectId)
+	{
+		var success = await ViewModel.DeleteSavedProjectInstanceAsync(projectId);
+        
+		if (success)
+		{
+			Snackbar.Add("Project deleted successfully.", Severity.Success);
+		}
+		else
+		{
+			Snackbar.Add("Failed to delete the project.", Severity.Error);
+		}
+
+		await ViewModel.LoadProjectsWithSavedProgress();
+	}
+}

@@ -41,7 +41,7 @@
 			</NavLink>
 		</div>
 
-		<div>
+		<div class="nav-item px-3">
 			<AuthorizeView>
 				<NotAuthorized>
 					<NavLink class="nav-link" href="/Identity/Account/Login">
@@ -49,13 +49,12 @@
 					</NavLink>
 				</NotAuthorized>
 				<Authorized>
-					<p>Logged in as: @context.User.Identity.Name</p>
+					<p>Logged in as: @context.User.Identity?.Name</p>
 					<NavLink class="nav-link" href="/Identity/Account/Logout">
 						<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logout
 					</NavLink>
 				</Authorized>
 			</AuthorizeView>
 		</div>
-
 	</nav>
 </div>

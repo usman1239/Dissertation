@@ -1,0 +1,43 @@
+﻿@page "/challenge/team"
+@using Dissertation.Models.Challenge.Enums
+@using Dissertation.View_Models
+@rendermode InteractiveServer
+@inject ChallengeDashboardViewModel ViewModel
+
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
+<link rel="stylesheet" href="Styles/Challenge/TeamManagement.css"/>
+
+
+<h3>Manage Team</h3>
+
+<div>
+	<h4>Team</h4>
+
+	<input @bind="ViewModel.DeveloperName" placeholder="Developer Name"/>
+
+	<select @bind="ViewModel.SelectedDeveloperExperienceLevel">
+		@foreach (var role in Enum.GetValues(typeof(DeveloperExperienceLevel))
+			          .Cast<DeveloperExperienceLevel>())
+		{
+			<option value="@role">@role.ToString()</option>
+		}
+	</select>
+
+	<button disabled="@ViewModel.CanAddDeveloper()" @onclick="ViewModel.AddDeveloper"> Add Developer </button>
+</div>
+
+<div>
+	<ul>
+		@foreach (var dev in ViewModel.Team)
+		{
+			<li>
+				@dev.Name - @dev.ExperienceLevel - @dev.Cost
+				<button @onclick="() => ViewModel.RemoveDeveloper(dev)">Delete</button>
+			</li>
+		}
+	</ul>
+</div>
+
+<div>
+	<NavLink href="/challenge" class="nav-link" active-class="active">⬅ Back to Dashboard</NavLink>
+</div>

@@ -1,9 +1,10 @@
 using Dissertation.Components;
 using Dissertation.Data;
 using Dissertation.Extensions;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddAuthorizationCore();
 
+builder.Services.AddMudServices();
 builder.Services.AddCustomServices();
-
 
 var app = builder.Build();
 

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250217194210_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20250303003320_Init1")]
+    partial class Init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Dissertation.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.Choice", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.Developer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,26 +33,23 @@ namespace Dissertation.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ChoiceText")
+                    b.Property<int>("Cost")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExperienceLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("boolean");
-
-                    b.Property<int?>("NextScenarioId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ScenarioId")
-                        .HasColumnType("integer");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NextScenarioId");
-
-                    b.HasIndex("ScenarioId");
-
-                    b.ToTable("Choices");
+                    b.ToTable("Developers");
                 });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.Project", b =>
@@ -63,14 +60,14 @@ namespace Dissertation.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Budget")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -79,7 +76,7 @@ namespace Dissertation.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.Scenario", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.Sprint", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,21 +84,129 @@ namespace Dissertation.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ProjectInstanceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SprintNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Summary")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Phase")
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectInstanceId");
+
+                    b.ToTable("Sprints");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserProjectInstance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Budget")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("DeveloperId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DeveloperId");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Scenarios");
+                    b.ToTable("UserProjectInstances");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AssignedToId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ProjectInstanceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StoryPoints")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedToId");
+
+                    b.HasIndex("ProjectInstanceId");
+
+                    b.ToTable("UserStories");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStoryTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AssignedToId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<double>("Progress")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserStoryId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedToId");
+
+                    b.HasIndex("UserStoryId");
+
+                    b.ToTable("UserStoryTasks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -304,33 +409,66 @@ namespace Dissertation.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.Choice", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.Sprint", b =>
                 {
-                    b.HasOne("Dissertation.Models.Challenge.Scenario", "NextScenario")
-                        .WithMany()
-                        .HasForeignKey("NextScenarioId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Dissertation.Models.Challenge.Scenario", "Scenario")
-                        .WithMany("Choices")
-                        .HasForeignKey("ScenarioId")
+                    b.HasOne("Dissertation.Models.Challenge.UserProjectInstance", "ProjectInstance")
+                        .WithMany("Sprints")
+                        .HasForeignKey("ProjectInstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("NextScenario");
-
-                    b.Navigation("Scenario");
+                    b.Navigation("ProjectInstance");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.Scenario", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserProjectInstance", b =>
                 {
+                    b.HasOne("Dissertation.Models.Challenge.Developer", null)
+                        .WithMany("AssignedProjects")
+                        .HasForeignKey("DeveloperId");
+
                     b.HasOne("Dissertation.Models.Challenge.Project", "Project")
-                        .WithMany("Scenarios")
+                        .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
+                {
+                    b.HasOne("Dissertation.Models.Challenge.Developer", "AssignedTo")
+                        .WithMany("AssignedUserStories")
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Dissertation.Models.Challenge.UserProjectInstance", "ProjectInstance")
+                        .WithMany("UserStories")
+                        .HasForeignKey("ProjectInstanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedTo");
+
+                    b.Navigation("ProjectInstance");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStoryTask", b =>
+                {
+                    b.HasOne("Dissertation.Models.Challenge.Developer", "AssignedTo")
+                        .WithMany("AssignedUserStoryTasks")
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Dissertation.Models.Challenge.UserStory", "UserStory")
+                        .WithMany("Tasks")
+                        .HasForeignKey("UserStoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedTo");
+
+                    b.Navigation("UserStory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -384,14 +522,25 @@ namespace Dissertation.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.Project", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.Developer", b =>
                 {
-                    b.Navigation("Scenarios");
+                    b.Navigation("AssignedProjects");
+
+                    b.Navigation("AssignedUserStories");
+
+                    b.Navigation("AssignedUserStoryTasks");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.Scenario", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserProjectInstance", b =>
                 {
-                    b.Navigation("Choices");
+                    b.Navigation("Sprints");
+
+                    b.Navigation("UserStories");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }
