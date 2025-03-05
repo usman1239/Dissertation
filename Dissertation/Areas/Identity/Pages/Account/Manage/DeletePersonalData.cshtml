@@ -7,7 +7,7 @@
 
 <h3>@ViewData["Title"]</h3>
 
-<div class="alert alert-warning" role="alert">
+<div class="alert alert-warning" experienceLevel="alert">
     <p>
         <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
     </p>
@@ -15,7 +15,7 @@
 
 <div>
     <form id="delete-user" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger" experienceLevel="alert"></div>
         @if (Model.RequirePassword)
         {
             <div class="form-floating mb-3">
