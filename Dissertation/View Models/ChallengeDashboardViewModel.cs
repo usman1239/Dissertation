@@ -13,8 +13,8 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
     #region Project Variables
 
     public ObservableCollection<Project?> AvailableProjects { get; set; } = [];
-    public UserProjectInstance? CurrentProject { get; private set; }
-    public ObservableCollection<UserProjectInstance> SavedProjects { get; set; } = [];
+    public ProjectInstance? CurrentProject { get; private set; }
+    public ObservableCollection<ProjectInstance> SavedProjects { get; set; } = [];
 
     #endregion
 
@@ -42,15 +42,6 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
     public string SelectedUserStory { get; set; } = "";
     public int StoryPoints { get; set; }
     public string? UserId { get; set; }
-
-    #endregion
-
-    #region Tasks Variables
-
-    public ObservableCollection<UserStoryTask> Tasks { get; set; } = [];
-    public string Task { get; set; } = "";
-
-    public UserStoryTaskType SelectedTaskType = UserStoryTaskType.BacklogItem;
 
     #endregion
 
@@ -99,25 +90,16 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
         }
     }
 
-    private void LoadExistingProject(UserProjectInstance projectInstance)
+    private void LoadExistingProject(ProjectInstance projectInstance)
     {
         CurrentProject = projectInstance;
         Sprints = new ObservableCollection<Sprint>(projectInstance.Sprints);
         UserStories = new ObservableCollection<UserStory>(projectInstance.UserStories);
-        Tasks = new ObservableCollection<UserStoryTask>(UserStories.SelectMany(us => us.Tasks));
-
-        Team = new ObservableCollection<Developer>(
-            UserStories.Select(us => us.AssignedTo)
-                .Concat(UserStories.SelectMany(us => us.Tasks.Select(t => t.AssignedTo)))
-                .Where(dev => dev != null)
-                .Distinct()
-                .ToList()!
-        );
     }
 
     private void InitializeNewProjectInstance(Project selectedProject)
     {
-        CurrentProject = new UserProjectInstance
+        CurrentProject = new ProjectInstance
         {
             ProjectId = selectedProject.Id,
             Project = selectedProject,
@@ -130,7 +112,6 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
         Team.Clear();
         Sprints.Clear();
         UserStories.Clear();
-        Tasks.Clear();
     }
 
     public async Task<bool> DeleteSavedProjectInstanceAsync(int projectId)
@@ -182,10 +163,11 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
 
     public bool CanStartSprint()
     {
-        return UserStories.Count == 0 ||
-               UserStories.Any(x => x.AssignedTo == null ||
-                                    x.Tasks.Count == 0 ||
-                                    x.Tasks.Any(t => t.AssignedTo == null));
+        return true;
+        //return UserStories.Count == 0 ||
+        //       UserStories.Any(x => x.AssignedTo == null ||
+        //                            x.Count == 0 ||
+        //                            x.Any(t => t.AssignedTo == null));
     }
 
     private async Task UpdateDbAfterSprint()
@@ -194,7 +176,7 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
         {
             await challengeService.AddDevelopersToDbAsync(Team.ToList());
             await challengeService.AddUserProjectInstanceAsync(CurrentProject);
-            await challengeService.AddOrUpdateUserStoriesAndTasksAsync(UserStories.ToList());
+            await challengeService.AddOrUpdateUserStoriesAsync(UserStories.ToList());
             await challengeService.AddSprintsToDbAsync(Sprints.ToList());
         }
     }
@@ -224,29 +206,7 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
 
             foreach (var story in UserStories.Where(us => us.AssignedTo == dev))
             {
-                var allTasksCompleted = true;
-                StringBuilder taskSummary = new();
 
-                foreach (var task in story.Tasks.Where(t => t.AssignedTo == dev))
-                {
-                    var progressIncrease = GetTaskProgressIncrement(dev.ExperienceLevel, task.Difficulty, random);
-                    task.Progress = Math.Min(100, task.Progress + progressIncrease);
-
-                    var status = task.IsCompleted ? "✅ Completed" : $"⏳ {task.Progress}% done";
-                    taskSummary.AppendLine(
-                        $"   - 📌 Task: {task.Title} ({task.Type}, Difficulty: {task.Difficulty}) → {status}");
-
-                    if (!task.IsCompleted) allTasksCompleted = false;
-                }
-
-                if (allTasksCompleted)
-                {
-                    completedUserStories.Add(story);
-                    revenue += 5000;
-                }
-
-                sprintSummary.AppendLine($"📖 User Story: {story.Title} (Assigned to: {dev.Name})");
-                sprintSummary.Append(taskSummary);
             }
 
             completedStories += completedUserStories.Count;
@@ -273,37 +233,6 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
         });
 
         await UpdateDbAfterSprint();
-    }
-
-
-    private static int GetTaskProgressIncrement(DeveloperExperienceLevel experience, UserStoryTaskDifficulty difficulty,
-        Random random)
-    {
-        return experience switch
-        {
-            DeveloperExperienceLevel.Junior => difficulty switch
-            {
-                UserStoryTaskDifficulty.Easy => random.Next(40, 60),
-                UserStoryTaskDifficulty.Medium => random.Next(20, 40),
-                UserStoryTaskDifficulty.Hard => random.Next(10, 20),
-                _ => 30
-            },
-            DeveloperExperienceLevel.MidLevel => difficulty switch
-            {
-                UserStoryTaskDifficulty.Easy => random.Next(60, 80),
-                UserStoryTaskDifficulty.Medium => random.Next(40, 60),
-                UserStoryTaskDifficulty.Hard => random.Next(20, 40),
-                _ => 50
-            },
-            DeveloperExperienceLevel.Senior => difficulty switch
-            {
-                UserStoryTaskDifficulty.Easy => random.Next(80, 100),
-                UserStoryTaskDifficulty.Medium => random.Next(60, 80),
-                UserStoryTaskDifficulty.Hard => random.Next(40, 60),
-                _ => 70
-            },
-            _ => 30
-        };
     }
 
     #endregion
@@ -349,43 +278,6 @@ public class ChallengeDashboardViewModel(IChallengeService challengeService, IUs
     public bool CanAddUserStory()
     {
         return StoryPoints <= 0 || string.IsNullOrEmpty(UserStory);
-    }
-
-    #endregion
-
-    #region Task Methods
-
-    public void AddAndAssignTaskToUserStory()
-    {
-        var story = UserStories.FirstOrDefault(us => us.Title == SelectedUserStory);
-        var developer = Team.FirstOrDefault(d => d.Name == SelectedDeveloper);
-
-        if (story == null || developer == null) return;
-
-        var newTask = new UserStoryTask
-        {
-            Title = Task,
-            Type = SelectedTaskType,
-            Difficulty = UserStoryTaskDifficulty.Medium,
-            AssignedTo = developer,
-            IsCompleted = false,
-            UserStoryId = story.Id,
-            AssignedToId = developer.Id,
-            UserStory = story
-        };
-        
-        story.Tasks.Add(newTask);
-
-        Task = "";
-        SelectedDeveloper = "";
-        SelectedUserStory = "";
-    }
-
-    public bool CanAddTaskToUserStory()
-    {
-        return string.IsNullOrEmpty(Task) ||
-               string.IsNullOrEmpty(SelectedUserStory) ||
-               string.IsNullOrEmpty(SelectedDeveloper);
     }
 
     #endregion

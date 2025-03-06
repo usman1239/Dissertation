@@ -15,7 +15,7 @@ public class ChallengeService(AppDbContext dbContext) : IChallengeService
             .ToListAsync();
     }
 
-    public async Task<List<UserProjectInstance>> LoadProjectsWithSavedProgressAsync(string? userId)
+    public async Task<List<ProjectInstance>> LoadProjectsWithSavedProgressAsync(string? userId)
     {
         return await dbContext.UserProjectInstances
             .Where(x => x.UserId == userId)
@@ -24,32 +24,29 @@ public class ChallengeService(AppDbContext dbContext) : IChallengeService
             .ToListAsync();
     }
 
-    public async Task<UserProjectInstance?> GetProjectInstanceAsync(int projectId, string? userId)
+    public async Task<ProjectInstance?> GetProjectInstanceAsync(int projectId, string? userId)
     {
         return await dbContext.UserProjectInstances
             .Include(p => p.Project)
             .Include(p => p.Sprints)
             .Include(p => p.UserStories)
-            .ThenInclude(us => us.Tasks)
-            .ThenInclude(t => t.AssignedTo)
             .Include(p => p.UserStories)
-            .ThenInclude(us => us.AssignedTo)
             .FirstOrDefaultAsync(x => x.ProjectId == projectId && x.UserId == userId);
     }
 
-    public async Task AddUserProjectInstanceAsync(UserProjectInstance userProjectInstance)
+    public async Task AddUserProjectInstanceAsync(ProjectInstance projectInstance)
     {
         var existingUserProjectInstance = await dbContext.UserProjectInstances
-            .FirstOrDefaultAsync(up => up.ProjectId == userProjectInstance.ProjectId &&
-                                       up.UserId == userProjectInstance.UserId);
+            .FirstOrDefaultAsync(up => up.ProjectId == projectInstance.ProjectId &&
+                                       up.UserId == projectInstance.UserId);
 
         if (existingUserProjectInstance == null)
-            await dbContext.UserProjectInstances.AddAsync(userProjectInstance);
+            await dbContext.UserProjectInstances.AddAsync(projectInstance);
         else
-            dbContext.Entry(existingUserProjectInstance).CurrentValues.SetValues(userProjectInstance);
+            dbContext.Entry(existingUserProjectInstance).CurrentValues.SetValues(projectInstance);
 
-        dbContext.Entry(userProjectInstance).Reference(p => p.Project).CurrentValue = userProjectInstance.Project;
-        dbContext.Entry(userProjectInstance.Project).State = EntityState.Unchanged;
+        dbContext.Entry(projectInstance).Reference(p => p.Project).CurrentValue = projectInstance.Project;
+        dbContext.Entry(projectInstance.Project).State = EntityState.Unchanged;
 
         await dbContext.SaveChangesAsync();
     }
@@ -88,26 +85,17 @@ public class ChallengeService(AppDbContext dbContext) : IChallengeService
         }
     }
 
-    public async Task AddOrUpdateUserStoriesAndTasksAsync(List<UserStory> userStories)
+    public async Task AddOrUpdateUserStoriesAsync(List<UserStory> userStories)
     {
         foreach (var story in userStories)
         {
             var existingStory = await dbContext.UserStories
-                .Include(us => us.Tasks)
                 .FirstOrDefaultAsync(us => us.Id == story.Id);
 
             if (existingStory != null)
             {
                 dbContext.Entry(existingStory).CurrentValues.SetValues(story);
 
-                foreach (var task in story.Tasks)
-                {
-                    var existingTask = existingStory.Tasks.FirstOrDefault(t => t.Id == task.Id);
-                    if (existingTask != null)
-                        dbContext.Entry(existingTask).CurrentValues.SetValues(task);
-                    else
-                        existingStory.Tasks.Add(task);
-                }
             }
             else
             {
