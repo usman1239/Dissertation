@@ -9,7 +9,4 @@ public class Developer
     public DeveloperExperienceLevel ExperienceLevel { get; set; }
     public int Cost { get; set; }
     public string UserId { get; set; } = null!;
-    public List<UserProjectInstance>? AssignedProjects { get; set; }
-    public List<UserStory>? AssignedUserStories { get; set; } = [];
-    public List<UserStoryTask>? AssignedUserStoryTasks { get; set; } = [];
 }

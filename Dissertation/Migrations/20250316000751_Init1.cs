@@ -75,7 +75,9 @@ namespace Dissertation.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Budget = table.Column<int>(type: "integer", nullable: false)
+                    Budget = table.Column<int>(type: "integer", nullable: false),
+                    NumOfSprints = table.Column<int>(type: "integer", nullable: false),
+                    DeveloperCosts = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,30 +191,46 @@ namespace Dissertation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProjectInstances",
+                name: "ProjectInstances",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
-                    Budget = table.Column<int>(type: "integer", nullable: false),
-                    DeveloperId = table.Column<int>(type: "integer", nullable: true)
+                    Budget = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProjectInstances", x => x.Id);
+                    table.PrimaryKey("PK_ProjectInstances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserProjectInstances_Developers_DeveloperId",
-                        column: x => x.DeveloperId,
-                        principalTable: "Developers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserProjectInstances_Projects_ProjectId",
+                        name: "FK_ProjectInstances_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    StoryPoints = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStories_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -225,73 +243,49 @@ namespace Dissertation.Migrations
                     SprintNumber = table.Column<int>(type: "integer", nullable: false),
                     Duration = table.Column<int>(type: "integer", nullable: false),
                     IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
-                    Summary = table.Column<string>(type: "text", nullable: false)
+                    Summary = table.Column<string>(type: "text", nullable: false),
+                    Progress = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sprints", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sprints_UserProjectInstances_ProjectInstanceId",
+                        name: "FK_Sprints_ProjectInstances_ProjectInstanceId",
                         column: x => x.ProjectInstanceId,
-                        principalTable: "UserProjectInstances",
+                        principalTable: "ProjectInstances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserStories",
+                name: "UserStoryInstances",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProjectInstanceId = table.Column<int>(type: "integer", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    StoryPoints = table.Column<int>(type: "integer", nullable: false),
-                    AssignedToId = table.Column<int>(type: "integer", nullable: true),
-                    IsCompleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserStories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserStories_Developers_AssignedToId",
-                        column: x => x.AssignedToId,
-                        principalTable: "Developers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_UserStories_UserProjectInstances_ProjectInstanceId",
-                        column: x => x.ProjectInstanceId,
-                        principalTable: "UserProjectInstances",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserStoryTasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    AssignedToId = table.Column<int>(type: "integer", nullable: true),
                     UserStoryId = table.Column<int>(type: "integer", nullable: false),
-                    Difficulty = table.Column<int>(type: "integer", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
-                    Progress = table.Column<double>(type: "double precision", nullable: false)
+                    ProjectInstanceId = table.Column<int>(type: "integer", nullable: false),
+                    Progress = table.Column<int>(type: "integer", nullable: false),
+                    DeveloperAssignedId = table.Column<int>(type: "integer", nullable: true),
+                    IsComplete = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserStoryTasks", x => x.Id);
+                    table.PrimaryKey("PK_UserStoryInstances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserStoryTasks_Developers_AssignedToId",
-                        column: x => x.AssignedToId,
+                        name: "FK_UserStoryInstances_Developers_DeveloperAssignedId",
+                        column: x => x.DeveloperAssignedId,
                         principalTable: "Developers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_UserStoryTasks_UserStories_UserStoryId",
+                        name: "FK_UserStoryInstances_ProjectInstances_ProjectInstanceId",
+                        column: x => x.ProjectInstanceId,
+                        principalTable: "ProjectInstances",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserStoryInstances_UserStories_UserStoryId",
                         column: x => x.UserStoryId,
                         principalTable: "UserStories",
                         principalColumn: "Id",
@@ -336,38 +330,33 @@ namespace Dissertation.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectInstances_ProjectId",
+                table: "ProjectInstances",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sprints_ProjectInstanceId",
                 table: "Sprints",
                 column: "ProjectInstanceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProjectInstances_DeveloperId",
-                table: "UserProjectInstances",
-                column: "DeveloperId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProjectInstances_ProjectId",
-                table: "UserProjectInstances",
+                name: "IX_UserStories_ProjectId",
+                table: "UserStories",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserStories_AssignedToId",
-                table: "UserStories",
-                column: "AssignedToId");
+                name: "IX_UserStoryInstances_DeveloperAssignedId",
+                table: "UserStoryInstances",
+                column: "DeveloperAssignedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserStories_ProjectInstanceId",
-                table: "UserStories",
+                name: "IX_UserStoryInstances_ProjectInstanceId",
+                table: "UserStoryInstances",
                 column: "ProjectInstanceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserStoryTasks_AssignedToId",
-                table: "UserStoryTasks",
-                column: "AssignedToId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserStoryTasks_UserStoryId",
-                table: "UserStoryTasks",
+                name: "IX_UserStoryInstances_UserStoryId",
+                table: "UserStoryInstances",
                 column: "UserStoryId");
         }
 
@@ -393,7 +382,7 @@ namespace Dissertation.Migrations
                 name: "Sprints");
 
             migrationBuilder.DropTable(
-                name: "UserStoryTasks");
+                name: "UserStoryInstances");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -402,13 +391,13 @@ namespace Dissertation.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "UserStories");
-
-            migrationBuilder.DropTable(
-                name: "UserProjectInstances");
-
-            migrationBuilder.DropTable(
                 name: "Developers");
+
+            migrationBuilder.DropTable(
+                name: "ProjectInstances");
+
+            migrationBuilder.DropTable(
+                name: "UserStories");
 
             migrationBuilder.DropTable(
                 name: "Projects");

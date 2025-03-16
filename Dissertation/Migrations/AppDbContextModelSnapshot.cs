@@ -64,6 +64,13 @@ namespace Dissertation.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("DeveloperCosts")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("NumOfSprints")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -71,6 +78,31 @@ namespace Dissertation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.ProjectInstance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Budget")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectInstances");
                 });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.Sprint", b =>
@@ -86,6 +118,9 @@ namespace Dissertation.Migrations
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ProjectInstanceId")
                         .HasColumnType("integer");
@@ -104,36 +139,6 @@ namespace Dissertation.Migrations
                     b.ToTable("Sprints");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.UserProjectInstance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Budget")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("DeveloperId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeveloperId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("UserProjectInstances");
-                });
-
             modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
                 {
                     b.Property<int>("Id")
@@ -142,13 +147,11 @@ namespace Dissertation.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AssignedToId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("ProjectInstanceId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
                     b.Property<int>("StoryPoints")
@@ -160,14 +163,12 @@ namespace Dissertation.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedToId");
-
-                    b.HasIndex("ProjectInstanceId");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("UserStories");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.UserStoryTask", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStoryInstance", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,23 +176,16 @@ namespace Dissertation.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AssignedToId")
+                    b.Property<int?>("DeveloperAssignedId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsCompleted")
+                    b.Property<bool>("IsComplete")
                         .HasColumnType("boolean");
 
-                    b.Property<double>("Progress")
-                        .HasColumnType("double precision");
+                    b.Property<int>("Progress")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Type")
+                    b.Property<int>("ProjectInstanceId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserStoryId")
@@ -199,11 +193,13 @@ namespace Dissertation.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedToId");
+                    b.HasIndex("DeveloperAssignedId");
+
+                    b.HasIndex("ProjectInstanceId");
 
                     b.HasIndex("UserStoryId");
 
-                    b.ToTable("UserStoryTasks");
+                    b.ToTable("UserStoryInstances");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -406,9 +402,20 @@ namespace Dissertation.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Dissertation.Models.Challenge.ProjectInstance", b =>
+                {
+                    b.HasOne("Dissertation.Models.Challenge.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("Dissertation.Models.Challenge.Sprint", b =>
                 {
-                    b.HasOne("Dissertation.Models.Challenge.UserProjectInstance", "ProjectInstance")
+                    b.HasOne("Dissertation.Models.Challenge.ProjectInstance", "ProjectInstance")
                         .WithMany("Sprints")
                         .HasForeignKey("ProjectInstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -417,53 +424,39 @@ namespace Dissertation.Migrations
                     b.Navigation("ProjectInstance");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.UserProjectInstance", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
                 {
-                    b.HasOne("Dissertation.Models.Challenge.Developer", null)
-                        .WithMany("AssignedProjects")
-                        .HasForeignKey("DeveloperId");
-
                     b.HasOne("Dissertation.Models.Challenge.Project", "Project")
-                        .WithMany()
+                        .WithMany("UserStories")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserStoryInstance", b =>
                 {
-                    b.HasOne("Dissertation.Models.Challenge.Developer", "AssignedTo")
-                        .WithMany("AssignedUserStories")
-                        .HasForeignKey("AssignedToId")
+                    b.HasOne("Dissertation.Models.Challenge.Developer", "DeveloperAssigned")
+                        .WithMany()
+                        .HasForeignKey("DeveloperAssignedId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Dissertation.Models.Challenge.UserProjectInstance", "ProjectInstance")
-                        .WithMany("UserStories")
+                    b.HasOne("Dissertation.Models.Challenge.ProjectInstance", "ProjectInstance")
+                        .WithMany("UserStoryInstances")
                         .HasForeignKey("ProjectInstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AssignedTo");
-
-                    b.Navigation("ProjectInstance");
-                });
-
-            modelBuilder.Entity("Dissertation.Models.Challenge.UserStoryTask", b =>
-                {
-                    b.HasOne("Dissertation.Models.Challenge.Developer", "AssignedTo")
-                        .WithMany("AssignedUserStoryTasks")
-                        .HasForeignKey("AssignedToId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Dissertation.Models.Challenge.UserStory", "UserStory")
-                        .WithMany("Tasks")
+                        .WithMany("UserStoryInstances")
                         .HasForeignKey("UserStoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AssignedTo");
+                    b.Navigation("DeveloperAssigned");
+
+                    b.Navigation("ProjectInstance");
 
                     b.Navigation("UserStory");
                 });
@@ -519,25 +512,21 @@ namespace Dissertation.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.Developer", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.Project", b =>
                 {
-                    b.Navigation("AssignedProjects");
-
-                    b.Navigation("AssignedUserStories");
-
-                    b.Navigation("AssignedUserStoryTasks");
+                    b.Navigation("UserStories");
                 });
 
-            modelBuilder.Entity("Dissertation.Models.Challenge.UserProjectInstance", b =>
+            modelBuilder.Entity("Dissertation.Models.Challenge.ProjectInstance", b =>
                 {
                     b.Navigation("Sprints");
 
-                    b.Navigation("UserStories");
+                    b.Navigation("UserStoryInstances");
                 });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("UserStoryInstances");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,7 @@
 
 //namespace Dissertation.View_Models;
 
-//public class ChallengeViewModel(IChallengeService challengeService, 
+//public class ChallengeViewModel(IProjectService projectService, 
 //    IUserProgressService userProgressService,
 //    AuthenticationStateProvider authenticationStateProvider)
 //{
@@ -32,7 +32,7 @@
 
 //    public async Task LoadProjectsAsync()
 //    {
-//        Projects = await challengeService.GetProjectsAsync();
+//        Projects = await projectService.GetProjectsAsync();
 //        await LoadUserProgressAsync();
 //    }
 
@@ -45,8 +45,8 @@
 
 //        if (progress != null)
 //        {
-//            SelectedProject = await challengeService.GetProjectWithScenariosAsync(progress.ProjectId);
-//            CurrentScenario = await challengeService.GetScenarioByIdAsync(progress.CurrentScenarioId);
+//            SelectedProject = await projectService.GetProjectWithScenariosAsync(progress.ProjectId);
+//            CurrentScenario = await projectService.GetScenarioByIdAsync(progress.CurrentScenarioId);
 //            Score = progress.Score;
 //            CurrentPhase = CurrentScenario?.Phase;
 //            await LoadChoicesAsync();
@@ -57,7 +57,7 @@
 
 //    public async Task SelectProjectAsync(int projectId)
 //    {
-//        SelectedProject = await challengeService.GetProjectWithScenariosAsync(projectId);
+//        SelectedProject = await projectService.GetProjectWithScenariosAsync(projectId);
 
 //        if (SelectedProject?.Scenarios.Count > 0)
 //        {
@@ -73,7 +73,7 @@
 //    public async Task LoadChoicesAsync()
 //    {
 //        if (CurrentScenario != null) 
-//            Choices = await challengeService.GetChoicesForScenarioAsync(CurrentScenario.Id);
+//            Choices = await projectService.GetChoicesForScenarioAsync(CurrentScenario.Id);
 //    }
 
 //    public async Task MakeChoiceAsync(int choiceId)
@@ -97,14 +97,14 @@
 
 //        if (choice.NextScenarioId != null)
 //        {
-//            CurrentScenario = await challengeService.GetScenarioByIdAsync(choice.NextScenarioId.Value);
+//            CurrentScenario = await projectService.GetScenarioByIdAsync(choice.NextScenarioId.Value);
 //            await LoadChoicesAsync();
 //        }
 //        else if (IsEndOfPhase())
 //        {
 //            ShowPhaseSummary = true;
 //            if (CurrentPhase != null)
-//                TotalQuestions = await challengeService.GetScenarioCountForPhaseAsync(CurrentPhase.Value);
+//                TotalQuestions = await projectService.GetScenarioCountForPhaseAsync(CurrentPhase.Value);
 //        }
 
 //        await SaveUserProgressAsync(userId);
@@ -134,7 +134,7 @@
 //            return;
 //        }
 
-//        var nextPhaseScenarios = await challengeService.GetScenariosForPhaseAsync(CurrentPhase.Value);
+//        var nextPhaseScenarios = await projectService.GetScenariosForPhaseAsync(CurrentPhase.Value);
 //        if (nextPhaseScenarios.Count > 0)
 //        {
 //            CurrentScenario = nextPhaseScenarios.First();
