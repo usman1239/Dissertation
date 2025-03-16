@@ -1,19 +1,22 @@
 ﻿@page "/challenge/select-project"
 @using Dissertation.View_Models
+@using Microsoft.AspNetCore.Authorization
 @inject ISnackbar Snackbar
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 @inject NavigationManager NavigationManager
 @inherits LayoutComponentBase
+@attribute [Authorize]
+
 <link rel="stylesheet" href="Styles/Challenge/ChallengeDashboard.css"/>
 
 <h2>Select a Project</h2>
 
-@if (ViewModel.SavedProjects.Any())
+@if (ViewModel.ProjectViewModel.SavedProjects.Any())
 {
 	<h3>Continue Saved Projects</h3>
 	<ul>
-		@foreach (var project in ViewModel.SavedProjects)
+		@foreach (var project in ViewModel.ProjectViewModel.SavedProjects)
 		{
 			<li>
 				<h3>@project.Project.Title</h3>
@@ -21,7 +24,6 @@
 				<p><strong>Budget:</strong> £@project.Budget</p>
 				<MudButton @onclick="() => ChooseProject(project.ProjectId, true)">Continue</MudButton>
 				<MudButton @onclick="() => DeleteProject(project.ProjectId)">Delete</MudButton>
-
 			</li>
 		}
 	</ul>
@@ -32,14 +34,14 @@
 <h2>Choose A New Project</h2>
 <div>
 	<ul>
-		@foreach (var project in ViewModel.AvailableProjects)
+		@foreach (var project in ViewModel.ProjectViewModel.AvailableProjects)
 		{
-			<li>
+			<MudList T="string">
 				<h3>@project!.Title</h3>
 				<p>@project.Description</p>
 				<p><strong>Budget:</strong> £@project.Budget</p>
 				<MudButton @onclick="() => ChooseProject(project.Id, false)">Select</MudButton>
-			</li>
+			</MudList>
 		}
 	</ul>
 </div>
@@ -49,17 +51,18 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await ViewModel.LoadProjectsWithSavedProgress();
-		await ViewModel.LoadAvailableProjectsAsync();
+		await ViewModel.ProjectViewModel.GetUser();
+		await ViewModel.ProjectViewModel.LoadProjectsWithSavedProgress();
+		await ViewModel.ProjectViewModel.LoadAvailableProjectsAsync();
 	}
 
 	private async Task ChooseProject(int projectId, bool isSavedProject)
 	{
-		await ViewModel.SelectProject(projectId, isSavedProject);
+		await ViewModel.ProjectViewModel.SelectProject(projectId, isSavedProject);
 
-		if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+		if (!string.IsNullOrEmpty(ViewModel.ProjectViewModel.ErrorMessage))
 		{
-			Snackbar.Add(ViewModel.ErrorMessage, Severity.Info, config =>
+			Snackbar.Add(ViewModel.ProjectViewModel.ErrorMessage, Severity.Info, config =>
 			{
 				config.Icon = Icons.Material.Filled.Error;
 				config.VisibleStateDuration = 5000;
@@ -68,14 +71,14 @@
 		}
 		else
 		{
-			NavigationManager.NavigateTo("/challenge");
+			NavigationManager.NavigateTo("/challenge/dashboard");
 		}
 	}
 
 	private async Task DeleteProject(int projectId)
 	{
-		var success = await ViewModel.DeleteSavedProjectInstanceAsync(projectId);
-        
+		var success = await ViewModel.ProjectViewModel.DeleteSavedProjectInstanceAsync(projectId);
+
 		if (success)
 		{
 			Snackbar.Add("Project deleted successfully.", Severity.Success);
@@ -85,6 +88,6 @@
 			Snackbar.Add("Failed to delete the project.", Severity.Error);
 		}
 
-		await ViewModel.LoadProjectsWithSavedProgress();
+		await ViewModel.ProjectViewModel.LoadProjectsWithSavedProgress();
 	}
 }

@@ -9,4 +9,5 @@ public class Sprint
     public int Duration { get; set; }
     public bool IsCompleted { get; set; }
     public string Summary { get; set; } = string.Empty;
+    public int Progress { get; set; }
 }

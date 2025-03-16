@@ -6,50 +6,57 @@
 <link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/UserStoriesManagement.css"/>
 
+<h2>User Stories</h2>
 
-<h3>Create User Stories</h3>
+@if (ViewModel.ProjectStateService.UserStoryInstances.Any())
+{
+	<table class="user-stories-table">
+		<thead>
+		<tr>
+			<th>Title</th>
+			<th>Description</th>
+			<th>Story Points</th>
+			<th>Assigned Developer</th>
+			<th>Progress</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var story in ViewModel.ProjectStateService.UserStoryInstances)
+		{
+			<tr>
+				<td>@story.UserStory.Title</td>
+				<td>@story.UserStory.Description</td>
+				<td>@story.UserStory.StoryPoints</td>
+				<td>
+					<InputSelect @bind-Value:get="story.DeveloperAssignedId"
+					             @bind-Value:set="value => ViewModel.UserStoryViewModel.AssignDeveloperToStory(story, value)">
+
+						<option value="">Unassigned</option>
+						@foreach (var developer in ViewModel.ProjectStateService.Team)
+						{
+							<option value="@developer.Id">@developer.Name (@developer.Id)</option>
+						}
+					</InputSelect>
+				</td>
+				<td>
+					<MudStack>
+						<MudProgressLinear Value="@story.Progress"
+						                   Color="@(story.Progress < 30 ? Color.Error : story.Progress < 70 ? Color.Warning : Color.Success)"
+						                   Rounded="true"
+						                   Height="10px"/>
+						<MudText Typo="Typo.body2" Class="text-center">@story.Progress%</MudText>
+					</MudStack>
+				</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+}
+else
+{
+	<p>No user stories found.</p>
+}
 
 <div>
-	<h3>User Stories</h3>
-	<ul>
-		@foreach (var story in ViewModel.UserStories)
-		{
-			<li>@story.Title - Assigned to: @(story.AssignedTo?.Name ?? "Unassigned") -- Points: @story.StoryPoints</li>
-		}
-	</ul>
-	<textarea @bind="ViewModel.UserStory" placeholder="Write user story here..."></textarea>
-	<input type="number" @bind="ViewModel.StoryPoints" min="1" placeholder="Story Points"/>
-
-	<button disabled="@ViewModel.CanAddUserStory()"
-	        @onclick="ViewModel.AddUserStory">
-		Add User Story
-	</button>
-</div>
-
-<!-- Assign User Story to Developer -->
-<div>
-	<h3>Assign User Story</h3>
-	<select @bind="ViewModel.SelectedDeveloper">
-		<option value="">-- Select Developer --</option>
-		@foreach (var dev in ViewModel.Team)
-		{
-			<option value="@dev.Name">@dev.Name</option>
-		}
-	</select>
-	<select @bind="ViewModel.SelectedUserStory">
-		<option value="">-- Select User Story --</option>
-		@foreach (var story in ViewModel.UserStories)
-		{
-			<option value="@story.Title">@story.Title</option>
-		}
-	</select>
-	<button
-		disabled="@ViewModel.CanAssignStory()"
-		@onclick="ViewModel.AssignUserStoryToDeveloper">
-		Assign User Story
-	</button>
-</div>
-
-<div>
-	<NavLink href="/challenge" class="nav-link" active-class="active">⬅ Back to Dashboard</NavLink>
+	<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
 </div>

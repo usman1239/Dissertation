@@ -1,62 +1,57 @@
-﻿@page "/challenge"
+﻿@page "/challenge/dashboard"
 @using Dissertation.View_Models
-@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
-@inject ChallengeDashboardViewModel ViewModel
 @inject NavigationManager NavigationManager
-@attribute [Authorize]
+@inject ChallengeDashboardViewModel ViewModel
+@inject ISnackbar Snackbar
 <link rel="stylesheet" href="Styles/Challenge/ChallengeDashboard.css"/>
-
 
 <h2>Project Dashboard</h2>
 
+<h3>@ViewModel.ProjectStateService.CurrentProject.Project.Title</h3>
+<h4>@ViewModel.ProjectStateService.CurrentProject.Project.Description</h4>
+<p><strong>Budget:</strong> £@ViewModel.ProjectStateService.CurrentProject.Budget</p>
 
-@if (ViewModel.CurrentProject == null)
-{
-	<p>No project selected. Please <MudLink href="/challenge/select-project">choose a project</MudLink>.</p>
-}
-else
-{
-	<h3>@ViewModel.CurrentProject.Project.Title</h3>
-	<h4>@ViewModel.CurrentProject.Project.Description</h4>
-	<p><strong>Budget:</strong> £@ViewModel.CurrentProject.Budget</p>
+<div>
+	<MudButton href="/challenge/team" class="action-button">Manage Development Team</MudButton>
+	<MudButton href="/challenge/stories" class="action-button">Manage User Stories</MudButton>
+	<MudButton href="/challenge/sprints" class="action-button">Manage Sprints</MudButton>
+	<MudButton href="/challenge/summary" class="action-button" Disabled="!ViewModel.SprintViewModel.CanShowSummary()">View Project Summary</MudButton>
+</div>
 
-	<nav>
-		<NavLink href="/challenge/team" class="nav-link" active-class="active">Manage Development Team</NavLink>
-		<NavLink href="/challenge/stories" class="nav-link" active-class="active">Manage User Stories</NavLink>
-		<NavLink href="/challenge/sprints" class="nav-link" active-class="active">Manage Sprints</NavLink>
-	</nav>
+<br/>
 
-	<button disabled="@ViewModel.CanStartSprint()"
-	@onclick="StartSprintAndNavigate">
-		Start Sprint
-	</button>
 
-	<br/>
-
-	<button @onclick="GoBackToProjectsList">
-		Back to Projects List
-	</button>
-}
+<MudButton OnClick="@StartSprint" Disabled="!ViewModel.SprintViewModel.CanStartSprint()">Start Sprint</MudButton>
 
 @code {
 
-	protected override async Task OnInitializedAsync()
+	private async Task StartSprint()
 	{
-		await ViewModel.GetUser();
-		await ViewModel.LoadAvailableProjectsAsync();
-	}
+		var totalSalary = ViewModel.ProjectStateService.Team.Sum(dev => dev.Cost);
 
-	private async Task StartSprintAndNavigate()
-	{
-		await ViewModel.StartSprint();
+		if (ViewModel.ProjectStateService.CurrentProject.Budget < totalSalary)
+		{
+			Snackbar.Add("Insufficient budget to start the sprint!", Severity.Error);
+			return;
+		}
 
-		NavigationManager.NavigateTo("/challenge/sprints");
-	}
+		await ViewModel.SprintViewModel.StartSprint();
 
-	private void GoBackToProjectsList()
-	{
-		NavigationManager.NavigateTo("/challenge/select-project");
+		Snackbar.Add("Sprint started successfully!", Severity.Success);
+
+		var allStoriesCompleted = ViewModel.ProjectStateService.UserStoryInstances.All(usi => usi.IsComplete);
+		var completedSprintsCount = ViewModel.ProjectStateService.Sprints.Count(s => s.IsCompleted);
+		var totalSprints = ViewModel.ProjectStateService.CurrentProject.Project.NumOfSprints;
+
+		if (allStoriesCompleted || completedSprintsCount >= totalSprints)
+		{
+			NavigationManager.NavigateTo("/challenge/summary");
+		}
+		else
+		{
+			NavigationManager.NavigateTo("/challenge/sprints");
+		}
 	}
 
 }

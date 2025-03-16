@@ -9,19 +9,19 @@
 
 <h2>Manage Sprints</h2>
 
-@if (!string.IsNullOrEmpty(ViewModel.SprintSummary))
+@if (!string.IsNullOrEmpty(ViewModel.SprintViewModel.SprintSummary))
 {
 	<div class="alert alert-info">
 		<h3>🚀 Sprint Summary</h3>
-		<pre>@ViewModel.SprintSummary</pre>
+		<pre>@ViewModel.SprintViewModel.SprintSummary</pre>
 	</div>
 }
 
 <h3>📌 Previous Sprints</h3>
-@if (ViewModel.Sprints.Any())
+@if (ViewModel.ProjectStateService.Sprints.Any())
 {
 	<ul class="list-group">
-		@foreach (var sprint in ViewModel.Sprints)
+		@foreach (var sprint in ViewModel.ProjectStateService.Sprints)
 		{
 			<li class="list-group-item">
 				<h5>🚀 Sprint @sprint.SprintNumber Complete!</h5>
@@ -29,13 +29,36 @@
 			</li>
 		}
 	</ul>
+
+	<MudCard>
+		<MudCardContent>
+			<MudChart ChartType="ChartType.Line"
+			          ChartSeries="@ViewModel.SprintViewModel.Series"
+			          XAxisLabels="@ViewModel.SprintViewModel.SprintLabels"
+			          Width="100%"
+			          Height="350px"
+			          ChartOptions="@ViewModel.SprintViewModel.ChartOptions"/>
+		</MudCardContent>
+	</MudCard>
 }
 else
 {
 	<p>No completed sprints yet.</p>
 }
 
-
 <div>
-	<NavLink href="/challenge" class="nav-link" active-class="active">⬅ Back to Dashboard</NavLink>
+	<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
 </div>
+
+@code {
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await ViewModel.SprintViewModel.LoadSprintProgressAsync();
+			StateHasChanged();
+		}
+	}
+
+}

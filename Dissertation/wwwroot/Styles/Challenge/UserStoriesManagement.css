@@ -1,15 +1,23 @@
-﻿h3 {
-    color: #333;
-    font-size: 1.8rem;
+﻿.user-stories-table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    width: 100%;
 }
 
-textarea { min-height: 150px; }
-
-ul li {
-    border-bottom: 1px solid #ddd;
-    padding: 0.5rem 0;
+.user-stories-table th, .user-stories-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
 }
 
-button { background-color: #ffc107; }
+.user-stories-table th { background-color: #f4f4f4; }
 
-button:hover:not(:disabled) { background-color: #e0a800; }
+.user-stories-table select {
+    padding: 5px;
+    width: 100%;
+}
+
+.user-stories-table button {
+    cursor: pointer;
+    padding: 5px 10px;
+}

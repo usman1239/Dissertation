@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="challenge">
+			<NavLink class="nav-link" href="challenge/select-project">
 				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Challenge
 			</NavLink>
 		</div>
@@ -49,10 +49,10 @@
 					</NavLink>
 				</NotAuthorized>
 				<Authorized>
-					<p>Logged in as: @context.User.Identity?.Name</p>
 					<NavLink class="nav-link" href="/Identity/Account/Logout">
 						<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logout
 					</NavLink>
+					<p>Logged in as: @context.User.Identity?.Name</p>
 				</Authorized>
 			</AuthorizeView>
 		</div>

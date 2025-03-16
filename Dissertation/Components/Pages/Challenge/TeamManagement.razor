@@ -4,40 +4,38 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
-<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
-<link rel="stylesheet" href="Styles/Challenge/TeamManagement.css"/>
-
-
 <h3>Manage Team</h3>
 
 <div>
 	<h4>Team</h4>
 
-	<input @bind="ViewModel.DeveloperName" placeholder="Developer Name"/>
+	<MudInput T="string" Label="Developer Name" @bind-Value="ViewModel.DeveloperViewModel.DeveloperName"/>
 
-	<select @bind="ViewModel.SelectedDeveloperExperienceLevel">
-		@foreach (var role in Enum.GetValues(typeof(DeveloperExperienceLevel))
-			          .Cast<DeveloperExperienceLevel>())
+	<MudSelect T="DeveloperExperienceLevel" Label="Experience Level" @bind-Value="ViewModel.DeveloperViewModel.SelectedDeveloperExperienceLevel">
+		@foreach (var role in Enum.GetValues(typeof(DeveloperExperienceLevel)).Cast<DeveloperExperienceLevel>())
 		{
-			<option value="@role">@role.ToString()</option>
+			<MudSelectItem T="DeveloperExperienceLevel" Value="@role">@role.ToString()</MudSelectItem>
 		}
-	</select>
+	</MudSelect>
 
-	<button disabled="@ViewModel.CanAddDeveloper()" @onclick="ViewModel.AddDeveloper"> Add Developer </button>
+	<MudButton OnClick="ViewModel.DeveloperViewModel.AddDeveloper" Disabled="ViewModel.DeveloperViewModel.CanAddDeveloper()">
+		Add Developer
+	</MudButton>
 </div>
 
 <div>
+	<h4>Current Team</h4>
 	<ul>
-		@foreach (var dev in ViewModel.Team)
+		@foreach (var dev in ViewModel.ProjectStateService.Team)
 		{
 			<li>
-				@dev.Name - @dev.ExperienceLevel - @dev.Cost
-				<button @onclick="() => ViewModel.RemoveDeveloper(dev)">Delete</button>
+				@dev.Name -- @dev.ExperienceLevel -- @dev.Cost
+				<MudButton OnClick="() => ViewModel.DeveloperViewModel.RemoveDeveloper(dev)">Delete</MudButton>
 			</li>
 		}
 	</ul>
 </div>
 
 <div>
-	<NavLink href="/challenge" class="nav-link" active-class="active">⬅ Back to Dashboard</NavLink>
+	<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
 </div>
