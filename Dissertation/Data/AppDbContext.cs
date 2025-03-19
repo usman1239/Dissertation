@@ -64,33 +64,40 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .OnDelete(DeleteBehavior.Cascade);
 
 
-
         modelBuilder.Entity<Project>()
             .Property(p => p.DeveloperCosts)
             .HasConversion(
-                v => JsonConvert.SerializeObject(v), // Serialize Dictionary to JSON string (default to empty string if null)
-                v => (string.IsNullOrEmpty(v) ? new Dictionary<DeveloperExperienceLevel, int>() : JsonConvert.DeserializeObject<Dictionary<DeveloperExperienceLevel, int>>(v))! // Deserialize JSON string back to Dictionary (empty if null or empty string)
+                v => JsonConvert
+                    .SerializeObject(v), // Serialize Dictionary to JSON string (default to empty string if null)
+                v => (string.IsNullOrEmpty(v)
+                        ? new Dictionary<DeveloperExperienceLevel, int>()
+                        : JsonConvert
+                            .DeserializeObject<Dictionary<DeveloperExperienceLevel, int>>(v))
+                    ! // Deserialize JSON string back to Dictionary (empty if null or empty string)
             )
             .Metadata.SetValueComparer(new ValueComparer<Dictionary<DeveloperExperienceLevel, int>>(
                 (c1, c2) =>
-                    (c1 == null && c2 == null) || (c1 != null && c2 != null && c1.Count == c2.Count && !c1.Except(c2).Any()), // Ensure null checks and deep equality
-                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.Key.GetHashCode(), v.Value.GetHashCode())), // Proper hash code generation, ensuring null handling
-                c => c.ToDictionary(k => k.Key, v => v.Value) // Copy the dictionary properly or return a new empty one if null
+                    (c1 == null && c2 == null) ||
+                    (c1 != null && c2 != null && c1.Count == c2.Count &&
+                     !c1.Except(c2).Any()),
+                c => c.Aggregate(0,
+                    (a, v) => HashCode.Combine(a, v.Key.GetHashCode(),
+                        v.Value.GetHashCode())),
+                c => c.ToDictionary(k => k.Key,
+                    v => v.Value)
             ));
-
-
     }
 
     public async Task RemoveIdleDevelopersAsync()
     {
-        // Find developers who are not assigned to any UserStoryInstance
         var idleDevelopers = await Developers
-            .Where(dev => !UserStoryInstances
-                .Any(usi => usi.DeveloperAssignedId == dev.Id))
+            .Where(dev =>
+                !dev.IsPermanentlyAbsent &&
+                !dev.IsSick &&
+                !UserStoryInstances.Any(usi => usi.DeveloperAssignedId == dev.Id))
             .ToListAsync();
 
-        // Remove those developers from the database
-        if (idleDevelopers.Any())
+        if (idleDevelopers.Count != 0)
         {
             Developers.RemoveRange(idleDevelopers);
             await SaveChangesAsync();

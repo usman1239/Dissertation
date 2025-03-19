@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250316000751_Init1")]
+    [Migration("20250318115921_Init1")]
     partial class Init1
     {
         /// <inheritdoc />
@@ -39,9 +39,18 @@ namespace Dissertation.Migrations
                     b.Property<int>("ExperienceLevel")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsPermanentlyAbsent")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSick")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("SickUntilSprint")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -153,6 +162,9 @@ namespace Dissertation.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsRandomEvent")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");

@@ -60,7 +60,10 @@ namespace Dissertation.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     ExperienceLevel = table.Column<int>(type: "integer", nullable: false),
                     Cost = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    IsSick = table.Column<bool>(type: "boolean", nullable: false),
+                    IsPermanentlyAbsent = table.Column<bool>(type: "boolean", nullable: false),
+                    SickUntilSprint = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -220,7 +223,8 @@ namespace Dissertation.Migrations
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    StoryPoints = table.Column<int>(type: "integer", nullable: false)
+                    StoryPoints = table.Column<int>(type: "integer", nullable: false),
+                    IsRandomEvent = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

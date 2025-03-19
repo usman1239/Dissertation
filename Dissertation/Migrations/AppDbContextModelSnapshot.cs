@@ -36,9 +36,18 @@ namespace Dissertation.Migrations
                     b.Property<int>("ExperienceLevel")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsPermanentlyAbsent")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSick")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("SickUntilSprint")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -150,6 +159,9 @@ namespace Dissertation.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsRandomEvent")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");

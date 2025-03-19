@@ -37,7 +37,7 @@ public static class DbSeeder
                 Description =
                     "A startup needs a simple web app for tracking daily tasks, setting priorities, and managing deadlines. The application should allow users to create, update, and delete tasks, assign categories, and set reminders. A user-friendly dashboard with filtering and sorting options is required. The app should support multiple users with basic authentication and role-based access control. Additionally, a minimal analytics feature to track completed and pending tasks would be beneficial.",
                 Budget = 15000,
-                NumOfSprints = 5,
+                NumOfSprints = 10,
                 DeveloperCosts = new Dictionary<DeveloperExperienceLevel, int>
                 {
                     { DeveloperExperienceLevel.Junior, 800 },
@@ -52,7 +52,7 @@ public static class DbSeeder
                 Description =
                     "An artisan shop wants an online store to sell handmade goods, featuring a visually appealing and easy-to-navigate design. The platform should include product listings with images, descriptions, and pricing, along with a secure shopping cart and checkout system. Users should be able to create accounts, save favorite items, and track orders. The store should support multiple payment options, including credit cards and digital wallets. Additionally, an admin panel is required for managing inventory, processing orders, and handling customer inquiries. Basic SEO optimization and mobile responsiveness are also necessary.",
                 Budget = 20000,
-                NumOfSprints = 5,
+                NumOfSprints = 15,
                 DeveloperCosts = new Dictionary<DeveloperExperienceLevel, int>
                 {
                     { DeveloperExperienceLevel.Junior, 1000 },
@@ -143,6 +143,27 @@ public static class DbSeeder
                     ProjectId = projectId, Title = "Deploy the website",
                     Description = "Host the website on a server",
                     StoryPoints = 4
+                },
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Small Critical Story",
+                    Description = "A small critical user story has appeared",
+                    StoryPoints = 3,
+                    IsRandomEvent = true
+                },
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Medium Critical Story",
+                    Description = "A medium critical user story has appeared",
+                    StoryPoints = 4,
+                    IsRandomEvent = true
+                },
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Large Critical Story",
+                    Description = "A large critical user story has appeared",
+                    StoryPoints = 7,
+                    IsRandomEvent = true
                 }
             ],
 
@@ -216,6 +237,28 @@ public static class DbSeeder
                     ProjectId = projectId, Title = "Deploy the web app",
                     Description = "Launch the application for public use",
                     StoryPoints = 5
+                },
+
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Small Critical Story",
+                    Description = "A small critical user story has appeared",
+                    StoryPoints = 2,
+                    IsRandomEvent = true
+                },
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Medium Critical Story",
+                    Description = "A medium critical user story has appeared",
+                    StoryPoints = 5,
+                    IsRandomEvent = true
+                },
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Large Critical Story",
+                    Description = "A large critical user story has appeared",
+                    StoryPoints = 8,
+                    IsRandomEvent = true
                 }
             ],
 
@@ -289,6 +332,28 @@ public static class DbSeeder
                     ProjectId = projectId, Title = "Deploy the e-commerce site",
                     Description = "Launch the store online",
                     StoryPoints = 5
+                },
+
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Small Critical Story",
+                    Description = "A small critical user story has appeared",
+                    StoryPoints = 2,
+                    IsRandomEvent = true
+                },
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Medium Critical Story",
+                    Description = "A medium critical user story has appeared",
+                    StoryPoints = 6,
+                    IsRandomEvent = true
+                },
+                new UserStory
+                {
+                    ProjectId = projectId, Title = "Large Critical Story",
+                    Description = "A large critical user story has appeared",
+                    StoryPoints = 9,
+                    IsRandomEvent = true
                 }
             ],
 
