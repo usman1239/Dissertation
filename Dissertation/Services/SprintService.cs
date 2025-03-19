@@ -18,7 +18,15 @@ public class SprintService(
 
     public async Task SaveSprintAsync(Sprint sprint)
     {
-        dbContext.Attach(sprint.ProjectInstance);
+        try
+        {
+            dbContext.Attach(sprint.ProjectInstance);
+        }
+        catch
+        {
+            // ignored
+        }
+
         await dbContext.Sprints.AddAsync(sprint);
         await dbContext.SaveChangesAsync();
 

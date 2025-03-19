@@ -1,4 +1,11 @@
-﻿using Dissertation.Data;
+﻿// RANDOM EVENT TESTING
+// USER POINTS / BADGES / GAMIFICATION
+// UNIT TESTS
+// REFACTORING
+// UNIT/INTEGRATION/SYSTEM/END-TO-END TESTS
+// CSS
+
+using Dissertation.Data;
 using Dissertation.Models.Challenge;
 using Dissertation.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +18,12 @@ public class UserStoryService(AppDbContext dbContext) : IUserStoryService
     {
         foreach (var instance in instances)
         {
-            // Check if the DeveloperAssignedId exists in the database
             if (instance.DeveloperAssignedId.HasValue)
             {
                 var developerExists =
                     await dbContext.Developers.AnyAsync(d => d.Id == instance.DeveloperAssignedId.Value);
                 if (!developerExists)
                 {
-                    // If the developer doesn't exist, set it to null to avoid FK violation
                     instance.DeveloperAssignedId = null;
                     instance.DeveloperAssigned = null;
                 }
@@ -30,23 +35,19 @@ public class UserStoryService(AppDbContext dbContext) : IUserStoryService
 
             if (existingInstance != null)
             {
-                // If existing, update it
                 dbContext.Entry(instance).State = EntityState.Modified;
             }
             else
             {
-                // For new instances, ensure relations are properly set
                 dbContext.Entry(instance.UserStory).State = EntityState.Unchanged;
 
                 dbContext.Entry(instance.ProjectInstance).State = EntityState.Unchanged;
 
-                // Handle developer reference
                 if (instance.DeveloperAssigned != null)
                 {
                     var developer = await dbContext.Developers.FindAsync(instance.DeveloperAssigned.Id);
                     if (developer != null)
                         instance.DeveloperAssignedId = developer.Id;
-                    // Don't track the developer through this relationship
                     else
                         instance.DeveloperAssignedId = null;
                 }
@@ -58,11 +59,10 @@ public class UserStoryService(AppDbContext dbContext) : IUserStoryService
         await dbContext.SaveChangesAsync();
     }
 
-
     public async Task<List<UserStory>> GetInitialUserStoriesForProject(int projectId)
     {
         return await dbContext.UserStories
-            .Where(us => us.ProjectId == projectId)
+            .Where(us => us.ProjectId == projectId && !us.IsRandomEvent)
             .Include(us => us.Project)
             .AsNoTracking()
             .ToListAsync();
@@ -86,11 +86,52 @@ public class UserStoryService(AppDbContext dbContext) : IUserStoryService
         }
     }
 
-    public async Task<List<UserStoryInstance>> GetUserStoryInstancesAsync(int projectInstanceId)
+    public async Task TriggerRandomUserStoryEventAsync(int projectInstanceId)
+    {
+        var assignedUserStoryIds = await dbContext.UserStoryInstances
+            .Where(usi => usi.ProjectInstanceId == projectInstanceId)
+            .Select(usi => usi.UserStoryId)
+            .ToListAsync();
+
+        Console.WriteLine($"Assigned User Story IDs: {string.Join(", ", assignedUserStoryIds)}");
+
+        // Get only unassigned random user stories for the correct project instance
+        var availableUserStories = await dbContext.UserStories
+            .Where(us => us.ProjectId == (
+                dbContext.ProjectInstances
+                    .Where(pi => pi.Id == projectInstanceId)
+                    .Select(pi => pi.ProjectId)
+                    .FirstOrDefault()
+            ) && us.IsRandomEvent)
+            .Where(us => !assignedUserStoryIds.Contains(us.Id)) // Filter out already assigned user stories
+            .ToListAsync();
+
+        Console.WriteLine($"Available User Stories Count: {availableUserStories.Count}");
+
+        if (availableUserStories.Count == 0)
+        {
+            Console.WriteLine("No available random user stories found.");
+            return;
+        }
+
+        var random = new Random();
+        var randomUserStory = availableUserStories[random.Next(availableUserStories.Count)];
+
+        var newUserStoryInstance = new UserStoryInstance
+        {
+            ProjectInstanceId = projectInstanceId,
+            UserStoryId = randomUserStory.Id
+        };
+
+        await dbContext.UserStoryInstances.AddAsync(newUserStoryInstance);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<List<UserStoryInstance>> GetUserStoryInstancesForProjectAsync(int projectInstanceId)
     {
         return await dbContext.UserStoryInstances
-            .Where(x => x.ProjectInstanceId == projectInstanceId)
-            .Include(usi => usi.DeveloperAssigned)
+            .Where(usi => usi.ProjectInstanceId == projectInstanceId)
+            .Include(usi => usi.UserStory)
             .ToListAsync();
     }
 }

@@ -9,4 +9,7 @@ public class Developer
     public DeveloperExperienceLevel ExperienceLevel { get; set; }
     public int Cost { get; set; }
     public string UserId { get; set; } = null!;
+    public bool IsSick { get; set; }
+    public bool IsPermanentlyAbsent { get; set; }
+    public int SickUntilSprint { get; set; }
 }

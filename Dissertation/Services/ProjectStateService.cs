@@ -7,7 +7,7 @@ public class ProjectStateService
 {
     public string? UserId { get; set; } = string.Empty;
 
-    public ProjectInstance CurrentProject { get; set; } = null!;
+    public ProjectInstance CurrentProjectInstance { get; set; } = null!;
     public ObservableCollection<Developer> Team { get; set; } = [];
     public ObservableCollection<UserStoryInstance> UserStoryInstances { get; set; } = [];
     public ObservableCollection<Sprint> Sprints { get; set; } = [];

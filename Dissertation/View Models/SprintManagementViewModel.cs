@@ -3,6 +3,7 @@ using Dissertation.Models.Challenge;
 using Dissertation.Models.Challenge.Enums;
 using Dissertation.Services;
 using Dissertation.Services.Interfaces;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Dissertation.View_Models;
@@ -11,7 +12,9 @@ public class SprintManagementViewModel(
     ProjectStateService projectStateService,
     ISprintService sprintService,
     IUserStoryService userStoryService,
-    IDeveloperService developerService)
+    IDeveloperService developerService,
+    ISnackbar snackbar,
+    NavigationManager navigationManager)
 {
     public ChartOptions ChartOptions { get; set; } = new()
     {
@@ -36,8 +39,8 @@ public class SprintManagementViewModel(
     {
         get
         {
-            var totalSprints = projectStateService.CurrentProject.Project.NumOfSprints + 1;
-            return Enumerable.Range(0, totalSprints).Select(i => $"Sprint {i}").ToArray();
+            var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints + 1;
+            return Enumerable.Range(0, totalSprints).Select(i => $"{i}").ToArray();
         }
     }
 
@@ -48,46 +51,153 @@ public class SprintManagementViewModel(
 
     public bool CanShowSummary()
     {
-        var allStoriesCompleted = projectStateService.CurrentProject.UserStoryInstances.All(usi => usi.IsComplete);
+        var allStoriesCompleted =
+            projectStateService.CurrentProjectInstance.UserStoryInstances.All(usi => usi.IsComplete);
         var allSprintsCompleted =
-            projectStateService.CurrentProject.Sprints.Count(s => s.IsCompleted) >=
-            projectStateService.CurrentProject.Project.NumOfSprints;
+            projectStateService.CurrentProjectInstance.Sprints.Count(s => s.IsCompleted) >=
+            projectStateService.CurrentProjectInstance.Project.NumOfSprints;
 
         return allStoriesCompleted || allSprintsCompleted;
     }
 
     public bool CanStartSprint()
     {
+        if (!CanAffordSprint()) return false;
+
         if (!projectStateService.Team.Any()) return false;
 
         var hasAssignedIncompleteStories = projectStateService.UserStoryInstances
             .Any(usi => usi is { DeveloperAssignedId: not null, IsComplete: false });
 
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
-        var totalSprints = projectStateService.CurrentProject.Project.NumOfSprints;
+        var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints;
 
-        return hasAssignedIncompleteStories && CanAffordSprint() && completedSprintsCount < totalSprints;
+        return hasAssignedIncompleteStories && completedSprintsCount < totalSprints;
     }
 
     private bool CanAffordSprint()
     {
-        var totalSalary = projectStateService.Team.Sum(dev => dev.Cost);
-        return projectStateService.CurrentProject.Budget >= totalSalary;
+        var totalSalary = GetTotalSalary();
+        if (projectStateService.CurrentProjectInstance.Budget >= totalSalary) return true;
+
+        snackbar.Add("Insufficient budget to start the next sprint!", Severity.Error);
+        return false;
     }
 
     public async Task StartSprint()
     {
-        await AddNewDeveloperAsync();
+        snackbar.Add("Sprint started successfully!", Severity.Success);
 
-        var totalSalary = GetTotalSalary();
-        if (!CanAffordSprint(totalSalary)) return;
+        if (!CanAffordSprint()) return;
+
+        await RecoverSickDevelopers();
 
         var revenue = ProcessUserStories();
 
-        UpdateBudget(revenue - totalSalary);
+        UpdateBudget(revenue - GetTotalSalary());
 
         await userStoryService.SaveUserStoryInstancesAsync(projectStateService.UserStoryInstances.ToList());
         await SaveSprint();
+
+        ShowSummaryOrSprints();
+    }
+
+    private async Task RecoverSickDevelopers()
+    {
+        var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
+
+        foreach (var dev in projectStateService.Team)
+        {
+            if (!dev.IsSick || dev.SickUntilSprint >= completedSprintsCount) continue;
+            dev.IsSick = false;
+            dev.SickUntilSprint = 0;
+            await developerService.UpdateDeveloperAbsence(dev);
+        }
+    }
+
+
+    private async Task HandleRandomEvents()
+    {
+        var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints;
+        var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
+
+        //if (completedSprintsCount < totalSprints * 2 / 3) return;
+
+        Random random = new();
+        //var eventChoice = random.Next(1, 4);
+        const int eventChoice = 2;
+
+        switch (eventChoice)
+        {
+            case 1:
+                return;
+            case 2:
+                await HandleSickOrAbsentDeveloperEvent(random, completedSprintsCount);
+                break;
+            case 3:
+                await HandleNewRandomUserStory();
+                break;
+        }
+    }
+
+    private async Task HandleNewRandomUserStory()
+    {
+        await userStoryService.TriggerRandomUserStoryEventAsync(projectStateService.CurrentProjectInstance.Id);
+
+        var refreshedStories =
+            await userStoryService.GetUserStoryInstancesForProjectAsync(projectStateService.CurrentProjectInstance.Id);
+        projectStateService.UserStoryInstances.Clear();
+
+        foreach (var story in refreshedStories)
+            projectStateService.UserStoryInstances.Add(story);
+
+        snackbar.Add("A new user story has been added!", Severity.Info);
+    }
+
+    private async Task HandleSickOrAbsentDeveloperEvent(Random random, int completedSprintsCount)
+    {
+        var sickDeveloper = GetRandomSickDeveloper();
+        if (random.Next(0, 2) == 0)
+        {
+            sickDeveloper.SickUntilSprint = completedSprintsCount + 1;
+            sickDeveloper.IsSick = true;
+            sickDeveloper.IsPermanentlyAbsent = false;
+            snackbar.Add($"{sickDeveloper.Name} is sick and will miss the next sprint.", Severity.Warning);
+        }
+        else
+        {
+            sickDeveloper.IsPermanentlyAbsent = true;
+            sickDeveloper.IsSick = false;
+            sickDeveloper.SickUntilSprint = 0;
+            snackbar.Add($"{sickDeveloper.Name} is permanently absent!", Severity.Warning);
+        }
+
+        await developerService.UpdateDeveloperAbsence(sickDeveloper);
+    }
+
+
+    private Developer GetRandomSickDeveloper()
+    {
+        var random = new Random();
+        var developers = projectStateService.Team.Where(x => x is { IsPermanentlyAbsent: false, IsSick: false })
+            .ToList();
+        return developers[random.Next(developers.Count)];
+    }
+
+    private Dictionary<int, List<UserStoryInstance>> GetDeveloperAssignments()
+    {
+        var developerDictionary = projectStateService.Team.ToDictionary(dev => dev.Id);
+
+        return projectStateService.UserStoryInstances
+            .Where(usi => usi is { DeveloperAssignedId: not null, IsComplete: false })
+            .Where(usi =>
+                !developerDictionary[usi.DeveloperAssignedId!.Value].IsSick &&
+                !developerDictionary[usi.DeveloperAssignedId.Value].IsPermanentlyAbsent &&
+                (developerDictionary[usi.DeveloperAssignedId.Value].SickUntilSprint == 0 ||
+                 developerDictionary[usi.DeveloperAssignedId.Value].SickUntilSprint >
+                 projectStateService.Sprints.Count))
+            .GroupBy(usi => usi.DeveloperAssignedId!.Value)
+            .ToDictionary(g => g.Key, g => g.ToList());
     }
 
     private static int CalculateDeveloperProgress(Developer dev, int numStories, Random random)
@@ -96,24 +206,31 @@ public class SprintManagementViewModel(
 
         var baseProgress = dev.ExperienceLevel switch
         {
-            DeveloperExperienceLevel.Junior => random.Next(10, 30),
-            DeveloperExperienceLevel.MidLevel => random.Next(30, 50),
-            DeveloperExperienceLevel.Senior => random.Next(50, 80),
+            DeveloperExperienceLevel.Junior => random.Next(20, 30),
+            DeveloperExperienceLevel.MidLevel => random.Next(40, 50),
+            DeveloperExperienceLevel.Senior => random.Next(60, 70),
             _ => 0
         };
 
         return (int)(baseProgress * workloadPenalty);
     }
 
-    private static int UpdateStoryProgress(List<UserStoryInstance> stories, int totalProgressIncrease)
+    private int UpdateStoryProgress(List<UserStoryInstance> stories, int totalProgressIncrease)
     {
         var revenue = 0;
         var totalStoryPoints = stories.Sum(usi => usi.UserStory.StoryPoints);
 
+        if (totalStoryPoints == 0)
+            return revenue;
+
         foreach (var usi in stories)
         {
+            var developer = projectStateService.Team.FirstOrDefault(d => d.Id == usi.DeveloperAssignedId);
+            if (developer == null || developer.IsSick || developer.IsPermanentlyAbsent)
+                continue;
+
             var weight = (double)usi.UserStory.StoryPoints / totalStoryPoints;
-            var progressIncrease = (int)(totalProgressIncrease * (1 - weight));
+            var progressIncrease = (int)Math.Ceiling(totalProgressIncrease * weight);
 
             usi.Progress = Math.Min(usi.Progress + progressIncrease, 100);
 
@@ -123,14 +240,6 @@ public class SprintManagementViewModel(
         }
 
         return revenue;
-    }
-
-    private Dictionary<int, List<UserStoryInstance>> GetDeveloperAssignments()
-    {
-        return projectStateService.UserStoryInstances
-            .Where(usi => usi is { DeveloperAssignedId: not null, IsComplete: false })
-            .GroupBy(usi => usi.DeveloperAssignedId!.Value)
-            .ToDictionary(g => g.Key, g => g.ToList());
     }
 
     private int ProcessUserStories()
@@ -143,7 +252,7 @@ public class SprintManagementViewModel(
         foreach (var (developerId, stories) in developerAssignments)
         {
             var dev = projectStateService.Team.FirstOrDefault(d => d.Id == developerId);
-            if (dev == null) continue;
+            if (dev == null || dev.IsSick || dev.IsPermanentlyAbsent) continue;
 
             var progressIncrease = CalculateDeveloperProgress(dev, stories.Count, random);
 
@@ -153,26 +262,15 @@ public class SprintManagementViewModel(
         return revenue;
     }
 
-    private bool CanAffordSprint(int totalSalary)
-    {
-        return projectStateService.CurrentProject.Budget >= totalSalary;
-    }
-
     private int GetTotalSalary()
     {
         return projectStateService.Team.Sum(dev => dev.Cost);
     }
 
-    private async Task AddNewDeveloperAsync()
-    {
-        var newDevelopers = projectStateService.Team.Where(dev => dev.Id == 0).ToList();
-        if (newDevelopers.Any())
-            await developerService.AddDevelopersAsync(newDevelopers);
-    }
-
     private async Task SaveSprint()
     {
-        var existingSprints = await sprintService.GetSprintsForProjectAsync(projectStateService.CurrentProject.Id);
+        var existingSprints =
+            await sprintService.GetSprintsForProjectAsync(projectStateService.CurrentProjectInstance.Id);
         var completedStories = projectStateService.UserStoryInstances.Count(usi => usi.IsComplete);
         var remainingWork = projectStateService.UserStoryInstances.Where(usi => !usi.IsComplete)
             .Sum(usi => usi.UserStory.StoryPoints);
@@ -180,15 +278,15 @@ public class SprintManagementViewModel(
         var previousTotalWork = SprintProgress.Any() ? SprintProgress.Last() : remainingWork;
         var sprintProgress = previousTotalWork - remainingWork;
 
-        await LoadSprintProgressAsync();
+        LoadSprintProgressAsync();
 
         var revenueEarned = projectStateService.UserStoryInstances.Where(usi => usi.IsComplete)
             .Sum(usi => usi.UserStory.StoryPoints * 500);
 
         var newSprint = new Sprint
         {
-            ProjectInstanceId = projectStateService.CurrentProject.Id,
-            ProjectInstance = projectStateService.CurrentProject,
+            ProjectInstanceId = projectStateService.CurrentProjectInstance.Id,
+            ProjectInstance = projectStateService.CurrentProjectInstance,
             SprintNumber = existingSprints.Count + 1,
             Duration = 14,
             IsCompleted = true,
@@ -198,16 +296,16 @@ public class SprintManagementViewModel(
                       $"- Total progress: {sprintProgress} story points.\n" +
                       $"- Revenue earned: £{revenueEarned:N0}.\n" +
                       $"- Remaining work: {remainingWork} story points.\n" +
-                      $"- Remaining budget: £{projectStateService.CurrentProject.Budget:N0}."
+                      $"- Remaining budget: £{projectStateService.CurrentProjectInstance.Budget:N0}."
         };
 
         projectStateService.Sprints.Add(newSprint);
         await sprintService.SaveSprintAsync(newSprint);
     }
 
-    public async Task LoadSprintProgressAsync()
+    public void LoadSprintProgressAsync()
     {
-        var savedSprints = await sprintService.GetSprintsForProjectAsync(projectStateService.CurrentProject.Id);
+        var savedSprints = projectStateService.Sprints;
 
         SprintProgress.Clear();
         ExpectedProgress.Clear();
@@ -215,9 +313,9 @@ public class SprintManagementViewModel(
         var totalWork = projectStateService.UserStoryInstances.Sum(usi => usi.UserStory.StoryPoints);
         var remainingWork = totalWork;
 
-        var completedSprints = projectStateService.CurrentProject.Sprints.Count;
+        var completedSprints = projectStateService.CurrentProjectInstance.Sprints.Count;
         var totalSprints =
-            projectStateService.CurrentProject.Project.NumOfSprints;
+            projectStateService.CurrentProjectInstance.Project.NumOfSprints;
         var expectedDecreasePerSprint = totalSprints > 0 ? totalWork / totalSprints : 0;
 
         SprintProgress.Add(totalWork);
@@ -242,7 +340,26 @@ public class SprintManagementViewModel(
 
     public void UpdateBudget(int amount)
     {
-        var newBudget = projectStateService.CurrentProject.Budget + amount;
-        projectStateService.CurrentProject.Budget = Math.Max(newBudget, 0);
+        var newBudget = projectStateService.CurrentProjectInstance.Budget + amount;
+        projectStateService.CurrentProjectInstance.Budget = Math.Max(newBudget, 0);
+    }
+
+    public void ShowSummaryOrSprints()
+    {
+        var allStoriesCompleted = projectStateService.UserStoryInstances.All(usi => usi.IsComplete);
+        var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
+        var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints;
+
+        if (allStoriesCompleted || completedSprintsCount >= totalSprints)
+        {
+            snackbar.Add("All sprints completed!", Severity.Success);
+            navigationManager.NavigateTo("/challenge/summary");
+        }
+        else
+        {
+            snackbar.Add($"{totalSprints - completedSprintsCount} Sprints Left", Severity.Success);
+            navigationManager.NavigateTo("/challenge/sprints");
+            _ = HandleRandomEvents();
+        }
     }
 }

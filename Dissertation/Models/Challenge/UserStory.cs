@@ -9,4 +9,5 @@ public class UserStory
     public string Description { get; set; } = string.Empty;
     public int StoryPoints { get; set; }
     public ICollection<UserStoryInstance> UserStoryInstances { get; set; } = [];
+    public bool IsRandomEvent { get; set; } = false;
 }

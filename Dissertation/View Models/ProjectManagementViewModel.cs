@@ -2,6 +2,8 @@
 using Dissertation.Models.Challenge;
 using Dissertation.Services;
 using Dissertation.Services.Interfaces;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using NuGet.Packaging;
 
 namespace Dissertation.View_Models;
@@ -10,7 +12,9 @@ public class ProjectManagementViewModel(
     ProjectStateService projectStateService,
     IProjectService projectService,
     IUserService userService,
-    IUserStoryService userStoryService)
+    IUserStoryService userStoryService,
+    ISnackbar snackbar,
+    NavigationManager navigationManager)
 {
     public string ErrorMessage { get; set; } = string.Empty;
     public ObservableCollection<Project?> AvailableProjects { get; set; } = [];
@@ -32,7 +36,8 @@ public class ProjectManagementViewModel(
     {
         var projects = await projectService.LoadProjectsWithSavedProgressAsync(projectStateService.UserId);
         SavedProjects.Clear();
-        foreach (var project in projects) SavedProjects.Add(project);
+        foreach (var project in projects)
+            SavedProjects.Add(project);
     }
 
     public async Task SelectProject(int projectId, bool isSavedProject)
@@ -44,6 +49,7 @@ public class ProjectManagementViewModel(
         if (isSavedProject && existingProjectInstance != null)
         {
             LoadExistingProject(existingProjectInstance);
+            navigationManager.NavigateTo("/challenge/dashboard");
             return;
         }
 
@@ -53,17 +59,18 @@ public class ProjectManagementViewModel(
         {
             if (existingProjectInstance != null)
             {
-                ErrorMessage = "You cannot select this project because an instance already exists.";
+                snackbar.Add("You cannot select this project because an instance already exists.", Severity.Warning);
                 return;
             }
 
             await InitializeNewProjectInstance(selectedProject);
+            navigationManager.NavigateTo("/challenge/dashboard");
         }
     }
 
     private void LoadExistingProject(ProjectInstance projectInstance)
     {
-        projectStateService.CurrentProject = projectInstance;
+        projectStateService.CurrentProjectInstance = projectInstance;
         projectStateService.Sprints = new ObservableCollection<Sprint>(projectInstance.Sprints);
         projectStateService.UserStoryInstances =
             new ObservableCollection<UserStoryInstance>(projectInstance.UserStoryInstances);
@@ -80,7 +87,7 @@ public class ProjectManagementViewModel(
     {
         var userStories = await userStoryService.GetInitialUserStoriesForProject(selectedProject.Id);
 
-        projectStateService.CurrentProject = new ProjectInstance
+        projectStateService.CurrentProjectInstance = new ProjectInstance
         {
             ProjectId = selectedProject.Id,
             Project = selectedProject,
@@ -90,29 +97,37 @@ public class ProjectManagementViewModel(
             UserId = projectStateService.UserId!
         };
 
-        projectStateService.CurrentProject.UserStoryInstances = userStories.Select(us => new UserStoryInstance
+        projectStateService.CurrentProjectInstance.UserStoryInstances = userStories.Select(us => new UserStoryInstance
         {
             UserStoryId = us.Id,
             UserStory = us,
-            ProjectInstanceId = projectStateService.CurrentProject.Id,
+            ProjectInstanceId = projectStateService.CurrentProjectInstance.Id,
             Progress = 0,
             DeveloperAssignedId = null,
             IsComplete = false
         }).ToList();
 
-        await userStoryService.AttachProjectAndUserStories(projectStateService.CurrentProject);
+        await userStoryService.AttachProjectAndUserStories(projectStateService.CurrentProjectInstance);
 
-        await projectService.SaveNewProjectInstance(projectStateService.CurrentProject);
+        await projectService.SaveNewProjectInstance(projectStateService.CurrentProjectInstance);
 
         projectStateService.Team.Clear();
         projectStateService.Sprints.Clear();
         projectStateService.UserStoryInstances.Clear();
-        projectStateService.UserStoryInstances.AddRange(projectStateService.CurrentProject.UserStoryInstances);
+        projectStateService.UserStoryInstances.AddRange(projectStateService.CurrentProjectInstance.UserStoryInstances);
     }
 
 
-    public async Task<bool> DeleteSavedProjectInstanceAsync(int projectId)
+    public async Task DeleteSavedProjectInstanceAsync(int projectId)
     {
-        return await projectService.DeleteSavedProjectInstanceAsync(projectId, projectStateService.UserId);
+        var deleteSavedProjectInstanceAsync =
+            await projectService.DeleteSavedProjectInstanceAsync(projectId, projectStateService.UserId);
+
+        if (deleteSavedProjectInstanceAsync)
+            snackbar.Add("Project deleted successfully.", Severity.Success);
+        else
+            snackbar.Add("Failed to delete the project.", Severity.Error);
+
+        await LoadProjectsWithSavedProgress();
     }
 }

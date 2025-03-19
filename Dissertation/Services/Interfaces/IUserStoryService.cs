@@ -6,6 +6,7 @@ public interface IUserStoryService
 {
     Task SaveUserStoryInstancesAsync(List<UserStoryInstance> instances);
     Task<List<UserStory>> GetInitialUserStoriesForProject(int projectId);
+    Task<List<UserStoryInstance>> GetUserStoryInstancesForProjectAsync(int projectInstanceId);
     Task AttachProjectAndUserStories(ProjectInstance projectInstance);
-    Task<List<UserStoryInstance>> GetUserStoryInstancesAsync(int projectInstanceId);
+    Task TriggerRandomUserStoryEventAsync(int projectInstanceId);
 }
