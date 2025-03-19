@@ -4,6 +4,11 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
+
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
+
 <h3>Manage Team</h3>
 
 <div>
@@ -18,7 +23,7 @@
 		}
 	</MudSelect>
 
-	<MudButton OnClick="ViewModel.DeveloperViewModel.AddDeveloper" Disabled="ViewModel.DeveloperViewModel.CanAddDeveloper()">
+	<MudButton OnClick="@ViewModel.DeveloperViewModel.AddDeveloper" Disabled="ViewModel.DeveloperViewModel.CanAddDeveloper()">
 		Add Developer
 	</MudButton>
 </div>
@@ -29,8 +34,17 @@
 		@foreach (var dev in ViewModel.ProjectStateService.Team)
 		{
 			<li>
-				@dev.Name -- @dev.ExperienceLevel -- @dev.Cost
-				<MudButton OnClick="() => ViewModel.DeveloperViewModel.RemoveDeveloper(dev)">Delete</MudButton>
+				<div>
+					<MudText Typo="Typo.h6" Class="mb-1">
+						<strong>@dev.Name</strong>
+					</MudText>
+					<MudText Typo="Typo.body2" Class="text-muted">
+						@dev.ExperienceLevel | £@dev.Cost
+					</MudText>
+					<MudButton OnClick="() => ViewModel.DeveloperViewModel.RemoveDeveloper(dev)" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">
+						Delete
+					</MudButton>
+				</div>
 			</li>
 		}
 	</ul>

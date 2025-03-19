@@ -1,57 +1,50 @@
 ﻿@page "/challenge/dashboard"
 @using Dissertation.View_Models
 @rendermode InteractiveServer
-@inject NavigationManager NavigationManager
 @inject ChallengeDashboardViewModel ViewModel
-@inject ISnackbar Snackbar
+
+
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/ChallengeDashboard.css"/>
 
-<h2>Project Dashboard</h2>
 
-<h3>@ViewModel.ProjectStateService.CurrentProject.Project.Title</h3>
-<h4>@ViewModel.ProjectStateService.CurrentProject.Project.Description</h4>
-<p><strong>Budget:</strong> £@ViewModel.ProjectStateService.CurrentProject.Budget</p>
+<MudPaper>
+	<MudText Typo="Typo.h4" Align="Align.Center">Project Dashboard</MudText>
 
-<div>
-	<MudButton href="/challenge/team" class="action-button">Manage Development Team</MudButton>
-	<MudButton href="/challenge/stories" class="action-button">Manage User Stories</MudButton>
-	<MudButton href="/challenge/sprints" class="action-button">Manage Sprints</MudButton>
-	<MudButton href="/challenge/summary" class="action-button" Disabled="!ViewModel.SprintViewModel.CanShowSummary()">View Project Summary</MudButton>
-</div>
+	<MudText Typo="Typo.h5" Align="Align.Center">
+		Project Difficulty:
+		@(
+		ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 5 ? "Easy" :
+		ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 10 ? "Medium" :
+		"Hard"
+		)
+	</MudText>
 
-<br/>
+	<MudText Typo="Typo.h6" Align="Align.Center">@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Title</MudText>
+	<MudText Typo="Typo.body1" Align="Align.Center">@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Description</MudText>
+	<MudText Typo="Typo.body1" Align="Align.Center"><strong>Budget:</strong> £@(ViewModel.ProjectStateService.CurrentProjectInstance.Budget)</MudText>
 
+	<MudDivider/>
 
-<MudButton OnClick="@StartSprint" Disabled="!ViewModel.SprintViewModel.CanStartSprint()">Start Sprint</MudButton>
+	<MudGrid>
+		<MudItem xs="12" sm="6" md="3">
+			<MudButton Href="/challenge/team" Variant="Variant.Filled" Color="Color.Primary" FullWidth>Manage Development Team</MudButton>
+		</MudItem>
+		<MudItem xs="12" sm="6" md="3">
+			<MudButton Href="/challenge/stories" Variant="Variant.Filled" Color="Color.Primary" FullWidth>Manage User Stories</MudButton>
+		</MudItem>
+		<MudItem xs="12" sm="6" md="3">
+			<MudButton Href="/challenge/sprints" Variant="Variant.Filled" Color="Color.Primary" FullWidth>Manage Sprints</MudButton>
+		</MudItem>
+		<MudItem xs="12" sm="6" md="3">
+			<MudButton Href="/challenge/summary" Variant="Variant.Filled" Color="Color.Primary" FullWidth Disabled="!ViewModel.SprintViewModel.CanShowSummary()">View Project Summary</MudButton>
+		</MudItem>
+	</MudGrid>
 
-@code {
+	<MudDivider/>
 
-	private async Task StartSprint()
-	{
-		var totalSalary = ViewModel.ProjectStateService.Team.Sum(dev => dev.Cost);
+	<MudButton OnClick="@ViewModel.SprintViewModel.StartSprint" Variant="Variant.Filled" Color="Color.Secondary" FullWidth Disabled="!ViewModel.SprintViewModel.CanStartSprint()">Start Sprint</MudButton>
 
-		if (ViewModel.ProjectStateService.CurrentProject.Budget < totalSalary)
-		{
-			Snackbar.Add("Insufficient budget to start the sprint!", Severity.Error);
-			return;
-		}
-
-		await ViewModel.SprintViewModel.StartSprint();
-
-		Snackbar.Add("Sprint started successfully!", Severity.Success);
-
-		var allStoriesCompleted = ViewModel.ProjectStateService.UserStoryInstances.All(usi => usi.IsComplete);
-		var completedSprintsCount = ViewModel.ProjectStateService.Sprints.Count(s => s.IsCompleted);
-		var totalSprints = ViewModel.ProjectStateService.CurrentProject.Project.NumOfSprints;
-
-		if (allStoriesCompleted || completedSprintsCount >= totalSprints)
-		{
-			NavigationManager.NavigateTo("/challenge/summary");
-		}
-		else
-		{
-			NavigationManager.NavigateTo("/challenge/sprints");
-		}
-	}
-
-}
+</MudPaper>

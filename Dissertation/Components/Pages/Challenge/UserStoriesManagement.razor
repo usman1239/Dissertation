@@ -3,6 +3,9 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
+
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
 <link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/UserStoriesManagement.css"/>
 
@@ -34,7 +37,7 @@
 						<option value="">Unassigned</option>
 						@foreach (var developer in ViewModel.ProjectStateService.Team)
 						{
-							<option value="@developer.Id">@developer.Name (@developer.Id)</option>
+							<option value="@developer.Id">@developer.Name (@developer.ExperienceLevel)</option>
 						}
 					</InputSelect>
 				</td>

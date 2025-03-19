@@ -3,155 +3,197 @@
 @using Dissertation.View_Models
 @inject ChallengeDashboardViewModel ViewModel
 
-<h2>Project Summary</h2>
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 
-<h3>@ViewModel.ProjectStateService.CurrentProject.Project.Title</h3>
-<p><strong>Total Budget Remaining:</strong> £@ViewModel.ProjectStateService.CurrentProject.Budget</p>
 
-<h4>📊 Project Performance</h4>
-<ul>
-	<li>
-		<strong>Total Sprints:</strong> @ViewModel.ProjectStateService.CurrentProject.Project.NumOfSprints
-	</li>
-	<li>
-		<strong>Completed Sprints:</strong> @ViewModel.ProjectStateService.Sprints.Count(s => s.IsCompleted)
-	</li>
-	<li>
-		<strong>Total User Stories:</strong> @ViewModel.ProjectStateService.UserStoryInstances.Count
-	</li>
-	<li>
-		<strong>Completed User Stories:</strong> @ViewModel.ProjectStateService.UserStoryInstances.Count(usi => usi.IsComplete)
-	</li>
-</ul>
+<MudPaper>
+	<MudText Typo="Typo.h4" Align="Align.Center">Project Summary</MudText>
 
-<h4>📈 Sprint Performance Overview</h4>
+	<MudText Typo="Typo.h6" Align="Align.Center">@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Title</MudText>
+	<MudText Typo="Typo.body1" Align="Align.Center"><strong>Total Budget Remaining:</strong> £@ViewModel.ProjectStateService.CurrentProjectInstance.Budget</MudText>
 
-<MudCard>
-	<MudCardContent>
-		<MudChart ChartType="ChartType.Line"
-		          ChartSeries="@ViewModel.SprintViewModel.Series"
-		          XAxisLabels="@ViewModel.SprintViewModel.SprintLabels"
-		          Width="100%"
-		          Height="350px"
-		          ChartOptions="@ViewModel.SprintViewModel.ChartOptions"/>
-	</MudCardContent>
-</MudCard>
+	<MudDivider/>
 
-<br/>
+	<MudText Typo="Typo.h6">📊 Project Performance</MudText>
+	<MudList T="string">
+		<MudListItem>
+			<MudText Typo="Typo.body2">
+				<strong>Total Sprints:</strong> @ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints
+			</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2">
+				<strong>Completed Sprints:</strong> @ViewModel.ProjectStateService.Sprints.Count(s => s.IsCompleted)
+			</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2">
+				<strong>Total User Stories:</strong> @ViewModel.ProjectStateService.UserStoryInstances.Count
+			</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2">
+				<strong>Completed User Stories:</strong> @ViewModel.ProjectStateService.UserStoryInstances.Count(usi => usi.IsComplete)
+			</MudText>
+		</MudListItem>
+	</MudList>
 
-<h4>💰 Budget Analysis</h4>
-<ul>
-	<li><strong>Initial Budget:</strong> £@(ViewModel.ProjectStateService.CurrentProject.Project.Budget)</li>
-	<li><strong>Total Spent:</strong> £@(ViewModel.ProjectStateService.CurrentProject.Project.Budget - ViewModel.ProjectStateService.CurrentProject.Budget)</li>
-	<li><strong>Final Budget:</strong> £@ViewModel.ProjectStateService.CurrentProject.Budget</li>
-</ul>
+	<MudDivider/>
 
-<h4>📈 Sprint Performance Insights</h4>
-@{
-	var bestSprint = ViewModel.ProjectStateService.Sprints.OrderByDescending(s => s.Progress).FirstOrDefault();
-	var worstSprint = ViewModel.ProjectStateService.Sprints.OrderBy(s => s.Progress).FirstOrDefault();
-	var avgProgress = ViewModel.ProjectStateService.Sprints.Any()
-		? ViewModel.ProjectStateService.Sprints.Average(s => s.Progress)
-		: 0;
-}
+	<MudText Typo="Typo.h6">📈 Sprint Performance Overview</MudText>
+	<MudCard>
+		<MudCardContent>
+			<MudChart ChartType="ChartType.Line"
+			          ChartSeries="@ViewModel.SprintViewModel.Series"
+			          XAxisLabels="@ViewModel.SprintViewModel.SprintLabels"
+			          Width="100%"
+			          Height="350px"/>
+		</MudCardContent>
+	</MudCard>
 
-<ul>
-	<li>
-		<strong>Best Sprint:</strong> @(bestSprint != null ? $"Sprint {bestSprint.SprintNumber} with {bestSprint.Progress} points" : "N/A")
-	</li>
-	<li>
-		<strong>Worst Sprint:</strong> @(worstSprint != null ? $"Sprint {worstSprint.SprintNumber} with {worstSprint.Progress} points" : "N/A")
-	</li>
-	<li><strong>Average Progress Per Sprint:</strong> @avgProgress.ToString("0.00") points</li>
-</ul>
+	<MudDivider/>
 
-<h4>🛠️ Developer Utilization</h4>
-@{
-	var underutilizedDevs = ViewModel.ProjectStateService.Team
-		.Where(dev => ViewModel.ProjectStateService.UserStoryInstances.All(usi => usi.DeveloperAssignedId != dev.Id))
-		.ToList();
+	<MudText Typo="Typo.h6">💰 Budget Analysis</MudText>
+	<MudList T="string">
+		<MudListItem>
+			<MudText Typo="Typo.body2"><strong>Initial Budget:</strong> £@(ViewModel.ProjectStateService.CurrentProjectInstance.Project.Budget)</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2"><strong>Net Spend:</strong> £@(ViewModel.ProjectStateService.CurrentProjectInstance.Project.Budget - ViewModel.ProjectStateService.CurrentProjectInstance.Budget)</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2"><strong>Final Budget:</strong> £@ViewModel.ProjectStateService.CurrentProjectInstance.Budget</MudText>
+		</MudListItem>
+	</MudList>
 
-	var overworkedDevs = ViewModel.ProjectStateService.Team
-		.Where(dev => ViewModel.ProjectStateService.UserStoryInstances.Count(usi => usi.DeveloperAssignedId == dev.Id) > 5)
-		.ToList();
-}
+	<MudDivider/>
 
-<ul>
-	@if (underutilizedDevs.Any())
-	{
-		<li>
-			<strong>Underutilized Developers:</strong> @string.Join(", ", underutilizedDevs.Select(d => d.Name))
-		</li>
-	}
-	else
-	{
-		<li>
-			✅ All developers were actively used.
-		</li>
+	<MudText Typo="Typo.h6">📈 Sprint Performance Insights</MudText>
+	@{
+		var bestSprint = ViewModel.ProjectStateService.Sprints.OrderByDescending(s => s.Progress).FirstOrDefault();
+		var worstSprint = ViewModel.ProjectStateService.Sprints.OrderBy(s => s.Progress).FirstOrDefault();
+		var avgProgress = ViewModel.ProjectStateService.Sprints.Any()
+			? ViewModel.ProjectStateService.Sprints.Average(s => s.Progress)
+			: 0;
 	}
 
-	@if (overworkedDevs.Any())
-	{
-		<li>
-			<strong>Overworked Developers:</strong> @string.Join(", ", overworkedDevs.Select(d => d.Name))
-		</li>
+	<MudList T="string">
+		<MudListItem>
+			<MudText Typo="Typo.body2">
+				<strong>Best Sprint:</strong> @(bestSprint != null ? $"Sprint {bestSprint.SprintNumber} with {bestSprint.Progress} points" : "N/A")
+			</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2">
+				<strong>Worst Sprint:</strong> @(worstSprint != null ? $"Sprint {worstSprint.SprintNumber} with {worstSprint.Progress} points" : "N/A")
+			</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2"><strong>Average Progress Per Sprint:</strong> @avgProgress.ToString("0.00") points</MudText>
+		</MudListItem>
+	</MudList>
+
+	<MudDivider/>
+
+	<MudText Typo="Typo.h6">🛠️ Developer Utilization</MudText>
+	@{
+		var underutilizedDevs = ViewModel.ProjectStateService.Team
+			.Where(dev => ViewModel.ProjectStateService.UserStoryInstances.All(usi => usi.DeveloperAssignedId != dev.Id))
+			.ToList();
+
+		var overworkedDevs = ViewModel.ProjectStateService.Team
+			.Where(dev => ViewModel.ProjectStateService.UserStoryInstances.Count(usi => usi.DeveloperAssignedId == dev.Id) > 5)
+			.ToList();
 	}
-</ul>
 
-<h4>🔍 Decision-Making Insights</h4>
-@{
-	var highValueStories = ViewModel.ProjectStateService.UserStoryInstances
-		.Count(usi => usi.UserStory.StoryPoints >= 6 && usi.IsComplete);
+	<MudList T="string">
+		@if (underutilizedDevs.Any())
+		{
+			<MudListItem>
+				<MudText Typo="Typo.body2">
+					<strong>Underutilized Developers:</strong> @string.Join(", ", underutilizedDevs.Select(d => d.Name))
+				</MudText>
+			</MudListItem>
+		}
+		else
+		{
+			<MudListItem>
+				<MudText Typo="Typo.body2">✅ All developers were actively used.</MudText>
+			</MudListItem>
+		}
 
-	var totalHighValueStories = ViewModel.ProjectStateService.UserStoryInstances.Count(usi => usi.UserStory.StoryPoints >= 6);
-}
+		@if (overworkedDevs.Any())
+		{
+			<MudListItem>
+				<MudText Typo="Typo.body2">
+					<strong>Overworked Developers:</strong> @string.Join(", ", overworkedDevs.Select(d => d.Name))
+				</MudText>
+			</MudListItem>
+		}
+	</MudList>
 
-<ul>
-	<li><strong>High-Value User Stories Completed (6 or more story points) :</strong> @highValueStories / @totalHighValueStories</li>
-	<li>
-		<strong>Task Allocation:</strong>
-		@(ViewModel.ProjectStateService.UserStoryInstances.Any(usi => usi.DeveloperAssignedId == null)
-			? "Some stories were left unassigned, affecting progress."
-			: "All stories were properly assigned.")
-	</li>
-</ul>
+	<MudDivider/>
 
-<h4>🏆 Final Verdict</h4>
-@if (ViewModel.ProjectStateService.CurrentProject.Budget > 0 &&
-     ViewModel.ProjectStateService.UserStoryInstances.All(usi => usi.IsComplete))
-{
-	<p style="color: green;">
-		<strong>🎉 Congratulations! You successfully managed the project with a remaining budget of £@ViewModel.ProjectStateService.CurrentProject.Budget.</strong>
-	</p>
-	<p>Your management was efficient, and you completed all user stories on time.</p>
-}
-else if (ViewModel.ProjectStateService.UserStoryInstances.Any(usi => !usi.IsComplete))
-{
-	<p style="color: orange;">
-		<strong>⚠️ The project was completed, but some user stories were left unfinished.</strong>
-	</p>
-	<p>Consider improving task assignment and developer utilization.</p>
-}
-else
-{
-	<p style="color: red;">
-		<strong>❌ The project was not completed successfully.</strong>
-	</p>
-	<p>Consider adjusting budget spending, improving sprint planning, and assigning tasks more efficiently.</p>
-}
+	<MudText Typo="Typo.h6">🔍 Decision-Making Insights</MudText>
+	@{
+		var highValueStories = ViewModel.ProjectStateService.UserStoryInstances
+			.Count(usi => usi.UserStory.StoryPoints >= 6 && usi.IsComplete);
 
-<div>
-	<MudNavLink Href="/challenge/select-project" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
-</div>
+		var totalHighValueStories = ViewModel.ProjectStateService.UserStoryInstances.Count(usi => usi.UserStory.StoryPoints >= 6);
+	}
+
+	<MudList T="string">
+		<MudListItem>
+			<MudText Typo="Typo.body2"><strong>High-Value User Stories Completed (6 or more story points):</strong> @highValueStories / @totalHighValueStories</MudText>
+		</MudListItem>
+		<MudListItem>
+			<MudText Typo="Typo.body2">
+				<strong>Task Allocation:</strong>
+				@(ViewModel.ProjectStateService.UserStoryInstances.Any(usi => usi.DeveloperAssignedId == null)
+					? "Some stories were left unassigned, affecting progress."
+					: "All stories were properly assigned.")
+			</MudText>
+		</MudListItem>
+	</MudList>
+
+	<MudDivider/>
+
+	<MudText Typo="Typo.h6">🏆 Final Verdict</MudText>
+	@if (ViewModel.ProjectStateService.CurrentProjectInstance.Budget > 0 &&
+	     ViewModel.ProjectStateService.UserStoryInstances.All(usi => usi.IsComplete))
+	{
+		<MudText Typo="Typo.body1" Color="Color.Success">
+			<strong>🎉 Congratulations! You successfully managed the project with a remaining budget of £@ViewModel.ProjectStateService.CurrentProjectInstance.Budget.</strong>
+		</MudText>
+		<MudText Typo="Typo.body2">Your management was efficient, and you completed all user stories on time.</MudText>
+	}
+	else if (ViewModel.ProjectStateService.CurrentProjectInstance.Budget <= 0)
+	{
+		<MudText Typo="Typo.body1" Color="Color.Error">
+			<strong>❌ The project was not completed successfully.</strong>
+		</MudText>
+		<MudText Typo="Typo.body2">Your budget ran out before finishing the project. Consider adjusting spending and sprint planning.</MudText>
+	}
+	else if (ViewModel.ProjectStateService.UserStoryInstances.Any(usi => !usi.IsComplete))
+	{
+		<MudText Typo="Typo.body1" Color="Color.Warning">
+			<strong>⚠️ The project was completed, but some user stories were left unfinished.</strong>
+		</MudText>
+		<MudText Typo="Typo.body2">Consider improving task assignment and developer utilization.</MudText>
+	}
+
+	<MudDivider/>
+
+	<MudNavLink Href="/challenge/select-project">⬅ Back to Dashboard</MudNavLink>
+</MudPaper>
 
 @code
 {
-	protected override async Task OnAfterRenderAsync(bool firstRender)
+	protected override void OnInitialized()
 	{
-		if (firstRender)
-		{
-			await ViewModel.SprintViewModel.LoadSprintProgressAsync();
-			StateHasChanged();
-		}
+		ViewModel.SprintViewModel.LoadSprintProgressAsync();
+		StateHasChanged();
 	}
 }

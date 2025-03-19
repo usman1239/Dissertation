@@ -3,62 +3,63 @@
 @using Dissertation.View_Models
 @inject ChallengeDashboardViewModel ViewModel
 
-<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
-<link rel="stylesheet" href="Styles/Challenge/SprintManagement.css"/>
+<MudPaper>
+	<MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary">Manage Sprints</MudText>
+	<MudText Typo="Typo.h2" Align="Align.Center" Color="Color.Primary">
+		Sprints Left: @(ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints - ViewModel.ProjectStateService.CurrentProjectInstance.Sprints.Count)
+	</MudText>
 
 
-<h2>Manage Sprints</h2>
+	@if (!string.IsNullOrEmpty(ViewModel.SprintViewModel.SprintSummary))
+	{
+		<MudAlert Severity="Severity.Info">
+			<MudText Typo="Typo.h6" Color="Color.Inherit">🚀 Sprint Summary</MudText>
+			<MudText>@ViewModel.SprintViewModel.SprintSummary</MudText>
+		</MudAlert>
+	}
 
-@if (!string.IsNullOrEmpty(ViewModel.SprintViewModel.SprintSummary))
-{
-	<div class="alert alert-info">
-		<h3>🚀 Sprint Summary</h3>
-		<pre>@ViewModel.SprintViewModel.SprintSummary</pre>
-	</div>
-}
+	<MudText Typo="Typo.h6" Color="Color.Secondary">📌 Previous Sprints</MudText>
 
-<h3>📌 Previous Sprints</h3>
-@if (ViewModel.ProjectStateService.Sprints.Any())
-{
-	<ul class="list-group">
-		@foreach (var sprint in ViewModel.ProjectStateService.Sprints)
-		{
-			<li class="list-group-item">
-				<h5>🚀 Sprint @sprint.SprintNumber Complete!</h5>
-				<pre>@sprint.Summary</pre>
-			</li>
-		}
-	</ul>
+	@if (ViewModel.ProjectStateService.Sprints.Any())
+	{
+		<MudList T="string">
+			@foreach (var sprint in ViewModel.ProjectStateService.Sprints)
+			{
+				<MudListItem>
+					<MudText Typo="Typo.h6">🚀 Sprint @sprint.SprintNumber Complete!</MudText>
+					<MudText Typo="Typo.body2" Color="Color.Inherit">@sprint.Summary</MudText>
+				</MudListItem>
+			}
+		</MudList>
 
-	<MudCard>
-		<MudCardContent>
-			<MudChart ChartType="ChartType.Line"
-			          ChartSeries="@ViewModel.SprintViewModel.Series"
-			          XAxisLabels="@ViewModel.SprintViewModel.SprintLabels"
-			          Width="100%"
-			          Height="350px"
-			          ChartOptions="@ViewModel.SprintViewModel.ChartOptions"/>
-		</MudCardContent>
-	</MudCard>
-}
-else
-{
-	<p>No completed sprints yet.</p>
-}
+		<MudCard>
+			<MudCardContent>
+				<MudChart ChartType="ChartType.Line"
+				          ChartSeries="@ViewModel.SprintViewModel.Series"
+				          XAxisLabels="@ViewModel.SprintViewModel.SprintLabels"
+				          Width="100%"
+				          ChartOptions="@ViewModel.SprintViewModel.ChartOptions"/>
+			</MudCardContent>
+		</MudCard>
+	}
+	else
+	{
+		<MudText Typo="Typo.body2" Color="Color.Secondary">No completed sprints yet.</MudText>
+	}
 
-<div>
-	<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
-</div>
+	<MudDivider/>
+
+	<MudNavLink Href="/challenge/dashboard" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack">
+		Back to Dashboard
+	</MudNavLink>
+</MudPaper>
 
 @code {
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
+	protected override void OnInitialized()
 	{
-		if (firstRender)
-		{
-			await ViewModel.SprintViewModel.LoadSprintProgressAsync();
-			StateHasChanged();
-		}
+		ViewModel.SprintViewModel.LoadSprintProgressAsync();
+		StateHasChanged();
 	}
 
 }
