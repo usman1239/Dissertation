@@ -1,4 +1,6 @@
 ﻿using Dissertation.Components.Pages.Learn;
+using Dissertation.Models;
+using Dissertation.Models.Challenge;
 using Dissertation.Models.Interfaces;
 using Dissertation.Services;
 using Dissertation.Services.Interfaces;
@@ -15,6 +17,7 @@ public static class ServiceExtensions
         services.AddScoped<IUserStoryService, UserStoryService>();
         services.AddScoped<IDeveloperService, DeveloperService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<INavigationService, NavigationService>();
 
         services.AddSingleton<ProjectStateService>();
         services.AddScoped<ProjectManagementViewModel>();

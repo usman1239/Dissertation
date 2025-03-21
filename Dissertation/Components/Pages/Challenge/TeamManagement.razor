@@ -23,7 +23,7 @@
 		}
 	</MudSelect>
 
-	<MudButton OnClick="@ViewModel.DeveloperViewModel.AddDeveloper" Disabled="ViewModel.DeveloperViewModel.CanAddDeveloper()">
+	<MudButton OnClick="@ViewModel.DeveloperViewModel.AddDeveloper" Disabled="!ViewModel.DeveloperViewModel.CanAddDeveloper()">
 		Add Developer
 	</MudButton>
 </div>

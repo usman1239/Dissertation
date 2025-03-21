@@ -1,8 +1,5 @@
-﻿// RANDOM EVENT TESTING
-// USER POINTS / BADGES / GAMIFICATION
-// UNIT TESTS
-// REFACTORING
-// UNIT/INTEGRATION/SYSTEM/END-TO-END TESTS
+﻿// USER POINTS / BADGES / GAMIFICATION
+// INTEGRATION/SYSTEM/END-TO-END TESTS
 // CSS
 
 using Dissertation.Data;
@@ -97,12 +94,10 @@ public class UserStoryService(AppDbContext dbContext) : IUserStoryService
 
         // Get only unassigned random user stories for the correct project instance
         var availableUserStories = await dbContext.UserStories
-            .Where(us => us.ProjectId == (
-                dbContext.ProjectInstances
-                    .Where(pi => pi.Id == projectInstanceId)
-                    .Select(pi => pi.ProjectId)
-                    .FirstOrDefault()
-            ) && us.IsRandomEvent)
+            .Where(us => us.ProjectId == dbContext.ProjectInstances
+                .Where(pi => pi.Id == projectInstanceId)
+                .Select(pi => pi.ProjectId)
+                .FirstOrDefault() && us.IsRandomEvent)
             .Where(us => !assignedUserStoryIds.Contains(us.Id)) // Filter out already assigned user stories
             .ToListAsync();
 

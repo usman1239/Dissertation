@@ -9,6 +9,6 @@ public class ProjectInstance
     public Project Project { get; set; } = null!;
 
     public int Budget { get; set; }
-    public List<Sprint> Sprints { get; set; } = [];
-    public List<UserStoryInstance> UserStoryInstances { get; set; } = [];
+    public ICollection<Sprint> Sprints { get; set; } = [];
+    public ICollection<UserStoryInstance> UserStoryInstances { get; set; } = [];
 }

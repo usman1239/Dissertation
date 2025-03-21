@@ -24,6 +24,7 @@ public class SprintService(
         }
         catch
         {
+            return;
             // ignored
         }
 
