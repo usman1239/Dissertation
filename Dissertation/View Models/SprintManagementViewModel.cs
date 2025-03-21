@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using Dissertation.Models;
 using Dissertation.Models.Challenge;
 using Dissertation.Models.Challenge.Enums;
 using Dissertation.Services;
 using Dissertation.Services.Interfaces;
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Dissertation.View_Models;
@@ -14,7 +14,7 @@ public class SprintManagementViewModel(
     IUserStoryService userStoryService,
     IDeveloperService developerService,
     ISnackbar snackbar,
-    NavigationManager navigationManager)
+    INavigationService navigationService)
 {
     public ChartOptions ChartOptions { get; set; } = new()
     {
@@ -45,6 +45,7 @@ public class SprintManagementViewModel(
     }
 
     public ObservableCollection<int> SprintProgress { get; set; } = [];
+
     public ObservableCollection<int> ExpectedProgress { get; set; } = [];
 
     public string SprintSummary { get; set; } = "";
@@ -102,7 +103,7 @@ public class SprintManagementViewModel(
         ShowSummaryOrSprints();
     }
 
-    private async Task RecoverSickDevelopers()
+    public async Task RecoverSickDevelopers()
     {
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
@@ -115,17 +116,15 @@ public class SprintManagementViewModel(
         }
     }
 
-
     private async Task HandleRandomEvents()
     {
         var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints;
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
-        //if (completedSprintsCount < totalSprints * 2 / 3) return;
+        if (completedSprintsCount < totalSprints * 2 / 3) return;
 
         Random random = new();
-        //var eventChoice = random.Next(1, 4);
-        const int eventChoice = 2;
+        var eventChoice = random.Next(1, 4);
 
         switch (eventChoice)
         {
@@ -140,7 +139,7 @@ public class SprintManagementViewModel(
         }
     }
 
-    private async Task HandleNewRandomUserStory()
+    public async Task HandleNewRandomUserStory()
     {
         await userStoryService.TriggerRandomUserStoryEventAsync(projectStateService.CurrentProjectInstance.Id);
 
@@ -154,7 +153,7 @@ public class SprintManagementViewModel(
         snackbar.Add("A new user story has been added!", Severity.Info);
     }
 
-    private async Task HandleSickOrAbsentDeveloperEvent(Random random, int completedSprintsCount)
+    public async Task HandleSickOrAbsentDeveloperEvent(Random random, int completedSprintsCount)
     {
         var sickDeveloper = GetRandomSickDeveloper();
         if (random.Next(0, 2) == 0)
@@ -175,7 +174,6 @@ public class SprintManagementViewModel(
         await developerService.UpdateDeveloperAbsence(sickDeveloper);
     }
 
-
     private Developer GetRandomSickDeveloper()
     {
         var random = new Random();
@@ -184,7 +182,7 @@ public class SprintManagementViewModel(
         return developers[random.Next(developers.Count)];
     }
 
-    private Dictionary<int, List<UserStoryInstance>> GetDeveloperAssignments()
+    public Dictionary<int, List<UserStoryInstance>> GetDeveloperAssignments()
     {
         var developerDictionary = projectStateService.Team.ToDictionary(dev => dev.Id);
 
@@ -200,7 +198,7 @@ public class SprintManagementViewModel(
             .ToDictionary(g => g.Key, g => g.ToList());
     }
 
-    private static int CalculateDeveloperProgress(Developer dev, int numStories, Random random)
+    public int CalculateDeveloperProgress(Developer dev, int numStories, Random random)
     {
         var workloadPenalty = Math.Max(1 - 0.1 * (numStories - 1), 0.5);
 
@@ -215,9 +213,9 @@ public class SprintManagementViewModel(
         return (int)(baseProgress * workloadPenalty);
     }
 
-    private int UpdateStoryProgress(List<UserStoryInstance> stories, int totalProgressIncrease)
+    public int UpdateStoryProgress(List<UserStoryInstance> stories, int totalProgressIncrease)
     {
-        var revenue = 0;
+       var revenue = 0;
         var totalStoryPoints = stories.Sum(usi => usi.UserStory.StoryPoints);
 
         if (totalStoryPoints == 0)
@@ -353,12 +351,12 @@ public class SprintManagementViewModel(
         if (allStoriesCompleted || completedSprintsCount >= totalSprints)
         {
             snackbar.Add("All sprints completed!", Severity.Success);
-            navigationManager.NavigateTo("/challenge/summary");
+            navigationService.NavigateTo("/challenge/summary");
         }
         else
         {
             snackbar.Add($"{totalSprints - completedSprintsCount} Sprints Left", Severity.Success);
-            navigationManager.NavigateTo("/challenge/sprints");
+            navigationService.NavigateTo("/challenge/sprints");
             _ = HandleRandomEvents();
         }
     }

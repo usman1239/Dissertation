@@ -1,6 +1,4 @@
-﻿using Dissertation.Models.Challenge;
-
-namespace Dissertation.Services.Interfaces;
+﻿namespace Dissertation.Services.Interfaces;
 
 public interface IUserProgressService
 {

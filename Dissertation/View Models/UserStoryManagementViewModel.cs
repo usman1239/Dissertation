@@ -1,4 +1,5 @@
-﻿using Dissertation.Models.Challenge;
+﻿using Dissertation.Models;
+using Dissertation.Models.Challenge;
 using Dissertation.Services;
 
 namespace Dissertation.View_Models;

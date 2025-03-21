@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
+using Dissertation.Models;
 using Dissertation.Models.Challenge;
 using Dissertation.Services;
 using Dissertation.Services.Interfaces;
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using NuGet.Packaging;
 
@@ -14,7 +14,7 @@ public class ProjectManagementViewModel(
     IUserService userService,
     IUserStoryService userStoryService,
     ISnackbar snackbar,
-    NavigationManager navigationManager)
+    INavigationService navigationService)
 {
     public string ErrorMessage { get; set; } = string.Empty;
     public ObservableCollection<Project?> AvailableProjects { get; set; } = [];
@@ -49,7 +49,7 @@ public class ProjectManagementViewModel(
         if (isSavedProject && existingProjectInstance != null)
         {
             LoadExistingProject(existingProjectInstance);
-            navigationManager.NavigateTo("/challenge/dashboard");
+            navigationService.NavigateTo("/challenge/dashboard");
             return;
         }
 
@@ -64,7 +64,7 @@ public class ProjectManagementViewModel(
             }
 
             await InitializeNewProjectInstance(selectedProject);
-            navigationManager.NavigateTo("/challenge/dashboard");
+            navigationService.NavigateTo("/challenge/dashboard");
         }
     }
 
@@ -97,15 +97,18 @@ public class ProjectManagementViewModel(
             UserId = projectStateService.UserId!
         };
 
-        projectStateService.CurrentProjectInstance.UserStoryInstances = userStories.Select(us => new UserStoryInstance
-        {
-            UserStoryId = us.Id,
-            UserStory = us,
-            ProjectInstanceId = projectStateService.CurrentProjectInstance.Id,
-            Progress = 0,
-            DeveloperAssignedId = null,
-            IsComplete = false
-        }).ToList();
+        projectStateService.CurrentProjectInstance.UserStoryInstances =
+        [
+            .. userStories.Select(us => new UserStoryInstance
+            {
+                UserStoryId = us.Id,
+                UserStory = us,
+                ProjectInstanceId = projectStateService.CurrentProjectInstance.Id,
+                Progress = 0,
+                DeveloperAssignedId = null,
+                IsComplete = false
+            })
+        ];
 
         await userStoryService.AttachProjectAndUserStories(projectStateService.CurrentProjectInstance);
 

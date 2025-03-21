@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using Dissertation.Models.Challenge;
 
-namespace Dissertation.Services;
+namespace Dissertation.Models.Challenge;
 
 public class ProjectStateService
 {

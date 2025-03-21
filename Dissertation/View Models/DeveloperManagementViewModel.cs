@@ -1,6 +1,5 @@
 ﻿using Dissertation.Models.Challenge;
 using Dissertation.Models.Challenge.Enums;
-using Dissertation.Services;
 using Dissertation.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using MudBlazor;
@@ -17,7 +16,7 @@ public class DeveloperManagementViewModel(
 
     public bool CanAddDeveloper()
     {
-        return DeveloperName.IsNullOrEmpty();
+        return !DeveloperName.IsNullOrEmpty();
     }
 
     public async Task AddDeveloper()
