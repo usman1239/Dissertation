@@ -1,0 +1,25 @@
+﻿.project-summary { padding: 20px; }
+
+.project-summary-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.project-summary-list { margin-top: 20px; }
+
+.project-summary .mud-divider { margin: 20px 0; }
+
+.project-performance { margin-top: 20px; }
+
+.sprint-performance-chart { margin-top: 20px; }
+
+.budget-analysis { margin-top: 20px; }
+
+.developer-utilization { margin-top: 20px; }
+
+.decision-insights { margin-top: 20px; }
+
+.final-verdict {
+    margin-top: 20px;
+    text-align: center;
+}
