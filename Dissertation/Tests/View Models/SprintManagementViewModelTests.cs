@@ -27,6 +27,7 @@ public class SprintManagementViewModelTests
         _mockDeveloperService = new Mock<IDeveloperService>();
         _mockSnackbar = new Mock<ISnackbar>();
         _mockNavigationService = new Mock<INavigationService>();
+        Mock<IBadgeService> mockBadgeService = new();
 
         _projectStateService = new ProjectStateService
         {
@@ -43,6 +44,7 @@ public class SprintManagementViewModelTests
             _mockSprintService.Object,
             _mockUserStoryService.Object,
             _mockDeveloperService.Object,
+            mockBadgeService.Object,
             _mockSnackbar.Object,
             _mockNavigationService.Object
         );
@@ -123,7 +125,7 @@ public class SprintManagementViewModelTests
         _projectStateService.CurrentProjectInstance.Project.NumOfSprints = 1;
         _projectStateService.Sprints.Add(new Sprint { IsCompleted = true });
 
-        _viewModel.ShowSummaryOrSprints();
+        _ = _viewModel.ShowSummaryOrSprints();
 
         _mockSnackbar.Verify(s => s.Add("All sprints completed!", Severity.Success, null, null), Times.Once);
         _mockNavigationService.Verify(n => n.NavigateTo("/challenge/summary", false), Times.Once);
@@ -136,7 +138,7 @@ public class SprintManagementViewModelTests
         _projectStateService.CurrentProjectInstance.Project.NumOfSprints = 2;
         _projectStateService.Sprints.Add(new Sprint { IsCompleted = true });
 
-        _viewModel.ShowSummaryOrSprints();
+        _ = _viewModel.ShowSummaryOrSprints();
 
         _mockNavigationService.Verify(n => n.NavigateTo("/challenge/sprints", false), Times.Once);
     }
@@ -250,16 +252,16 @@ public class SprintManagementViewModelTests
         // Arrange
         var projectInstance = new ProjectInstance
         {
-            UserStoryInstances = new List<UserStoryInstance>
-            {
-                new() { IsComplete = true },
-                new() { IsComplete = true }
-            },
-            Sprints = new List<Sprint>
-            {
-                new() { IsCompleted = false },
-                new() { IsCompleted = false }
-            },
+            UserStoryInstances =
+            [
+                new UserStoryInstance { IsComplete = true },
+                new UserStoryInstance { IsComplete = true }
+            ],
+            Sprints =
+            [
+                new Sprint { IsCompleted = false },
+                new Sprint { IsCompleted = false }
+            ],
             Project = new Project { NumOfSprints = 2 }
         };
 
@@ -279,16 +281,16 @@ public class SprintManagementViewModelTests
         // Arrange
         var projectInstance = new ProjectInstance
         {
-            UserStoryInstances = new List<UserStoryInstance>
-            {
-                new() { IsComplete = false },
-                new() { IsComplete = false }
-            },
-            Sprints = new List<Sprint>
-            {
-                new() { IsCompleted = true },
-                new() { IsCompleted = true }
-            },
+            UserStoryInstances =
+            [
+                new UserStoryInstance { IsComplete = false },
+                new UserStoryInstance { IsComplete = false }
+            ],
+            Sprints =
+            [
+                new Sprint { IsCompleted = true },
+                new Sprint { IsCompleted = true }
+            ],
             Project = new Project { NumOfSprints = 2 }
         };
 
@@ -308,16 +310,16 @@ public class SprintManagementViewModelTests
         // Arrange
         var projectInstance = new ProjectInstance
         {
-            UserStoryInstances = new List<UserStoryInstance>
-            {
-                new() { IsComplete = false },
-                new() { IsComplete = false }
-            },
-            Sprints = new List<Sprint>
-            {
-                new() { IsCompleted = false },
-                new() { IsCompleted = false }
-            },
+            UserStoryInstances =
+            [
+                new UserStoryInstance { IsComplete = false },
+                new UserStoryInstance { IsComplete = false }
+            ],
+            Sprints =
+            [
+                new Sprint { IsCompleted = false },
+                new Sprint { IsCompleted = false }
+            ],
             Project = new Project { NumOfSprints = 2 }
         };
 
@@ -336,16 +338,16 @@ public class SprintManagementViewModelTests
         // Arrange
         var projectInstance = new ProjectInstance
         {
-            UserStoryInstances = new List<UserStoryInstance>
-            {
-                new() { IsComplete = true },
-                new() { IsComplete = false }
-            },
-            Sprints = new List<Sprint>
-            {
-                new() { IsCompleted = true },
-                new() { IsCompleted = true }
-            },
+            UserStoryInstances =
+            [
+                new UserStoryInstance { IsComplete = true },
+                new UserStoryInstance { IsComplete = false }
+            ],
+            Sprints =
+            [
+                new Sprint { IsCompleted = true },
+                new Sprint { IsCompleted = true }
+            ],
             Project = new Project { NumOfSprints = 2 }
         };
 

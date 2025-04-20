@@ -60,4 +60,15 @@ public class ProjectService(AppDbContext dbContext) : IProjectService
         await dbContext.SaveChangesAsync();
         return true;
     }
+
+    public async Task<List<ProjectInstance>> GetUserProjectsAsync(string userId)
+    {
+        return await dbContext.ProjectInstances
+            .AsNoTracking()
+            .Where(p => p.UserId == userId)
+            .Include(p => p.Project)
+            .Include(p => p.Sprints)
+            .ToListAsync();
+    }
+
 }

@@ -17,6 +17,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public virtual DbSet<UserStoryInstance> UserStoryInstances { get; set; }
     public virtual DbSet<Developer> Developers { get; set; }
 
+    public virtual DbSet<UserBadge> UserBadges { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -86,6 +88,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 c => c.ToDictionary(k => k.Key,
                     v => v.Value)
             ));
+
+
+        // 7. UserBadge → User (Many-to-One)
+        modelBuilder.Entity<UserBadge>()
+            .HasOne(ub => ub.User)
+            .WithMany()
+            .HasForeignKey(ub => ub.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     public async Task RemoveIdleDevelopersAsync()

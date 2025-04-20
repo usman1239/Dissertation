@@ -1,5 +1,4 @@
 ﻿using Dissertation.Components.Pages.Learn;
-using Dissertation.Models;
 using Dissertation.Models.Challenge;
 using Dissertation.Models.Interfaces;
 using Dissertation.Services;
@@ -18,12 +17,14 @@ public static class ServiceExtensions
         services.AddScoped<IDeveloperService, DeveloperService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INavigationService, NavigationService>();
+        services.AddScoped<IBadgeService, BadgeService>();
 
         services.AddSingleton<ProjectStateService>();
         services.AddScoped<ProjectManagementViewModel>();
         services.AddScoped<DeveloperManagementViewModel>();
         services.AddScoped<SprintManagementViewModel>();
         services.AddScoped<UserStoryManagementViewModel>();
+        services.AddScoped<UserProfileManagementViewModel>();
 
         services.AddScoped<ChallengeDashboardViewModel>();
 

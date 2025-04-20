@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250320004719_Init1")]
+    [Migration("20250402162558_Init1")]
     partial class Init1
     {
         /// <inheritdoc />
@@ -149,6 +149,36 @@ namespace Dissertation.Migrations
                     b.HasIndex("ProjectInstanceId");
 
                     b.ToTable("Sprints");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserBadge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BadgeType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBadges");
                 });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>
@@ -437,6 +467,17 @@ namespace Dissertation.Migrations
                         .IsRequired();
 
                     b.Navigation("ProjectInstance");
+                });
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.UserBadge", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.UserStory", b =>

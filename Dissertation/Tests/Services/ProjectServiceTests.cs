@@ -69,8 +69,8 @@ public class ProjectServiceTests
         {
             ProjectId = 1,
             UserId = userId,
-            Sprints = new List<Sprint> { new() { Id = 1 } },
-            UserStoryInstances = new List<UserStoryInstance> { new() { UserStoryId = 1 } }
+            Sprints = [new Sprint { Id = 1 }],
+            UserStoryInstances = [new UserStoryInstance { UserStoryId = 1 }]
         };
         await _dbContext.Projects.AddAsync(project);
         await _dbContext.ProjectInstances.AddAsync(projectInstance);

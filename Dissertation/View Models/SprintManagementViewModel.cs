@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using Dissertation.Models;
 using Dissertation.Models.Challenge;
 using Dissertation.Models.Challenge.Enums;
-using Dissertation.Services;
 using Dissertation.Services.Interfaces;
 using MudBlazor;
 
@@ -13,6 +11,7 @@ public class SprintManagementViewModel(
     ISprintService sprintService,
     IUserStoryService userStoryService,
     IDeveloperService developerService,
+    IBadgeService badgeService,
     ISnackbar snackbar,
     INavigationService navigationService)
 {
@@ -26,12 +25,12 @@ public class SprintManagementViewModel(
         new()
         {
             Name = "Remaining Work",
-            Data = SprintProgress.Select(p => (double)p).ToArray()
+            Data = [.. SprintProgress.Select(p => (double)p)]
         },
         new()
         {
             Name = "Expected Progress",
-            Data = ExpectedProgress.Select(p => (double)p).ToArray()
+            Data = [.. ExpectedProgress.Select(p => (double)p)]
         }
     ];
 
@@ -40,7 +39,7 @@ public class SprintManagementViewModel(
         get
         {
             var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints + 1;
-            return Enumerable.Range(0, totalSprints).Select(i => $"{i}").ToArray();
+            return [.. Enumerable.Range(0, totalSprints).Select(i => $"{i}")];
         }
     }
 
@@ -97,10 +96,10 @@ public class SprintManagementViewModel(
 
         UpdateBudget(revenue - GetTotalSalary());
 
-        await userStoryService.SaveUserStoryInstancesAsync(projectStateService.UserStoryInstances.ToList());
+        await userStoryService.SaveUserStoryInstancesAsync([.. projectStateService.UserStoryInstances]);
         await SaveSprint();
 
-        ShowSummaryOrSprints();
+        await ShowSummaryOrSprints();
     }
 
     public async Task RecoverSickDevelopers()
@@ -215,7 +214,7 @@ public class SprintManagementViewModel(
 
     public int UpdateStoryProgress(List<UserStoryInstance> stories, int totalProgressIncrease)
     {
-       var revenue = 0;
+        var revenue = 0;
         var totalStoryPoints = stories.Sum(usi => usi.UserStory.StoryPoints);
 
         if (totalStoryPoints == 0)
@@ -342,7 +341,7 @@ public class SprintManagementViewModel(
         projectStateService.CurrentProjectInstance.Budget = Math.Max(newBudget, 0);
     }
 
-    public void ShowSummaryOrSprints()
+    public async Task ShowSummaryOrSprints()
     {
         var allStoriesCompleted = projectStateService.UserStoryInstances.All(usi => usi.IsComplete);
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
@@ -352,12 +351,20 @@ public class SprintManagementViewModel(
         {
             snackbar.Add("All sprints completed!", Severity.Success);
             navigationService.NavigateTo("/challenge/summary");
+
+            await UpdateBadges();
         }
         else
         {
             snackbar.Add($"{totalSprints - completedSprintsCount} Sprints Left", Severity.Success);
             navigationService.NavigateTo("/challenge/sprints");
-            _ = HandleRandomEvents();
+            await HandleRandomEvents();
         }
+    }
+
+    public async Task UpdateBadges()
+    {
+        await badgeService.CheckAndAwardBadgesAsync(projectStateService.UserId!);
+        snackbar.Add("You may have new badges, view your profile to check them out!");
     }
 }

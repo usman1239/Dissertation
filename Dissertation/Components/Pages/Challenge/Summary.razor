@@ -1,6 +1,6 @@
 ﻿@page "/challenge/summary"
-@rendermode InteractiveServer
 @using Dissertation.View_Models
+@rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
 <link href="Styles/Main.css" rel="stylesheet"/>
@@ -186,7 +186,7 @@
 	}
 
 	<MudDivider/>
-
+	<MudNavLink Href="/user/profile"> Look at your profile </MudNavLink>
 	<MudNavLink Href="/challenge/select-project">⬅ Back to Dashboard</MudNavLink>
 </MudPaper>
 

@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Dissertation.Models;
 using Dissertation.Models.Challenge;
-using Dissertation.Services;
 using Dissertation.Services.Interfaces;
 using MudBlazor;
 using NuGet.Packaging;
@@ -71,15 +69,16 @@ public class ProjectManagementViewModel(
     private void LoadExistingProject(ProjectInstance projectInstance)
     {
         projectStateService.CurrentProjectInstance = projectInstance;
-        projectStateService.Sprints = new ObservableCollection<Sprint>(projectInstance.Sprints);
+        projectStateService.Sprints = [.. projectInstance.Sprints];
         projectStateService.UserStoryInstances =
-            new ObservableCollection<UserStoryInstance>(projectInstance.UserStoryInstances);
+            [.. projectInstance.UserStoryInstances];
         projectStateService.Team = new ObservableCollection<Developer>(
-            projectStateService.UserStoryInstances
-                .Where(usi => usi.DeveloperAssigned != null)
-                .Select(usi => usi.DeveloperAssigned!)
-                .DistinctBy(dev => dev.Id)
-                .ToList()
+            [
+                .. projectStateService.UserStoryInstances
+                    .Where(usi => usi.DeveloperAssigned != null)
+                    .Select(usi => usi.DeveloperAssigned!)
+                    .DistinctBy(dev => dev.Id)
+            ]
         );
     }
 

@@ -10,3 +10,4 @@
 //    public int? NextScenarioId { get; set; }
 //    public Scenario? NextScenario { get; set; }
 //}
+

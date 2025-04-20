@@ -194,6 +194,28 @@ namespace Dissertation.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserBadges",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    BadgeType = table.Column<int>(type: "integer", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Icon = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserBadges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserBadges_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectInstances",
                 columns: table => new
                 {
@@ -344,6 +366,11 @@ namespace Dissertation.Migrations
                 column: "ProjectInstanceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserBadges_UserId",
+                table: "UserBadges",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserStories_ProjectId",
                 table: "UserStories",
                 column: "ProjectId");
@@ -384,6 +411,9 @@ namespace Dissertation.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sprints");
+
+            migrationBuilder.DropTable(
+                name: "UserBadges");
 
             migrationBuilder.DropTable(
                 name: "UserStoryInstances");

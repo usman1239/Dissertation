@@ -1,0 +1,57 @@
+﻿@page "/user/profile"
+@using Dissertation.View_Models
+@using Microsoft.AspNetCore.Authorization
+@rendermode InteractiveServer
+@inject ChallengeDashboardViewModel ViewModel
+@attribute [Authorize]
+
+<h2>Your Progress</h2>
+
+
+<h3>Your Active Projects</h3>
+
+@if (ViewModel.UserProfileManagementViewModel.ActiveProjects.Any())
+{
+	<ul>
+		@foreach (var project in ViewModel.UserProfileManagementViewModel.ActiveProjects)
+		{
+			<li>
+				<strong>@project.Project.Title</strong> - @project.Project.Description
+				<br />
+				<em>Sprints Completed:</em> @project.Sprints.Count / @project.Project.NumOfSprints
+			</li>
+		}
+	</ul>
+}
+else
+{
+	<p>No active projects at the moment.</p>
+}
+
+
+@if (ViewModel.UserProfileManagementViewModel.UserBadges.Any())
+{
+	<h3>Your Achievements</h3>
+	<ul>
+		@foreach (var badge in ViewModel.UserProfileManagementViewModel.UserBadges)
+		{
+			<li>
+				@badge.Icon - <strong>@badge.BadgeType</strong>: @badge.Description
+			</li>
+		}
+	</ul>
+}
+else
+{
+	<p>No badges earned yet. Keep progressing!</p>
+}
+
+@code {
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ViewModel.UserProfileManagementViewModel.GetUserBadges();
+		await ViewModel.UserProfileManagementViewModel.GetActiveProjects();
+	}
+
+}

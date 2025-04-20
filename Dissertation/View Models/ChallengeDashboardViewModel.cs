@@ -10,18 +10,24 @@ public class ChallengeDashboardViewModel(
     IDeveloperService developerService,
     IUserStoryService userStoryService,
     ISprintService sprintService,
+    IBadgeService badgeService,
     ProjectStateService projectStateService,
     ISnackbar snackbar,
     INavigationService navigationService)
 {
     public ProjectManagementViewModel ProjectViewModel { get; } =
-        new(projectStateService, projectService, userService, userStoryService, snackbar, navigationService);
+        new(projectStateService, projectService, userService, userStoryService, snackbar,
+            navigationService);
+
+    public UserProfileManagementViewModel UserProfileManagementViewModel { get; } =
+        new(projectStateService, badgeService, projectService);
 
     public DeveloperManagementViewModel DeveloperViewModel { get; } =
         new(projectStateService, developerService, snackbar);
 
     public SprintManagementViewModel SprintViewModel { get; } =
-        new(projectStateService, sprintService, userStoryService, developerService, snackbar, navigationService);
+        new(projectStateService, sprintService, userStoryService, developerService, badgeService, snackbar,
+            navigationService);
 
     public UserStoryManagementViewModel UserStoryViewModel { get; } = new(projectStateService);
     public ProjectStateService ProjectStateService { get; } = projectStateService;

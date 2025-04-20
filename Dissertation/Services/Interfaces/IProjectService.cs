@@ -9,4 +9,5 @@ public interface IProjectService
     Task<ProjectInstance?> GetProjectInstanceAsync(int projectId, string? userId);
     Task SaveNewProjectInstance(ProjectInstance projectInstance);
     Task<bool> DeleteSavedProjectInstanceAsync(int projectId, string? userId);
+    Task<List<ProjectInstance>> GetUserProjectsAsync(string userId);
 }
