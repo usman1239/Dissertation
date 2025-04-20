@@ -3,6 +3,11 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
+<link rel="stylesheet" href="Styles/Challenge/SprintManagement.css"/>
+
 <MudPaper>
 	<MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary">Manage Sprints</MudText>
 	<MudText Typo="Typo.h2" Align="Align.Center" Color="Color.Primary">
@@ -49,9 +54,9 @@
 
 	<MudDivider/>
 
-	<MudNavLink Href="/challenge/dashboard" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack">
-		Back to Dashboard
-	</MudNavLink>
+	<div>
+		<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
+	</div>
 </MudPaper>
 
 

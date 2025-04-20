@@ -1,23 +1,78 @@
-﻿.user-stories-table {
+﻿/* Table Container */
+.user-stories-table {
+    background-color: black; /* White background for table */
     border-collapse: collapse;
-    margin-top: 10px;
+    border-radius: 10px; /* Rounded corners for the table */
+    box-shadow: 0 4px 10px #000000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    overflow: hidden; /* Ensures the rounded corners are respected */
     width: 100%;
 }
 
-.user-stories-table th, .user-stories-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
+/* Table Headers Styling */
+
+.user-stories-table th {
+    background-color: #f4f6f9; /* Light gray background for headers */
+    border-bottom: 2px solid #ddd;
+    border-radius: 10px 10px 0 0; /* Rounded top corners */
+    color: #34495e;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 16px;
     text-align: left;
 }
 
-.user-stories-table th { background-color: #f4f4f4; }
+/* Table Cell Styling */
+
+.user-stories-table td {
+    background-color: #fafafa; /* Light background for table rows */
+    border-bottom: 1px solid #ddd;
+    color: #555;
+    padding: 16px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+/* Hover Effect for Table Rows */
+
+.user-stories-table tr:hover {
+    background-color: #f1f1f1; /* Slightly darker row background on hover */
+    cursor: pointer;
+}
+
+/* Select Input for Developer Assignment */
 
 .user-stories-table select {
-    padding: 5px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #34495e;
+    font-size: 1.1rem;
+    padding: 10px;
+    transition: border-color 0.3s ease;
     width: 100%;
 }
 
-.user-stories-table button {
-    cursor: pointer;
-    padding: 5px 10px;
+/* Focused InputSelect */
+
+.user-stories-table select:focus {
+    border-color: #1976d2;
+    outline: none;
+}
+
+/* Progress Bar Styling */
+
+.mud-progress-linear {
+    border-radius: 10px;
+    height: 12px;
+    margin-top: 10px;
+}
+
+/* Text Styling for Progress */
+
+.text-center {
+    font-size: 1rem;
+    margin-top: 6px;
+    text-align: center;
 }

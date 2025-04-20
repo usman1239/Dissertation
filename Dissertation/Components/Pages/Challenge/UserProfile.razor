@@ -5,8 +5,10 @@
 @inject ChallengeDashboardViewModel ViewModel
 @attribute [Authorize]
 
-<h2>Your Progress</h2>
-
+<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
+<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
+<link rel="stylesheet" href="Styles/Challenge/UserProfile.css"/>
 
 <h3>Your Active Projects</h3>
 
@@ -16,8 +18,8 @@
 		@foreach (var project in ViewModel.UserProfileManagementViewModel.ActiveProjects)
 		{
 			<li>
-				<strong>@project.Project.Title</strong> - @project.Project.Description
-				<br />
+				<strong>@project.Project.Title</strong> @project.Project.Description
+				<br/>
 				<em>Sprints Completed:</em> @project.Sprints.Count / @project.Project.NumOfSprints
 			</li>
 		}
@@ -29,14 +31,14 @@ else
 }
 
 
+<h3>Your Achievements</h3>
 @if (ViewModel.UserProfileManagementViewModel.UserBadges.Any())
 {
-	<h3>Your Achievements</h3>
 	<ul>
 		@foreach (var badge in ViewModel.UserProfileManagementViewModel.UserBadges)
 		{
 			<li>
-				@badge.Icon - <strong>@badge.BadgeType</strong>: @badge.Description
+				@badge.Icon <strong>@badge.BadgeType</strong> @badge.Description
 			</li>
 		}
 	</ul>

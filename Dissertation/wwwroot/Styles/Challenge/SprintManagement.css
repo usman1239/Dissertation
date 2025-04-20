@@ -1,24 +1,92 @@
-﻿h2 {
-    color: #333;
-    font-size: 2rem;
+﻿/* General Text Styling */
+h2, .mud-typography-h2 {
+    color: #2c3e50;
+    font-size: 2.25rem;
+    font-weight: 600;
 }
 
-.alert-info {
+h5, .mud-typography-h5 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.mud-typography-h6 {
+    color: #555;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Alert Box Styling */
+
+.alert-info, .mud-alert {
     background-color: #e9f7fe;
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     color: #31708f;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem auto;
     padding: 1rem;
 }
 
-.list-group-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
+/* Sprint List Items */
+
+.mud-list-item {
+    background-color: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
     margin-bottom: 1rem;
     padding: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-pre {
+.mud-list-item:hover { background-color: #f1f9ff; }
+
+/* Sprint Chart Card */
+
+.mud-card {
+    border-radius: 12px;
+    box-shadow: 0 3px 6px #000000;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+}
+
+.mud-card-content { padding: 1.5rem; }
+
+
+
+.active {
+    background-color: #f0f8ff;
+    border-color: #007BFF;
+    font-weight: bold;
+}
+
+/* Text Wrapping for Summaries */
+
+pre, .mud-typography-body2 {
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+/* Divider Styling */
+
+.mud-divider {
+    background-color: #e0e0e0;
+    height: 1px;
+    margin: 2rem 0;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .mud-typography-h2 { font-size: 1.75rem; }
+
+    .mud-typography-h5 { font-size: 1.25rem; }
+
+    .mud-card-content { padding: 1rem; }
+
+    .nav-link {
+        text-align: center;
+        width: 100%;
+    }
 }

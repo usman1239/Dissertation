@@ -4,37 +4,36 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
-
 <link href="Styles/Main.css" rel="stylesheet"/>
 <link href="Styles/Home.css" rel="stylesheet"/>
 <link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
+<link rel="stylesheet" href="Styles/Challenge/TeamManagement.css"/>
 
-<h3>Manage Team</h3>
+<MudPaper Elevation="4" Square="true" Class="team-management-paper">
 
-<div>
-	<h4>Team</h4>
+	<div class="team-management-form">
+		<h4>Team</h4>
 
-	<MudInput T="string" Label="Developer Name" @bind-Value="ViewModel.DeveloperViewModel.DeveloperName"/>
+		<MudInput T="string" Label="Developer Name" @bind-Value="ViewModel.DeveloperViewModel.DeveloperName"/>
 
-	<MudSelect T="DeveloperExperienceLevel" Label="Experience Level" @bind-Value="ViewModel.DeveloperViewModel.SelectedDeveloperExperienceLevel">
-		@foreach (var role in Enum.GetValues(typeof(DeveloperExperienceLevel)).Cast<DeveloperExperienceLevel>())
-		{
-			<MudSelectItem T="DeveloperExperienceLevel" Value="@role">@role.ToString()</MudSelectItem>
-		}
-	</MudSelect>
+		<MudSelect T="DeveloperExperienceLevel" Label="Experience Level" @bind-Value="ViewModel.DeveloperViewModel.SelectedDeveloperExperienceLevel">
+			@foreach (var role in Enum.GetValues(typeof(DeveloperExperienceLevel)).Cast<DeveloperExperienceLevel>())
+			{
+				<MudSelectItem T="DeveloperExperienceLevel" Value="@role">@role.ToString()</MudSelectItem>
+			}
+		</MudSelect>
 
-	<MudButton OnClick="@ViewModel.DeveloperViewModel.AddDeveloper" Disabled="!ViewModel.DeveloperViewModel.CanAddDeveloper()">
-		Add Developer
-	</MudButton>
-</div>
+		<MudButton OnClick="@ViewModel.DeveloperViewModel.AddDeveloper" Disabled="!ViewModel.DeveloperViewModel.CanAddDeveloper()" Class="mud-button">
+			Add Developer
+		</MudButton>
+	</div>
 
-<div>
-	<h4>Current Team</h4>
-	<ul>
-		@foreach (var dev in ViewModel.ProjectStateService.Team)
-		{
-			<li>
-				<div>
+	<div class="current-team-list">
+		<h4>Current Team</h4>
+		<MudList T="string">
+			@foreach (var dev in ViewModel.ProjectStateService.Team)
+			{
+				<MudListItem T="string">
 					<MudText Typo="Typo.h6" Class="mb-1">
 						<strong>@dev.Name</strong>
 					</MudText>
@@ -44,12 +43,13 @@
 					<MudButton OnClick="() => ViewModel.DeveloperViewModel.RemoveDeveloper(dev)" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">
 						Delete
 					</MudButton>
-				</div>
-			</li>
-		}
-	</ul>
-</div>
+				</MudListItem>
+			}
+		</MudList>
+	</div>
 
-<div>
-	<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
-</div>
+	<div >
+		<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
+	</div>
+
+</MudPaper>

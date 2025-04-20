@@ -1,0 +1,101 @@
+﻿/* Container for the MudPaper */
+.mud-paper {
+    background-color: #ffffff; /* White background */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 10px #000000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin: 20px; /* Margin around the MudPaper */
+    padding: 30px; /* Spacing inside the paper */
+}
+
+/* Title Styling */
+
+.mud-text.typography-h4 {
+    color: #333333; /* Dark grey color */
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Subtitle Styling (for project difficulty) */
+
+.mud-text.typography-h5 {
+    color: #555555; /* Medium grey */
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+/* Subheading styling */
+
+.mud-text.typography-h6 {
+    color: #444444; /* Darker grey for emphasis */
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Description and Budget Text Styling */
+
+.mud-text.typography-body2 {
+    color: #777777; /* Lighter grey */
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+/* Button Styling */
+
+.mud-button {
+    border-radius: 8px; /* Rounded corners for buttons */
+    margin-top: 10px; /* Space between buttons */
+    transition: background-color 0.3s ease; /* Smooth transition for button hover */
+}
+
+/* Primary Button (Select / Continue) */
+
+.mud-button.color-primary {
+    background-color: #1976D2; /* Blue color for primary buttons */
+    color: #ffffff;
+}
+
+.mud-button.color-primary:hover {
+    background-color: #1565C0; /* Darker blue on hover */
+}
+
+/* Error Button (Delete) */
+
+.mud-button.color-error {
+    background-color: #D32F2F; /* Red color for delete buttons */
+    color: #ffffff;
+}
+
+.mud-button.color-error:hover {
+    background-color: #C62828; /* Darker red on hover */
+}
+
+/* MudList Styling (List of Projects) */
+
+.mud-list-item {
+    background-color: #f9f9f9; /* Light grey background for list items */
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.mud-list-item:hover {
+    background-color: #eeeeee; /* Light hover effect */
+}
+
+/* Divider Styling */
+
+.mud-divider {
+    border-top: 1px solid #eeeeee; /* Light grey divider line */
+    margin: 20px 0; /* Space above and below the divider */
+}
+
+/* Text Alignment */
+
+.mud-text.align-center { text-align: center; }
+
+/* MudList Styling for Available Projects */
+
+.mud-list { margin-top: 20px; }

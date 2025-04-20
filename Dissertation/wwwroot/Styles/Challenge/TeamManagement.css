@@ -1,18 +1,114 @@
-﻿h3 {
-    color: #333;
-    font-size: 1.8rem;
+﻿/* General Styling */
+.team-management-paper {
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 30px;
 }
 
-ul li {
-    align-items: center;
-    border-bottom: 1px solid #ddd;
+/* Heading Styling */
+
+h3 {
+    color: #2c3e50;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+h4 {
+    color: #34495e;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Developer Form Styling */
+
+.team-management-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.team-management-form .MudInput, .team-management-form .MudSelect {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.team-management-form .MudButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    width: auto;
+}
+
+/* Current Team List Styling */
+
+.current-team-list { margin-top: 30px; }
+
+.current-team-list .MudListItem {
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px #000000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
-    padding: 0.5rem 0;
+    margin-bottom: 10px;
+    padding: 12px;
+    transition: all 0.3s ease;
 }
 
-button { background-color: #dc3545; }
+.current-team-list .MudListItem:hover {
+    background-color: #fafafa;
+    box-shadow: 0 6px 12px #000000;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
 
-button:hover:not(:disabled) { background-color: #c82333; }
+/* Developer Info Styling */
 
-input, select { max-width: 300px; }
+.current-team-list .MudListItem .mb-1 { margin-bottom: 6px; }
+
+.current-team-list .MudListItem .text-muted {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* Delete Button Styling */
+
+.MudButton {
+    font-size: 0.9rem;
+    margin-left: 16px;
+    padding: 6px 12px;
+}
+
+/* Back to Dashboard Styling */
+
+.nav-link {
+    background-color: #1976d2;
+    border-radius: 8px;
+    color: #fff;
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-top: 30px;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover { background-color: #1565c0; }
+
+/* Responsive Layout */
+
+@media (min-width: 1024px) {
+    /* Developer Form Styling */
+    .team-management-form .MudInput, .team-management-form .MudSelect { width: 50%; }
+
+    /* Ensure "Add Developer" button is well-aligned */
+    .team-management-form .MudButton { width: auto; }
+
+    /* Current Team List Styling */
+    .current-team-list .MudListItem {
+        margin: 10px auto;
+        max-width: 800px;
+        width: 100%;
+    }
+}

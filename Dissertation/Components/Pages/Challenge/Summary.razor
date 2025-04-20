@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/Summary.css"/>
 
-
 <MudPaper>
 	<MudText Typo="Typo.h4" Align="Align.Center">Project Summary</MudText>
 
@@ -187,7 +186,9 @@
 
 	<MudDivider/>
 	<MudNavLink Href="/user/profile"> Look at your profile </MudNavLink>
-	<MudNavLink Href="/challenge/select-project">⬅ Back to Dashboard</MudNavLink>
+	<div>
+		<MudNavLink Href="/challenge/select-project" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
+	</div>
 </MudPaper>
 
 @code

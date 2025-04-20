@@ -3,7 +3,6 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
-
 <link href="Styles/Main.css" rel="stylesheet"/>
 <link href="Styles/Home.css" rel="stylesheet"/>
 <link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
@@ -11,55 +10,57 @@
 
 <h2>User Stories</h2>
 
-@if (ViewModel.ProjectStateService.UserStoryInstances.Any())
-{
-	<table class="user-stories-table">
-		<thead>
-		<tr>
-			<th>Title</th>
-			<th>Description</th>
-			<th>Story Points</th>
-			<th>Assigned Developer</th>
-			<th>Progress</th>
-		</tr>
-		</thead>
-		<tbody>
-		@foreach (var story in ViewModel.ProjectStateService.UserStoryInstances)
-		{
+<MudPaper>
+	@if (ViewModel.ProjectStateService.UserStoryInstances.Any())
+	{
+		<table class="user-stories-table">
+			<thead>
 			<tr>
-				<td>@story.UserStory.Title</td>
-				<td>@story.UserStory.Description</td>
-				<td>@story.UserStory.StoryPoints</td>
-				<td>
-					<InputSelect @bind-Value:get="story.DeveloperAssignedId"
-					             @bind-Value:set="value => ViewModel.UserStoryViewModel.AssignDeveloperToStory(story, value)">
-
-						<option value="">Unassigned</option>
-						@foreach (var developer in ViewModel.ProjectStateService.Team)
-						{
-							<option value="@developer.Id">@developer.Name (@developer.ExperienceLevel)</option>
-						}
-					</InputSelect>
-				</td>
-				<td>
-					<MudStack>
-						<MudProgressLinear Value="@story.Progress"
-						                   Color="@(story.Progress < 30 ? Color.Error : story.Progress < 70 ? Color.Warning : Color.Success)"
-						                   Rounded="true"
-						                   Height="10px"/>
-						<MudText Typo="Typo.body2" Class="text-center">@story.Progress%</MudText>
-					</MudStack>
-				</td>
+				<th>Title</th>
+				<th>Description</th>
+				<th>Story Points</th>
+				<th>Assigned Developer</th>
+				<th>Progress</th>
 			</tr>
-		}
-		</tbody>
-	</table>
-}
-else
-{
-	<p>No user stories found.</p>
-}
+			</thead>
+			<tbody>
+			@foreach (var story in ViewModel.ProjectStateService.UserStoryInstances)
+			{
+				<tr>
+					<td>@story.UserStory.Title</td>
+					<td>@story.UserStory.Description</td>
+					<td>@story.UserStory.StoryPoints</td>
+					<td>
+						<InputSelect @bind-Value:get="story.DeveloperAssignedId"
+						             @bind-Value:set="value => ViewModel.UserStoryViewModel.AssignDeveloperToStory(story, value)">
 
-<div>
-	<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
-</div>
+							<option value="">Unassigned</option>
+							@foreach (var developer in ViewModel.ProjectStateService.Team)
+							{
+								<option value="@developer.Id">@developer.Name (@developer.ExperienceLevel)</option>
+							}
+						</InputSelect>
+					</td>
+					<td>
+						<MudStack>
+							<MudProgressLinear Value="@story.Progress"
+							                   Color="@(story.Progress < 30 ? Color.Error : story.Progress < 70 ? Color.Warning : Color.Success)"
+							                   Rounded="true"
+							                   Height="10px"/>
+							<MudText Typo="Typo.body2" Class="text-center">@story.Progress%</MudText>
+						</MudStack>
+					</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<p>No user stories found.</p>
+	}
+
+	<div>
+		<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
+	</div>
+</MudPaper>
