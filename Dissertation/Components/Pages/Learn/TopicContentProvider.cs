@@ -12,13 +12,17 @@ public class TopicContentProvider : ITopicContentProvider
             new TopicContent
             {
                 TopicName = "Scrum",
-                Description = "Scrum is an Agile methodology focused on iterative and incremental development.",
+                Description =
+                    "Scrum is a simple but powerful Agile framework that helps teams work together to solve complex problems and deliver valuable products. It focuses on teamwork, continuous progress, and adapting to change quickly.",
+
                 VideoPath = "https://www.youtube.com/embed/b02ZkndLk1Y",
 
                 Paragraphs =
                 [
-                    "Scrum is a framework that allows teams to work together efficiently.",
-                    "It encourages collaboration, accountability, and iterative progress."
+                    "Scrum organizes work into short cycles called Sprints, usually lasting two to four weeks. At the end of each Sprint, the team delivers a usable piece of the product, allowing for regular feedback and fast improvements.",
+                    "The Scrum team includes three important roles: the Product Owner, who sets the vision and priorities; the Scrum Master, who helps the team stay focused and removes obstacles; and the Development Team, who builds the product together.",
+                    "Scrum uses regular events — called ceremonies — to keep everyone aligned. These include Sprint Planning (to set goals), Daily Stand-ups (quick daily check-ins), Sprint Reviews (to demo work and gather feedback), and Sprint Retrospectives (to reflect and improve).",
+                    "Scrum is used in many industries beyond software, such as marketing, education, and product design. Its focus on collaboration, quick learning, and flexibility makes it a popular choice for teams that want to adapt and succeed in changing environments."
                 ]
             }
         },
@@ -27,13 +31,17 @@ public class TopicContentProvider : ITopicContentProvider
             new TopicContent
             {
                 TopicName = "Kanban",
-                Description = "Kanban is a visual system for managing work as it moves through a process.",
+                Description =
+                    "Kanban is a flexible and visual method for managing work. It helps teams organize tasks, focus on what matters most, and deliver work more smoothly and efficiently.",
+
                 VideoPath = "https://www.youtube.com/embed/iVaFVa7HYj4",
 
                 Paragraphs =
                 [
-                    "Kanban helps you visualise your work, maximise efficiency, and improve continuously.",
-                    "It is widely used in software development and other industries."
+                    "Kanban is built around a simple idea: make work visible. Teams create a board with columns like 'To Do', 'In Progress', and 'Done' to track the journey of every task. This makes it easy for everyone to see what’s happening at a glance.",
+                    "One of Kanban’s key strengths is limiting how much work is happening at once. By setting limits, teams avoid multitasking, reduce stress, and complete work faster and with higher quality.",
+                    "Kanban encourages continuous improvement. Teams regularly review how work flows through the board, looking for ways to remove bottlenecks and make small changes that lead to big improvements over time.",
+                    "Originally developed to improve manufacturing at Toyota, Kanban is now used across many industries — from software development to marketing, healthcare, and education — wherever there’s a need to organize work and keep teams moving forward."
                 ]
             }
         },
