@@ -13,7 +13,8 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Scrum",
                 Description = "Scrum is an Agile methodology focused on iterative and incremental development.",
-                VideoPath = "Videos/scrum.mp4",
+                VideoPath = "https://www.youtube.com/embed/b02ZkndLk1Y",
+
                 Paragraphs =
                 [
                     "Scrum is a framework that allows teams to work together efficiently.",
@@ -27,7 +28,8 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Kanban",
                 Description = "Kanban is a visual system for managing work as it moves through a process.",
-                VideoPath = "Videos/kanban.mp4",
+                VideoPath = "https://www.youtube.com/embed/iVaFVa7HYj4",
+
                 Paragraphs =
                 [
                     "Kanban helps you visualise your work, maximise efficiency, and improve continuously.",

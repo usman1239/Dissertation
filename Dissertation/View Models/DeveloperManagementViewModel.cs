@@ -33,6 +33,25 @@ public class DeveloperManagementViewModel(
             return;
         }
 
+        var cost = GetDeveloperCost();
+
+        var dev = new Developer
+        {
+            Name = DeveloperName,
+            ExperienceLevel = SelectedDeveloperExperienceLevel,
+            Cost = cost,
+            UserId = projectStateService.UserId!
+        };
+
+        await developerService.AddDeveloperAsync(dev);
+
+        projectStateService.Team.Add(dev);
+        snackbar.Add($"Developer {DeveloperName} added successfully!", Severity.Success);
+        DeveloperName = "";
+    }
+
+    private int GetDeveloperCost()
+    {
         var cost = SelectedDeveloperExperienceLevel switch
         {
             DeveloperExperienceLevel.Junior => projectStateService.CurrentProjectInstance.Project.DeveloperCosts
@@ -52,20 +71,7 @@ public class DeveloperManagementViewModel(
 
             _ => throw new ArgumentOutOfRangeException(nameof(SelectedDeveloperExperienceLevel))
         };
-
-        var dev = new Developer
-        {
-            Name = DeveloperName,
-            ExperienceLevel = SelectedDeveloperExperienceLevel,
-            Cost = cost,
-            UserId = projectStateService.UserId!
-        };
-
-        await developerService.AddDeveloperAsync(dev);
-
-        projectStateService.Team.Add(dev);
-        snackbar.Add($"Developer {DeveloperName} added successfully!", Severity.Success);
-        DeveloperName = "";
+        return cost;
     }
 
     public async Task RemoveDeveloper(Developer dev)
