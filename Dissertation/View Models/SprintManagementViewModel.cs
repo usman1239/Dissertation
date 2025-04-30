@@ -132,7 +132,7 @@ public class SprintManagementViewModel(
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
         Random random = new();
-        var eventChoice = random.Next(1, 4);
+        var eventChoice = random.Next(1, 5);
 
         switch (eventChoice)
         {
@@ -144,8 +144,25 @@ public class SprintManagementViewModel(
             case 3:
                 await HandleNewRandomUserStory();
                 break;
+            case 4:
+                HandleRandomBudgetCut();
+                break;
         }
     }
+
+    public void HandleRandomBudgetCut()
+    {
+        Random random = new();
+        var percentageCut = random.Next(10, 31);
+
+        var currentBudget = projectStateService.CurrentProjectInstance.Budget;
+        var cutAmount = (int)(currentBudget * (percentageCut / 100.0));
+
+        projectStateService.CurrentProjectInstance.Budget = Math.Max(currentBudget - cutAmount, 0);
+
+        snackbar.Add($"Budget cut! Project lost £{cutAmount:N0} ({percentageCut}% of current budget).", Severity.Warning);
+    }
+
 
     public async Task HandleNewRandomUserStory()
     {

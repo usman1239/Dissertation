@@ -18,4 +18,10 @@ public class UserStoryManagementViewModel(ProjectStateService projectStateServic
         story.DeveloperAssignedId = developer.Id;
         story.DeveloperAssigned = developer;
     }
+
+    public bool IsDeveloperUnavailable(int developerId)
+    {
+        var dev = projectStateService.Team.FirstOrDefault(d => d.Id == developerId);
+        return dev is { IsSick: true } or { IsPermanentlyAbsent: true };
+    }
 }
