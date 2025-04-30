@@ -66,17 +66,29 @@ public class SprintManagementViewModel(
 
         if (!projectStateService.Team.Any()) return false;
 
-        var hasAssignedIncompleteStories = projectStateService.UserStoryInstances
-            .Any(usi => usi is { DeveloperAssignedId: not null, IsComplete: false });
+        var availableDevelopers = projectStateService.Team
+            .Where(d => d is { IsSick: false, IsPermanentlyAbsent: false })
+            .Select(d => d.Id)
+            .ToHashSet();
 
-        var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
+        var currentSprint = projectStateService.Sprints.Count(s => s.IsCompleted);
         var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints;
 
-        return hasAssignedIncompleteStories && completedSprintsCount < totalSprints;
+        if (currentSprint >= totalSprints)
+            return false;
+
+        var hasAssignableStories = projectStateService.UserStoryInstances
+            .Any(usi =>
+                usi is { IsComplete: false, DeveloperAssignedId: not null } &&
+                availableDevelopers.Contains(usi.DeveloperAssignedId.Value));
+
+        return hasAssignableStories;
     }
+
 
     private bool CanAffordSprint()
     {
+        
         var totalSalary = GetTotalSalary();
         if (projectStateService.CurrentProjectInstance.Budget >= totalSalary) return true;
 
@@ -117,13 +129,10 @@ public class SprintManagementViewModel(
 
     private async Task HandleRandomEvents()
     {
-        var totalSprints = projectStateService.CurrentProjectInstance.Project.NumOfSprints;
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
-        if (completedSprintsCount < totalSprints * 2 / 3) return;
-
         Random random = new();
-        var eventChoice = random.Next(1, 4);
+        var eventChoice = random.Next(1, 5);
 
         switch (eventChoice)
         {
@@ -135,8 +144,25 @@ public class SprintManagementViewModel(
             case 3:
                 await HandleNewRandomUserStory();
                 break;
+            case 4:
+                HandleRandomBudgetCut();
+                break;
         }
     }
+
+    public void HandleRandomBudgetCut()
+    {
+        Random random = new();
+        var percentageCut = random.Next(10, 31);
+
+        var currentBudget = projectStateService.CurrentProjectInstance.Budget;
+        var cutAmount = (int)(currentBudget * (percentageCut / 100.0));
+
+        projectStateService.CurrentProjectInstance.Budget = Math.Max(currentBudget - cutAmount, 0);
+
+        snackbar.Add($"Budget cut! Project lost £{cutAmount:N0} ({percentageCut}% of current budget).", Severity.Warning);
+    }
+
 
     public async Task HandleNewRandomUserStory()
     {
@@ -157,10 +183,11 @@ public class SprintManagementViewModel(
         var sickDeveloper = GetRandomSickDeveloper();
         if (random.Next(0, 2) == 0)
         {
-            sickDeveloper.SickUntilSprint = completedSprintsCount + 1;
+            var sickDeveloperSickUntilSprint = completedSprintsCount + random.Next(1,3);
+            sickDeveloper.SickUntilSprint = sickDeveloperSickUntilSprint;
             sickDeveloper.IsSick = true;
             sickDeveloper.IsPermanentlyAbsent = false;
-            snackbar.Add($"{sickDeveloper.Name} is sick and will miss the next sprint.", Severity.Warning);
+            snackbar.Add($"{sickDeveloper.Name} is sick and will miss until sprint ${sickDeveloperSickUntilSprint}", Severity.Warning);
         }
         else
         {

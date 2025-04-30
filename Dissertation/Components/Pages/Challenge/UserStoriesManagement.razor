@@ -26,6 +26,9 @@
 			<tbody>
 			@foreach (var story in ViewModel.ProjectStateService.UserStoryInstances)
 			{
+				var assignedDev = ViewModel.ProjectStateService.Team.FirstOrDefault(d => d.Id == story.DeveloperAssignedId);
+				var isAssignedDevUnavailable = assignedDev != null && ViewModel.UserStoryViewModel.IsDeveloperUnavailable(assignedDev.Id);
+
 				<tr>
 					<td>@story.UserStory.Title</td>
 					<td>@story.UserStory.Description</td>
@@ -33,20 +36,30 @@
 					<td>
 						<InputSelect @bind-Value:get="story.DeveloperAssignedId"
 						             @bind-Value:set="value => ViewModel.UserStoryViewModel.AssignDeveloperToStory(story, value)">
-
 							<option value="">Unassigned</option>
 							@foreach (var developer in ViewModel.ProjectStateService.Team)
 							{
-								<option value="@developer.Id">@developer.Name (@developer.ExperienceLevel)</option>
+								var isUnavailable = ViewModel.UserStoryViewModel.IsDeveloperUnavailable(developer.Id);
+								<option value="@developer.Id"
+								        disabled="@isUnavailable"
+								        style="color: @(isUnavailable ? "gray" : "black")">
+									@developer.Name (@developer.ExperienceLevel) @(isUnavailable ? " - Unavailable" : "")
+								</option>
 							}
 						</InputSelect>
+
+						@if (isAssignedDevUnavailable)
+						{
+							<MudTooltip Text="This developer is currently unavailable (sick or absent)">
+								<MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" Style="margin-left: 4px;"/>
+							</MudTooltip>
+						}
 					</td>
 					<td>
 						<MudStack>
 							<MudProgressLinear Value="@story.Progress"
 							                   Color="@(story.Progress < 30 ? Color.Error : story.Progress < 70 ? Color.Warning : Color.Success)"
-							                   Rounded="true"
-							                   Height="10px"/>
+							                   Rounded="true"/>
 							<MudText Typo="Typo.body2" Class="text-center">@story.Progress%</MudText>
 						</MudStack>
 					</td>
