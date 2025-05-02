@@ -233,6 +233,9 @@ namespace Dissertation.Migrations
                     b.Property<int>("UserStoryId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("UserStoryType")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeveloperAssignedId");

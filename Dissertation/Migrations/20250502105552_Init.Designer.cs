@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250402162558_Init1")]
-    partial class Init1
+    [Migration("20250502105552_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -234,6 +234,9 @@ namespace Dissertation.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("UserStoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserStoryType")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
