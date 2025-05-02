@@ -70,8 +70,21 @@ public class SprintManagementViewModelTests
     [Fact]
     public void CanStartSprint_ShouldReturnTrue_WhenAllConditionsAreMet()
     {
-        _projectStateService.Team.Add(new Developer { Cost = 500 });
+        _projectStateService.Team.Add(new Developer
+        {
+            Id = 1,
+            Cost = 500,
+            IsSick = false,
+            IsPermanentlyAbsent = false
+        });
+
         _projectStateService.CurrentProjectInstance.Budget = 10000;
+        _projectStateService.CurrentProjectInstance.Project = new Project
+        {
+            NumOfSprints = 3
+        };
+        _projectStateService.Sprints.Clear();
+
         _projectStateService.UserStoryInstances.Add(new UserStoryInstance
         {
             DeveloperAssignedId = 1,
@@ -166,7 +179,7 @@ public class SprintManagementViewModelTests
         Assert.Equal(7000, _projectStateService.CurrentProjectInstance.Budget);
     }
 
-    [Theory] //FIX THIS
+    [Theory]
     [InlineData(DeveloperExperienceLevel.Junior, 20, 35)]
     [InlineData(DeveloperExperienceLevel.MidLevel, 40, 55)]
     [InlineData(DeveloperExperienceLevel.Senior, 60, 75)]
@@ -196,9 +209,10 @@ public class SprintManagementViewModelTests
     [Fact]
     public async Task HandleSickOrAbsentDeveloperEvent_ShouldMakeDeveloperSick()
     {
-        // Arrange
         var randomMock = new Mock<Random>();
-        randomMock.Setup(r => r.Next(0, 2)).Returns(0);
+        randomMock.SetupSequence(r => r.Next(It.IsAny<int>(), It.IsAny<int>()))
+            .Returns(0)
+            .Returns(1);
 
         var developer = new Developer { Id = 1, Name = "Alice", IsSick = false, IsPermanentlyAbsent = false };
         _projectStateService.Team.Add(developer);
@@ -207,22 +221,24 @@ public class SprintManagementViewModelTests
 
         _mockDeveloperService.Setup(ds => ds.UpdateDeveloperAbsence(It.IsAny<Developer>())).Returns(Task.CompletedTask);
 
-        // Act
         await _viewModel.HandleSickOrAbsentDeveloperEvent(randomMock.Object, completedSprintsCount);
 
-        // Assert
         Assert.True(developer.IsSick);
         Assert.Equal(completedSprintsCount + 1, developer.SickUntilSprint);
+        Assert.False(developer.IsPermanentlyAbsent);
+
         _mockSnackbar.Verify(
-            s => s.Add($"{developer.Name} is sick and will miss the next sprint.", Severity.Warning, null, null),
+            s => s.Add(
+                $"{developer.Name} is sick and will miss until sprint ${completedSprintsCount + 1}",
+                Severity.Warning, null, null),
             Times.Once);
+
         _mockDeveloperService.Verify(ds => ds.UpdateDeveloperAbsence(developer), Times.Once);
     }
 
     [Fact]
     public async Task HandleSickOrAbsentDeveloperEvent_ShouldMakeDeveloperPermanentlyAbsent()
     {
-        // Arrange
         var randomMock = new Mock<Random>();
         randomMock.Setup(r => r.Next(0, 2)).Returns(1);
 
@@ -233,10 +249,8 @@ public class SprintManagementViewModelTests
 
         _mockDeveloperService.Setup(ds => ds.UpdateDeveloperAbsence(It.IsAny<Developer>())).Returns(Task.CompletedTask);
 
-        // Act
         await _viewModel.HandleSickOrAbsentDeveloperEvent(randomMock.Object, completedSprintsCount);
 
-        // Assert
         Assert.True(developer.IsPermanentlyAbsent);
         Assert.False(developer.IsSick);
         Assert.Equal(0, developer.SickUntilSprint);
@@ -249,7 +263,6 @@ public class SprintManagementViewModelTests
     [Fact]
     public void CanShowSummary_ShouldReturnTrue_WhenAllUserStoriesAreCompleted()
     {
-        // Arrange
         var projectInstance = new ProjectInstance
         {
             UserStoryInstances =
@@ -265,20 +278,16 @@ public class SprintManagementViewModelTests
             Project = new Project { NumOfSprints = 2 }
         };
 
-        // Mock the projectStateService
         _projectStateService.CurrentProjectInstance = projectInstance;
 
-        // Act
         var result = _viewModel.CanShowSummary();
 
-        // Assert
         Assert.True(result);
     }
 
     [Fact]
     public void CanShowSummary_ShouldReturnTrue_WhenAllSprintsAreCompleted()
     {
-        // Arrange
         var projectInstance = new ProjectInstance
         {
             UserStoryInstances =
@@ -296,10 +305,8 @@ public class SprintManagementViewModelTests
 
         _projectStateService.CurrentProjectInstance = projectInstance;
 
-        // Act
         var result = _viewModel.CanShowSummary();
 
-        // Assert
         Assert.True(result);
     }
 
@@ -307,7 +314,6 @@ public class SprintManagementViewModelTests
     [Fact]
     public void CanShowSummary_ShouldReturnFalse_WhenNotAllUserStoriesOrSprintsAreCompleted()
     {
-        // Arrange
         var projectInstance = new ProjectInstance
         {
             UserStoryInstances =
@@ -325,17 +331,14 @@ public class SprintManagementViewModelTests
 
         _projectStateService.CurrentProjectInstance = projectInstance;
 
-        // Act
         var result = _viewModel.CanShowSummary();
 
-        // Assert
         Assert.False(result);
     }
 
     [Fact]
     public void CanShowSummary_ShouldReturnTrue_WhenSomeUserStoriesAndSprintsAreCompleted()
     {
-        // Arrange
         var projectInstance = new ProjectInstance
         {
             UserStoryInstances =
@@ -353,10 +356,8 @@ public class SprintManagementViewModelTests
 
         _projectStateService.CurrentProjectInstance = projectInstance;
 
-        // Act
         var result = _viewModel.CanShowSummary();
 
-        // Assert
         Assert.True(result);
     }
 
@@ -364,24 +365,20 @@ public class SprintManagementViewModelTests
     [Fact]
     public void UpdateStoryProgress_ShouldReturnZero_WhenTotalStoryPointsIsZero()
     {
-        // Arrange
         var stories = new List<UserStoryInstance>
         {
             new() { UserStory = new UserStory { StoryPoints = 0 } }
         };
         const int totalProgressIncrease = 100;
 
-        // Act
         var revenue = _viewModel.UpdateStoryProgress(stories, totalProgressIncrease);
 
-        // Assert
         Assert.Equal(0, revenue);
     }
 
     [Fact]
     public void UpdateStoryProgress_ShouldSkipSickDeveloper()
     {
-        // Arrange
         var developer = new Developer { Id = 1, IsSick = true };
         var stories = new List<UserStoryInstance>
         {
@@ -396,10 +393,8 @@ public class SprintManagementViewModelTests
 
         _projectStateService.Team = [developer];
 
-        // Act
         var revenue = _viewModel.UpdateStoryProgress(stories, totalProgressIncrease);
 
-        // Assert
         Assert.Equal(0, revenue);
         Assert.Equal(50, stories[0].Progress);
     }
@@ -407,7 +402,6 @@ public class SprintManagementViewModelTests
     [Fact]
     public void UpdateStoryProgress_ShouldSkipPermanentlyAbsentDeveloper()
     {
-        // Arrange
         var developer = new Developer { Id = 1, IsPermanentlyAbsent = true };
         var stories = new List<UserStoryInstance>
         {
@@ -421,30 +415,25 @@ public class SprintManagementViewModelTests
         const int totalProgressIncrease = 100;
         _projectStateService.Team = [developer];
 
-        // Act
         var revenue = _viewModel.UpdateStoryProgress(stories, totalProgressIncrease);
 
-        // Assert
-        Assert.Equal(0, revenue); // Permanently absent developer should be skipped
-        Assert.Equal(50, stories[0].Progress); // Progress should remain the same
+        Assert.Equal(0, revenue);
+        Assert.Equal(50, stories[0].Progress);
     }
 
     [Fact]
     public void UpdateStoryProgress_ShouldUpdateProgressBasedOnStoryPoints()
     {
-        // Arrange
         var stories = new List<UserStoryInstance>
         {
             new() { UserStory = new UserStory { StoryPoints = 10 }, Progress = 50, DeveloperAssignedId = 1 }
         };
         const int totalProgressIncrease = 30;
-
         var developer = new Developer { Id = 1, IsSick = false, IsPermanentlyAbsent = false };
         _projectStateService.Team = [developer];
-        // Act
+
         var revenue = _viewModel.UpdateStoryProgress(stories, totalProgressIncrease);
 
-        // Assert
         Assert.Equal(80, stories[0].Progress);
         Assert.Equal(0, revenue);
     }
@@ -453,7 +442,6 @@ public class SprintManagementViewModelTests
     [Fact]
     public void UpdateStoryProgress_ShouldCompleteStoryAndAddRevenue()
     {
-        // Arrange
         var stories = new List<UserStoryInstance>
         {
             new() { UserStory = new UserStory { StoryPoints = 10 }, Progress = 90, DeveloperAssignedId = 1 }
@@ -463,10 +451,8 @@ public class SprintManagementViewModelTests
         var developer = new Developer { Id = 1, IsSick = false, IsPermanentlyAbsent = false };
         _projectStateService.Team = [developer];
 
-        // Act
         var revenue = _viewModel.UpdateStoryProgress(stories, totalProgressIncrease);
 
-        // Assert
         Assert.Equal(100, stories[0].Progress);
         Assert.True(stories[0].IsComplete);
         Assert.Equal(5000, revenue);
@@ -476,7 +462,6 @@ public class SprintManagementViewModelTests
     [Fact]
     public void GetDeveloperAssignments_ShouldIncludeDeveloper_WhenAvailable()
     {
-        // Arrange
         var developer = new Developer
         {
             Id = 1,
@@ -495,10 +480,8 @@ public class SprintManagementViewModelTests
         _projectStateService.UserStoryInstances = [userStoryInstance];
         _projectStateService.Sprints = [];
 
-        // Act
         var developerAssignments = _viewModel.GetDeveloperAssignments();
 
-        // Assert
         Assert.Single(developerAssignments);
         Assert.Contains(1, developerAssignments.Keys);
     }
@@ -506,7 +489,6 @@ public class SprintManagementViewModelTests
     [Fact]
     public void GetDeveloperAssignments_ShouldExcludeSickDeveloper()
     {
-        // Arrange
         var developer = new Developer
         {
             Id = 1,
@@ -525,17 +507,14 @@ public class SprintManagementViewModelTests
         _projectStateService.UserStoryInstances = [userStoryInstance];
         _projectStateService.Sprints = [];
 
-        // Act
         var developerAssignments = _viewModel.GetDeveloperAssignments();
 
-        // Assert
         Assert.Empty(developerAssignments);
     }
 
     [Fact]
     public void GetDeveloperAssignments_ShouldExcludePermanentlyAbsentDeveloper()
     {
-        // Arrange
         var developer = new Developer
         {
             Id = 1,
@@ -554,11 +533,8 @@ public class SprintManagementViewModelTests
         _projectStateService.UserStoryInstances = [userStoryInstance];
         _projectStateService.Sprints = [];
 
-        // Act
         var developerAssignments = _viewModel.GetDeveloperAssignments();
 
-
-        // Assert
         Assert.Empty(developerAssignments);
     }
 
@@ -566,7 +542,6 @@ public class SprintManagementViewModelTests
     [Fact]
     public void GetDeveloperAssignments_ShouldExcludeDeveloperIfSickUntilSprint()
     {
-        // Arrange
         var developer = new Developer
         {
             Id = 1,
@@ -589,17 +564,14 @@ public class SprintManagementViewModelTests
             new Sprint()
         ];
 
-        // Act
         var developerAssignments = _viewModel.GetDeveloperAssignments();
 
-        // Assert
         Assert.Empty(developerAssignments);
     }
 
     [Fact]
     public void GetDeveloperAssignments_ShouldHandleMultipleDevelopersCorrectly()
     {
-        // Arrange
         var developer1 = new Developer
         {
             Id = 1,
@@ -637,10 +609,8 @@ public class SprintManagementViewModelTests
             new Sprint()
         ];
 
-        // Act
         var developerAssignments = _viewModel.GetDeveloperAssignments();
 
-        // Assert
         Assert.Single(developerAssignments);
         Assert.Contains(1, developerAssignments.Keys);
         Assert.DoesNotContain(2, developerAssignments.Keys);
