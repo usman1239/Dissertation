@@ -9,4 +9,5 @@ public interface IUserStoryService
     Task<List<UserStoryInstance>> GetUserStoryInstancesForProjectAsync(int projectInstanceId);
     Task AttachProjectAndUserStories(ProjectInstance projectInstance);
     Task TriggerRandomUserStoryEventAsync(int projectInstanceId);
+    Task<UserStoryInstance> CreateAndAssignBugToProjectAsync(ProjectInstance projectInstanceId);
 }

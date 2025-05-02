@@ -18,6 +18,7 @@ public static class ServiceExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INavigationService, NavigationService>();
         services.AddScoped<IBadgeService, BadgeService>();
+        services.AddScoped<IProjectAiService, ProjectAiService>();
 
         services.AddSingleton<ProjectStateService>();
         services.AddScoped<ProjectManagementViewModel>();

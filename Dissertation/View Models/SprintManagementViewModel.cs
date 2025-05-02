@@ -88,7 +88,6 @@ public class SprintManagementViewModel(
 
     private bool CanAffordSprint()
     {
-        
         var totalSalary = GetTotalSalary();
         if (projectStateService.CurrentProjectInstance.Budget >= totalSalary) return true;
 
@@ -132,7 +131,7 @@ public class SprintManagementViewModel(
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
         Random random = new();
-        var eventChoice = random.Next(1, 5);
+        var eventChoice = random.Next(1, 6);
 
         switch (eventChoice)
         {
@@ -147,7 +146,20 @@ public class SprintManagementViewModel(
             case 4:
                 HandleRandomBudgetCut();
                 break;
+            case 5:
+                await HandleBugInjectionEvent();
+                break;
         }
+    }
+
+    public async Task HandleBugInjectionEvent()
+    {
+        var bugInstance =
+            await userStoryService.CreateAndAssignBugToProjectAsync(projectStateService.CurrentProjectInstance);
+
+        projectStateService.UserStoryInstances.Add(bugInstance);
+
+        snackbar.Add($"🐞 A new bug appeared: {bugInstance.UserStory.Title}", Severity.Error);
     }
 
     public void HandleRandomBudgetCut()
@@ -160,7 +172,8 @@ public class SprintManagementViewModel(
 
         projectStateService.CurrentProjectInstance.Budget = Math.Max(currentBudget - cutAmount, 0);
 
-        snackbar.Add($"Budget cut! Project lost £{cutAmount:N0} ({percentageCut}% of current budget).", Severity.Warning);
+        snackbar.Add($"Budget cut! Project lost £{cutAmount:N0} ({percentageCut}% of current budget).",
+            Severity.Warning);
     }
 
 
@@ -183,11 +196,12 @@ public class SprintManagementViewModel(
         var sickDeveloper = GetRandomSickDeveloper();
         if (random.Next(0, 2) == 0)
         {
-            var sickDeveloperSickUntilSprint = completedSprintsCount + random.Next(1,3);
+            var sickDeveloperSickUntilSprint = completedSprintsCount + random.Next(1, 3);
             sickDeveloper.SickUntilSprint = sickDeveloperSickUntilSprint;
             sickDeveloper.IsSick = true;
             sickDeveloper.IsPermanentlyAbsent = false;
-            snackbar.Add($"{sickDeveloper.Name} is sick and will miss until sprint ${sickDeveloperSickUntilSprint}", Severity.Warning);
+            snackbar.Add($"{sickDeveloper.Name} is sick and will miss until sprint ${sickDeveloperSickUntilSprint}",
+                Severity.Warning);
         }
         else
         {

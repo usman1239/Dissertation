@@ -1,4 +1,6 @@
-﻿namespace Dissertation.Models.Challenge;
+﻿using Dissertation.Models.Challenge.Enums;
+
+namespace Dissertation.Models.Challenge;
 
 public class UserStoryInstance
 {
@@ -12,4 +14,6 @@ public class UserStoryInstance
     public int? DeveloperAssignedId { get; set; }
     public Developer? DeveloperAssigned { get; set; }
     public bool IsComplete { get; set; }
+
+    public UserStoryType UserStoryType { get; set; } = UserStoryType.Feature;
 }

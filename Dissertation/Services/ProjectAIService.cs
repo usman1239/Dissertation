@@ -1,0 +1,170 @@
+﻿using System.Net;
+using System.Text.Json;
+using Dissertation.Models.Challenge;
+using Dissertation.Models.Challenge.Enums;
+using Dissertation.Services.Interfaces;
+
+namespace Dissertation.Services;
+
+public class ProjectAiService(ProjectStateService projectStateService, IConfiguration config) : IProjectAiService
+{
+    private readonly string _apiKey = config["OpenRouter:ApiKey"]!;
+
+    public async Task<string> GetProjectSuggestionAsync(AssistantMode assistantMode)
+    {
+        try
+        {
+            var context = BuildProjectContext();
+
+            var roleInstructions = GetRoleInstructions(assistantMode);
+
+            var prompt = $"""
+                          You are a project management assistant operating in {assistantMode} mode.
+                          {roleInstructions}
+
+                          Here is the current project state:
+                          {context}
+
+                          Respond with 2–3 suggestions using this format:
+                          - **Suggestion:** One-sentence actionable advice.
+                          - **Reasoning:** Brief justification for the suggestion.
+
+                          Use clear and concise language. Avoid any generic tips.
+
+                          Make it specific to this project and its current state. 
+
+                          Mention team members, developers, stories etc. in response for better context.
+
+                          For example, a junior developer would not be as good to assign to a complex story as a senior developer.
+                          """;
+
+
+            //var prompt = $"""
+            //              You are a project management assistant in {assistantMode} mode.
+            //              {roleInstructions}
+
+            //              Here is the current project state:
+            //              {context}
+
+            //              Based on this, give 2-3 specific, clear, concise, actionable suggestions to improve the project.
+            //              Focus on issues like: developer assignment, budget concerns, incomplete stories, team overload, sprint pacing, or resource planning.
+
+            //              Each suggestion should be short, direct, and helpful.
+            //              """;
+
+            using var http = new HttpClient();
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
+            http.DefaultRequestHeaders.Add("HTTP-Referer", "https://localhost:7040");
+
+            var request = new
+            {
+                model = "gpt-3.5-turbo",
+                messages = new[]
+                {
+                    new { role = "system", content = "You are a helpful AI assistant for project management." },
+                    new { role = "user", content = prompt }
+                }
+            };
+
+            var response = await http.PostAsJsonAsync("https://openrouter.ai/api/v1/chat/completions", request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+
+                return response.StatusCode switch
+                {
+                    HttpStatusCode.Unauthorized =>
+                        "Error: Unauthorized. Please check your API key or authentication settings.",
+                    HttpStatusCode.TooManyRequests =>
+                        "Error: Too many requests. You've reached the rate limit. Please try again later.",
+                    HttpStatusCode.InternalServerError =>
+                        "Error: The server encountered an issue. Please try again later.",
+                    HttpStatusCode.BadRequest => "Error: Bad request. Please check your input parameters.",
+                    HttpStatusCode.NotFound => "Error: The requested resource could not be found.",
+                    _ =>
+                        $"Error: Unable to fetch suggestion. Status Code: {response.StatusCode}. Details: {errorMessage}"
+                };
+            }
+
+            var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+            var content = json.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+
+            return content?.Trim() ?? "I'm not sure what to suggest right now.";
+        }
+        catch (Exception ex)
+        {
+            // Return a friendly error message if an exception occurs
+            return $"Something went wrong while contacting the AI: {ex.Message}";
+        }
+    }
+
+
+    private string BuildProjectContext()
+    {
+        var sprints = projectStateService.Sprints;
+        var stories = projectStateService.UserStoryInstances;
+        var budget = projectStateService.CurrentProjectInstance.Budget;
+        var team = projectStateService.Team;
+        var currentProject = projectStateService.CurrentProjectInstance.Project;
+
+        // Budget
+
+        // Incomplete user stories
+        var incompleteStories = stories
+            .Where(s => !s.IsComplete)
+            .Select(s =>
+            {
+                var assigned = s.DeveloperAssigned != null
+                    ? s.DeveloperAssigned.Name
+                    : "Unassigned";
+                return $"- \"{s.UserStory.Title}\" ({s.UserStory.StoryPoints} pts), assigned to: {assigned}";
+            })
+            .ToList();
+
+        // Sprint performance: average completed stories per sprint
+        var completedInPastSprints = sprints
+            .Where(s => s.IsCompleted)
+            .Select(s => s.ProjectInstance.UserStoryInstances.Count(us => us.IsComplete))
+            .ToList();
+
+        var averageStoryCompletion = completedInPastSprints.Count != 0
+            ? completedInPastSprints.Average()
+            : 0;
+
+        var absentDevs = team.Where(t => t.IsPermanentlyAbsent || t.IsSick).ToList();
+        var activeDevs = team.Where(t => !t.IsPermanentlyAbsent || !t.IsSick).ToList();
+
+        return $"""
+                    Project Overview:
+                    - {sprints.Count(s => s.IsCompleted)} out of {currentProject.NumOfSprints} sprints completed.
+                    - {stories.Count(s => s.IsComplete)} of {stories.Count} stories completed.
+                    - Remaining budget: £{budget:N0} of £{budget:N0}.
+                    - Avg stories completed per sprint: {averageStoryCompletion:N2}
+                
+                    Team Info:
+                    - Active team: {string.Join(", ", activeDevs.Select(t => $"{t.Name} ({t.ExperienceLevel})"))}
+                    - Absent team members: {(absentDevs.Any() ? string.Join(", ", absentDevs.Select(t => t.Name)) : "None")}
+                
+                    Incomplete Stories:
+                    {string.Join("\n", incompleteStories)}
+                """;
+    }
+
+    private static string GetRoleInstructions(AssistantMode mode)
+    {
+        return mode switch
+        {
+            AssistantMode.Coach =>
+                "Act like a supportive coach. Focus on motivation, balanced workloads, and developer well-being.",
+            AssistantMode.Planner =>
+                "Act like a strategic planner. Focus on future sprint planning, prioritization, and developer utilization.",
+            AssistantMode.BudgetAnalyst =>
+                "Act like a budget analyst. Focus on cost efficiency, developer cost distribution, and preventing budget overruns.",
+            AssistantMode.Crisis =>
+                "Act like a crisis manager. Focus on urgent issues, missed deadlines, and immediate actions to save the project.",
+            _ =>
+                "Give project improvement suggestions. You are to help the user improve in their understanding of software project management (mainly Scrum)"
+        };
+    }
+}

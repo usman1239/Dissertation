@@ -1,0 +1,94 @@
+﻿@using Dissertation.Models.Challenge.Enums
+@using Dissertation.Services.Interfaces
+@inject IProjectAiService AiService
+
+<div>
+	<MudFab Icon="@Icons.Material.Filled.SmartToy" Color="Color.Primary" OnClick="ToggleChat"/>
+
+	@if (_isOpen)
+	{
+		<MudPaper Class="p-3">
+			<MudText Typo="Typo.h6">AI Assistant</MudText>
+
+			<MudSelect T="AssistantMode" @bind-Value="_selectedMode" Label="Assistant Mode" Dense Class="mb-2">
+				<MudSelectItem Value="AssistantMode.Coach">Coach Mode</MudSelectItem>
+				<MudSelectItem Value="AssistantMode.Planner">Planner Mode</MudSelectItem>
+				<MudSelectItem Value="AssistantMode.BudgetAnalyst">Budget Analyst Mode</MudSelectItem>
+				<MudSelectItem Value="AssistantMode.Crisis">Crisis Mode</MudSelectItem>
+			</MudSelect>
+
+			<MudButton Variant="Variant.Filled" OnClick="GetSuggestion" Disabled="@_isLoading">Get Suggestion</MudButton>
+			<MudButton OnClick="ToggleChat" Color="Color.Secondary">Close</MudButton>
+
+			<MudCard Class="mt-3 p-3">
+				<MudText Typo="Typo.subtitle1" GutterBottom="true">🧠 Assistant Response</MudText>
+				<MudDivider Class="mb-2"/>
+				<MudText Typo="Typo.body1" Style="white-space: pre-wrap;">
+					@((MarkupString)FormatResponse(_response))
+				</MudText>
+			</MudCard>
+
+
+			@if (_response.Contains("urgent", StringComparison.OrdinalIgnoreCase))
+			{
+				<MudText Color="Color.Error" Typo="Typo.subtitle2">⚠ Urgent issue detected!</MudText>
+			}
+
+			@if (!string.IsNullOrWhiteSpace(_error))
+			{
+				<MudAlert Severity="Severity.Error" Class="mt-2">@_error</MudAlert>
+			}
+		</MudPaper>
+	}
+</div>
+
+@code {
+	private bool _isOpen;
+	private bool _isLoading;
+	private string _response = "How can I help you today?";
+	private string? _error;
+	private AssistantMode _selectedMode = AssistantMode.Coach;
+
+	private async Task GetSuggestion()
+	{
+		_isLoading = true;
+		_error = null;
+		_response = "Thinking...";
+
+		try
+		{
+			_response = await AiService.GetProjectSuggestionAsync(_selectedMode);
+		}
+		catch (HttpRequestException)
+		{
+			_error = "Network issue. Please check your connection.";
+		}
+		catch (UnauthorizedAccessException)
+		{
+			_error = "Unauthorized. Check your API key.";
+		}
+		catch (Exception ex)
+		{
+			_error = $"Unexpected error: {ex.Message}";
+		}
+
+		_isLoading = false;
+	}
+
+	private void ToggleChat()
+	{
+		_isOpen = !_isOpen;
+	}
+
+	private string FormatResponse(string raw)
+	{
+		if (string.IsNullOrWhiteSpace(raw)) return "";
+
+		return raw
+			.Replace("**Suggestion:**", "<b>💡 Suggestion:</b>")
+			.Replace("**Reasoning:**", "<b>🧩 Reasoning:</b>")
+			.Replace("**", "")
+			.Replace("\n", "<br><br>");
+	}
+
+}
