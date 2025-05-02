@@ -1,6 +1,7 @@
 ﻿@using Dissertation.Models.Challenge.Enums
 @using Dissertation.Services.Interfaces
 @inject IProjectAiService AiService
+@inject IJSRuntime Js
 
 <link rel="stylesheet" href="Styles/Challenge/AiAssistant.css"/>
 
@@ -9,49 +10,53 @@
 
 	@if (_isOpen)
 	{
-		<MudPaper Class="ai-chat-box p-3">
-			<MudText Typo="Typo.h6" Class="ai-title">AI Assistant</MudText>
+		<div class="ai-assistant" @ref="_chatBoxRef">
+			<MudPaper Class="ai-chat-box p-3">
+				<MudText Typo="Typo.h6" Class="ai-title">AI Assistant</MudText>
 
-			<MudSelect T="AssistantMode" @bind-Value="_selectedMode" Label="Assistant Mode" Dense Class="mb-2 ai-select">
-				<MudSelectItem Value="AssistantMode.Coach">Coach Mode</MudSelectItem>
-				<MudSelectItem Value="AssistantMode.Planner">Planner Mode</MudSelectItem>
-				<MudSelectItem Value="AssistantMode.BudgetAnalyst">Budget Analyst Mode</MudSelectItem>
-				<MudSelectItem Value="AssistantMode.Crisis">Crisis Mode</MudSelectItem>
-			</MudSelect>
+				<MudSelect T="AssistantMode" @bind-Value="_selectedMode" Label="Assistant Mode" Dense Class="mb-2 ai-select">
+					<MudSelectItem Value="AssistantMode.Coach">Coach Mode</MudSelectItem>
+					<MudSelectItem Value="AssistantMode.Planner">Planner Mode</MudSelectItem>
+					<MudSelectItem Value="AssistantMode.BudgetAnalyst">Budget Analyst Mode</MudSelectItem>
+					<MudSelectItem Value="AssistantMode.Crisis">Crisis Mode</MudSelectItem>
+				</MudSelect>
 
-			<MudTextField @bind-Value="_userQuestion" Label="Ask the Assistant a Question" Variant="Variant.Outlined" Class="mb-2 ai-textfield"/>
+				<MudTextField @bind-Value="_userQuestion" Label="Ask the Assistant a Question" Variant="Variant.Outlined" Class="mb-2 ai-textfield"/>
 
-			<MudButton Variant="Variant.Filled" OnClick="GetCustomResponse" Disabled="@_isLoading" Class="ai-btn">Get Response</MudButton>
-			<MudButton OnClick="ToggleChat" Color="Color.Secondary" Class="ai-close-btn">Close</MudButton>
+				<MudButton Variant="Variant.Filled" OnClick="GetCustomResponse" Disabled="@_isLoading" Class="ai-btn">Get Response</MudButton>
+				<MudButton OnClick="ToggleChat" Color="Color.Secondary" Class="ai-close-btn">Close</MudButton>
 
-			<MudCard Class="ai-response-card mt-3 p-3">
-				<MudText Typo="Typo.subtitle1" GutterBottom="true">🧠 Assistant Response</MudText>
-				<MudDivider Class="mb-2"/>
-				<MudText Typo="Typo.body1" Style="white-space: pre-wrap;" class="ai-response-text">
-					@((MarkupString)FormatResponse(_response))
-				</MudText>
-			</MudCard>
+				<MudCard Class="ai-response-card mt-3 p-3">
+					<MudText Typo="Typo.subtitle1" GutterBottom="true">🧠 Assistant Response</MudText>
+					<MudDivider Class="mb-2"/>
+					<MudText Typo="Typo.body1" Style="white-space: pre-wrap;" class="ai-response-text">
+						@((MarkupString)FormatResponse(_response))
+					</MudText>
+				</MudCard>
 
-			@if (_response.Contains("urgent", StringComparison.OrdinalIgnoreCase))
-			{
-				<MudText Color="Color.Error" Typo="Typo.subtitle2" Class="ai-urgent-warning">⚠ Urgent issue detected!</MudText>
-			}
+				@if (_response.Contains("urgent", StringComparison.OrdinalIgnoreCase))
+				{
+					<MudText Color="Color.Error" Typo="Typo.subtitle2" Class="ai-urgent-warning">⚠ Urgent issue detected!</MudText>
+				}
 
-			@if (!string.IsNullOrWhiteSpace(_error))
-			{
-				<MudAlert Severity="Severity.Error" Class="mt-2 ai-error-alert">@_error</MudAlert>
-			}
-		</MudPaper>
+				@if (!string.IsNullOrWhiteSpace(_error))
+				{
+					<MudAlert Severity="Severity.Error" Class="mt-2 ai-error-alert">@_error</MudAlert>
+				}
+			</MudPaper>
+		</div>
 	}
 </div>
 
-@code {
+@code
+{
 	private bool _isOpen;
 	private bool _isLoading;
 	private string _response = "How can I help you today?";
 	private string? _error;
 	private string _userQuestion = string.Empty;
 	private AssistantMode _selectedMode = AssistantMode.Coach;
+	private ElementReference _chatBoxRef;
 
 	private async Task GetCustomResponse()
 	{
@@ -79,10 +84,19 @@
 		_isLoading = false;
 	}
 
-	private void ToggleChat()
+	private async Task ToggleChat()
 	{
 		_isOpen = !_isOpen;
+
+		// Delay to let the component render before scrolling
+		await Task.Delay(100);
+
+		if (_isOpen)
+		{
+			await Js.InvokeVoidAsync("scrollToElement", _chatBoxRef);
+		}
 	}
+
 
 	private string FormatResponse(string raw)
 	{
