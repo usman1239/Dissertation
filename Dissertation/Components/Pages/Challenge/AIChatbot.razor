@@ -17,7 +17,9 @@
 				<MudSelectItem Value="AssistantMode.Crisis">Crisis Mode</MudSelectItem>
 			</MudSelect>
 
-			<MudButton Variant="Variant.Filled" OnClick="GetSuggestion" Disabled="@_isLoading">Get Suggestion</MudButton>
+			<MudTextField @bind-Value="_userQuestion" Label="Ask the Assistant a Question" Variant="Variant.Outlined" Class="mb-2"/>
+
+			<MudButton Variant="Variant.Filled" OnClick="GetCustomResponse" Disabled="@_isLoading">Get Response</MudButton>
 			<MudButton OnClick="ToggleChat" Color="Color.Secondary">Close</MudButton>
 
 			<MudCard Class="mt-3 p-3">
@@ -27,7 +29,6 @@
 					@((MarkupString)FormatResponse(_response))
 				</MudText>
 			</MudCard>
-
 
 			@if (_response.Contains("urgent", StringComparison.OrdinalIgnoreCase))
 			{
@@ -47,9 +48,10 @@
 	private bool _isLoading;
 	private string _response = "How can I help you today?";
 	private string? _error;
+	private string _userQuestion = string.Empty;
 	private AssistantMode _selectedMode = AssistantMode.Coach;
 
-	private async Task GetSuggestion()
+	private async Task GetCustomResponse()
 	{
 		_isLoading = true;
 		_error = null;
@@ -57,7 +59,7 @@
 
 		try
 		{
-			_response = await AiService.GetProjectSuggestionAsync(_selectedMode);
+			_response = await AiService.GetProjectSuggestionAsync(_selectedMode, _userQuestion);
 		}
 		catch (HttpRequestException)
 		{
