@@ -110,6 +110,8 @@ public class SprintManagementViewModel(
         await userStoryService.SaveUserStoryInstancesAsync([.. projectStateService.UserStoryInstances]);
         await SaveSprint();
 
+        ClearMoraleBoosts();
+
         await ShowSummaryOrSprints();
     }
 
@@ -131,7 +133,7 @@ public class SprintManagementViewModel(
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
         Random random = new();
-        var eventChoice = random.Next(1, 6);
+        var eventChoice = random.Next(1, 7);
 
         switch (eventChoice)
         {
@@ -149,8 +151,31 @@ public class SprintManagementViewModel(
             case 5:
                 await HandleBugInjectionEvent();
                 break;
+            case 6:
+                HandleTeamMoraleBoost();
+                break;
         }
     }
+
+    public void HandleTeamMoraleBoost()
+    {
+        var eligibleDevs = projectStateService.Team
+            .Where(d => d is { IsSick: false, IsPermanentlyAbsent: false })
+            .ToList();
+
+        if (eligibleDevs.Count == 0)
+            return;
+
+        var random = new Random();
+        var boostCount = Math.Min(2, eligibleDevs.Count);
+        var selected = eligibleDevs.OrderBy(_ => random.Next()).Take(boostCount).ToList();
+
+        foreach (var dev in selected)
+            dev.MoraleBoost = 25;
+
+        snackbar.Add("✨ Morale boost! Some developers will be 25% more productive this sprint.", Severity.Success);
+    }
+
 
     public async Task HandleBugInjectionEvent()
     {
@@ -250,7 +275,15 @@ public class SprintManagementViewModel(
             _ => 0
         };
 
-        return (int)(baseProgress * workloadPenalty);
+        var moraleMultiplier = 1 + dev.MoraleBoost / 100.0;
+
+        return (int)(baseProgress * workloadPenalty * moraleMultiplier);
+    }
+
+    private void ClearMoraleBoosts()
+    {
+        foreach (var dev in projectStateService.Team)
+            dev.MoraleBoost = 0;
     }
 
     public int UpdateStoryProgress(List<UserStoryInstance> stories, int totalProgressIncrease)
