@@ -1,0 +1,219 @@
+﻿@using System.Text
+@using System.Timers
+@using Dissertation.Models.Challenge
+@using Dissertation.View_Models
+@implements IDisposable
+@inject ChallengeDashboardViewModel ViewModel
+
+<link rel="stylesheet" href="Styles/Challenge/Summary.css"/>
+
+<MudPaper Class="ai-chat-box p-3">
+
+	<div class="chat-container">
+
+		<div class="chat-box">
+			@foreach (var msg in _shownMessages)
+			{
+				<div class="chat-bubble @msg.Role.ToLower()" @key="msg.Text">
+					@if (msg.Text != null)
+					{
+						@((MarkupString)msg.Text)
+					}
+				</div>
+			}
+
+			@if (_isTyping)
+			{
+				<div class="chat-bubble assistant typing">Typing<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+			}
+		</div>
+
+		<MudButton class="btn btn-primary mt-3" @onclick="Restart">🔁 Replay Summary</MudButton>
+	</div>
+</MudPaper>
+
+@code {
+	private List<ChatMessage> _shownMessages = [];
+	private Timer? _messageTimer;
+	private bool _isTyping;
+	private ChatMessage? _fullSummary;
+	private List<ChatMessage> _summaryChunks = [];
+
+
+	protected override void OnInitialized()
+	{
+		GenerateFullSummary();
+		StartChatFlow();
+	}
+
+	private void GenerateFullSummary()
+	{
+		var fullText = CreateSummary();
+		var blocks = fullText.Split("<br><br>", StringSplitOptions.RemoveEmptyEntries);
+		_summaryChunks = blocks.Select(b => new ChatMessage("assistant", $"{b}<br><br>")).ToList();
+	}
+
+
+	private string CreateSummary()
+	{
+		var instance = ViewModel.ProjectStateService.CurrentProjectInstance;
+		var team = ViewModel.ProjectStateService.Team;
+		var sprints = ViewModel.ProjectStateService.Sprints.OrderBy(s => s.SprintNumber).ToList();
+		var stories = ViewModel.ProjectStateService.UserStoryInstances;
+
+		var completedSprints = sprints.Count(s => s.IsCompleted);
+		var totalSprints = sprints.Count;
+		var completedStories = stories.Count(s => s.IsComplete);
+		var totalStories = stories.Count;
+
+		decimal originalBudget = instance.Project.Budget;
+		decimal usedBudget = team.Sum(d => d.Cost) * completedSprints;
+		var savings = originalBudget - usedBudget;
+		var underBudgetPercent = originalBudget > 0 ? (int)(savings * 100.0m / originalBudget) : 0;
+
+		var sickDevelopers = team.Where(d => d.IsSick).ToList();
+		var permanentlyAbsent = team.Where(d => d.IsPermanentlyAbsent).ToList();
+		var moraleAvg = team.Any() ? team.Average(d => d.MoraleBoost) : 0;
+
+		var builder = new StringBuilder();
+
+		// Header
+		builder.AppendLine("🎯 <b>Project Summary Assistant</b><br>");
+		builder.AppendLine($"📄 Project: <b>{instance.Project.Title}</b><br>");
+		builder.AppendLine($"👤 User ID: {instance.UserId}<br><br>");
+
+		// Progress
+		builder.AppendLine($"✅ <b>Sprints Completed:</b> {completedSprints} / {totalSprints}<br>");
+		builder.AppendLine($"📚 <b>User Stories:</b> {completedStories} / {totalStories} completed<br>");
+
+		// Story Type Breakdown
+		builder.AppendLine("📋 <b>Story Types:</b><br>");
+		foreach (var group in stories.GroupBy(s => s.UserStoryType))
+		{
+			var total = group.Count();
+			var done = group.Count(s => s.IsComplete);
+			builder.AppendLine($"- {group.Key}: {total} total, {done} completed<br>");
+		}
+
+		// Sprint Breakdown
+		builder.AppendLine("<br>📊 <b>Sprint Breakdown:</b><br>");
+		foreach (var sprint in sprints)
+		{
+			builder.AppendLine($"Sprint {sprint.SprintNumber} ✅<br>");
+			builder.AppendLine($"• Progress: {sprint.Progress}%<br>");
+			builder.AppendLine($"• Summary: {sprint.Summary}<br><br>");
+		}
+
+		// Team Summary
+		builder.AppendLine("👥 <b>Team Summary:</b><br>");
+		foreach (var dev in team)
+		{
+			var assigned = stories.Where(s => s.DeveloperAssignedId == dev.Id).ToList();
+			var done = assigned.Count(s => s.IsComplete);
+
+			var status = dev.IsPermanentlyAbsent
+				? "❌ Permanently Absent"
+				: dev.IsSick
+					? $"🤒 Sick until Sprint {dev.SickUntilSprint}"
+					: "✅ Active";
+
+			builder.AppendLine($"• {dev.Name} [{dev.ExperienceLevel}] – Tasks: {assigned.Count}, Completed: {done}, Morale: {dev.MoraleBoost} ({status})<br>");
+		}
+
+		// Budget
+		builder.AppendLine("<br>💰 <b>Budget Overview:</b><br>");
+		builder.AppendLine($"• Original Budget: ${originalBudget}<br>");
+		builder.AppendLine($"• Estimated Used: ${usedBudget}<br>");
+		builder.AppendLine($"• Remaining: ${instance.Budget}<br>");
+		builder.AppendLine($"• Savings: ${savings} ({underBudgetPercent}% under)<br><br>");
+
+		// Morale & Risks
+		builder.AppendLine($"🌟 <b>Morale:</b> {moraleAvg}<br>");
+		builder.AppendLine($"🤒 <b>Sick Developers:</b> {sickDevelopers.Count}<br>");
+		foreach (var d in sickDevelopers)
+			builder.AppendLine($" - {d.Name} until Sprint {d.SickUntilSprint}<br>");
+		builder.AppendLine($"❌ <b>Permanently Absent:</b> {permanentlyAbsent.Count}<br><br>");
+
+		// Risk Assessment
+		builder.AppendLine("🚨 <b>Risk Assessment:</b><br>");
+		builder.AppendLine(sickDevelopers.Count > team.Count / 2
+			? "⚠️ High sick rate impacting sprint efficiency.<br>"
+			: "✅ Staffing looks stable.<br>");
+		builder.AppendLine(moraleAvg < -2
+			? "⚠️ Low morale. Consider balancing workloads or team rewards.<br><br>"
+			: "🎉 Morale is stable.<br><br>");
+
+		// Suggestions
+		builder.AppendLine("💡 <b>Suggestions:</b><br>");
+		builder.AppendLine("• Reassign key stories away from sick developers.<br>");
+		builder.AppendLine("• Monitor sprint velocity for adjustments.<br>");
+		builder.AppendLine("• Plan buffer capacity for absences.<br>");
+		builder.AppendLine("• Encourage collaboration and morale boosters.<br><br>");
+
+		// Milestones
+		builder.AppendLine("🏆 <b>Milestone Checks:</b><br>");
+		builder.AppendLine(completedSprints > 0
+			? "✅ First Sprint Completed<br>"
+			: "⏳ First Sprint Still Pending<br>");
+		if (completedStories >= 30)
+			builder.AppendLine("🏅 Problem Slayer Candidate: 30+ stories!<br>");
+		if (instance.Budget < originalBudget * 0.5m)
+			builder.AppendLine("💰 Budget Guru Potential: Significant savings!<br>");
+
+		return builder.ToString();
+	}
+
+
+	private string FormatResponse(string? raw)
+	{
+		return string.IsNullOrWhiteSpace(raw) ? "" : raw.Replace("\n", "<br>");
+	}
+
+	private int _currentChunkIndex = 0;
+
+	private void StartChatFlow()
+	{
+		_shownMessages.Clear();
+		_isTyping = true;
+		_currentChunkIndex = 0;
+
+		_messageTimer = new Timer(2000); // every 2 seconds
+		_messageTimer.Elapsed += async (_, _) => await ShowNextChunk();
+		_messageTimer.AutoReset = true;
+		_messageTimer.Start();
+	}
+
+	private async Task ShowNextChunk()
+	{
+		await InvokeAsync(() =>
+		{
+			if (_currentChunkIndex < _summaryChunks.Count)
+			{
+				_shownMessages.Add(_summaryChunks[_currentChunkIndex]);
+				_currentChunkIndex++;
+			}
+			else
+			{
+				_isTyping = false;
+				_messageTimer?.Stop();
+				_messageTimer?.Dispose();
+			}
+
+			StateHasChanged();
+		});
+	}
+
+
+	private void Restart()
+	{
+		_messageTimer?.Stop();
+		_messageTimer?.Dispose();
+		StartChatFlow();
+	}
+
+	public void Dispose()
+	{
+		_messageTimer?.Dispose();
+	}
+
+}
