@@ -49,10 +49,8 @@ public class ProjectAiService(ProjectStateService projectStateService, IConfigur
                    User has asked the following question:
                    "{userQuery}"
 
-                   Respond with 2–3 suggestions using this format:
-                   - **Suggestion:** One-sentence actionable advice.
-                   - **Reasoning:** Brief justification for the suggestion.
-                   
+                   Give a clear specific answer. 
+
                    Use clear and concise language. Avoid any generic tips.
                    
                    Make it specific to this project and its current state. 
