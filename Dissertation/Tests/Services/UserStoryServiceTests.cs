@@ -1,5 +1,6 @@
 ﻿using Dissertation.Data;
 using Dissertation.Models.Challenge;
+using Dissertation.Models.Challenge.Enums;
 using Dissertation.Services;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -174,5 +175,34 @@ public class UserStoryServiceTests
         // Assert
         Assert.NotNull(userStoryInstances);
         Assert.Contains(userStoryInstances, usi => usi.UserStoryId == 1);
+    }
+
+    [Fact]
+    public async Task CreateAndAssignBugToProjectAsync_ShouldCreateBugUserStoryAndInstance()
+    {
+        // Arrange
+        var project = new Project { Id = 1, Title = "Test Project", Budget = 1000 };
+        var projectInstance = new ProjectInstance { Id = 1, ProjectId = 1, UserId = "user1", Project = project };
+
+        await _dbContext.Projects.AddAsync(project);
+        await _dbContext.ProjectInstances.AddAsync(projectInstance);
+        await _dbContext.SaveChangesAsync();
+
+        // Act
+        var bugInstance = await _userStoryService.CreateAndAssignBugToProjectAsync(projectInstance);
+
+        // Assert
+        var bugStory = await _dbContext.UserStories.FirstOrDefaultAsync(us => us.Id == bugInstance.UserStoryId);
+
+        Assert.NotNull(bugInstance);
+        Assert.NotNull(bugStory);
+        Assert.Equal(project.Id, bugStory.ProjectId);
+        Assert.True(bugStory.IsRandomEvent);
+        Assert.Equal(UserStoryType.Bug, bugInstance.UserStoryType);
+        Assert.Equal(0, bugInstance.Progress);
+        Assert.False(bugInstance.IsComplete);
+        Assert.InRange(bugStory.StoryPoints, 2, 5);
+        Assert.Contains("Bug:", bugStory.Title);
+        Assert.Null(bugInstance.DeveloperAssignedId);
     }
 }

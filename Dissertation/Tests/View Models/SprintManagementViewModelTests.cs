@@ -615,4 +615,81 @@ public class SprintManagementViewModelTests
         Assert.Contains(1, developerAssignments.Keys);
         Assert.DoesNotContain(2, developerAssignments.Keys);
     }
+
+
+    [Fact]
+    public void HandleTeamMoraleBoost_ShouldApplyMoraleBoostToTwoEligibleDevelopers()
+    {
+        var dev1 = new Developer { Name = "Alice", IsSick = false, IsPermanentlyAbsent = false };
+        var dev2 = new Developer { Name = "Bob", IsSick = false, IsPermanentlyAbsent = false };
+        var dev3 = new Developer { Name = "Charlie", IsSick = true, IsPermanentlyAbsent = false };
+        _projectStateService.Team.Add(dev1);
+        _projectStateService.Team.Add(dev2);
+        _projectStateService.Team.Add(dev3);
+
+        _viewModel.HandleTeamMoraleBoost();
+
+        var boostedDevs = _projectStateService.Team.Where(d => d.MoraleBoost == 25).ToList();
+        Assert.True(boostedDevs.Count <= 2);
+        Assert.All(boostedDevs, d => Assert.False(d.IsSick));
+        _mockSnackbar.Verify(s => s.Add(
+                "✨ Morale boost! Some developers will be 25% more productive this sprint.",
+                Severity.Success,
+                null,
+                null),
+            Times.Once);
+    }
+
+    [Fact]
+    public void HandleTeamMoraleBoost_ShouldDoNothing_WhenNoEligibleDevelopers()
+    {
+        var dev = new Developer { IsSick = true, IsPermanentlyAbsent = true };
+        _projectStateService.Team.Add(dev);
+
+        _viewModel.HandleTeamMoraleBoost();
+
+        Assert.Equal(0, _projectStateService.Team.Count(d => d.MoraleBoost > 0));
+        _mockSnackbar.Verify(s => s.Add(It.IsAny<string>(), It.IsAny<Severity>(), null, null), Times.Never);
+    }
+
+    [Fact]
+    public async Task HandleBugInjectionEvent_ShouldAddBugAndShowSnackbar()
+    {
+        var bug = new UserStoryInstance
+        {
+            UserStory = new UserStory { Title = "Critical bug" }
+        };
+
+        _mockUserStoryService.Setup(s =>
+                s.CreateAndAssignBugToProjectAsync(_projectStateService.CurrentProjectInstance))
+            .ReturnsAsync(bug);
+
+        await _viewModel.HandleBugInjectionEvent();
+
+        Assert.Contains(bug, _projectStateService.UserStoryInstances);
+        _mockSnackbar.Verify(s => s.Add(
+                $"🐞 A new bug appeared: {bug.UserStory.Title}",
+                Severity.Error,
+                null,
+                null),
+            Times.Once);
+    }
+
+    [Fact]
+    public void HandleRandomBudgetCut_ShouldReduceBudgetAndShowSnackbar()
+    {
+        var originalBudget = 10000;
+        _projectStateService.CurrentProjectInstance.Budget = originalBudget;
+
+        _viewModel.HandleRandomBudgetCut();
+
+        var newBudget = _projectStateService.CurrentProjectInstance.Budget;
+        Assert.InRange(newBudget, 7000, 9000); // 10%-30% cut
+        _mockSnackbar.Verify(s => s.Add(
+                It.Is<string>(msg => msg.Contains("Budget cut!")),
+                Severity.Warning,
+                null,
+                null),
+            Times.Once);
+    }
 }

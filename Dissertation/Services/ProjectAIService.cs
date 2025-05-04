@@ -38,7 +38,6 @@ public class ProjectAiService(ProjectStateService projectStateService, IConfigur
 
                    For example, a junior developer would not be as good to assign to a complex story as a senior developer.
                    """
-
                 : $"""
                    You are a project management assistant operating in {assistantMode} mode.
                    {roleInstructions}
@@ -52,11 +51,11 @@ public class ProjectAiService(ProjectStateService projectStateService, IConfigur
                    Give a clear specific answer. 
 
                    Use clear and concise language. Avoid any generic tips.
-                   
+
                    Make it specific to this project and its current state. 
-                   
+
                    Mention team members, developers, stories etc. in response for better context.
-                   
+
                    For example, a junior developer would not be as good to assign to a complex story as a senior developer.
                    """;
 
@@ -107,58 +106,6 @@ public class ProjectAiService(ProjectStateService projectStateService, IConfigur
         }
     }
 
-
-    //private string BuildProjectContext()
-    //{
-    //    var sprints = projectStateService.Sprints;
-    //    var stories = projectStateService.UserStoryInstances;
-    //    var budget = projectStateService.CurrentProjectInstance.Budget;
-    //    var team = projectStateService.Team;
-    //    var currentProject = projectStateService.CurrentProjectInstance.Project;
-
-    //    // Budget
-
-    //    // Incomplete user stories
-    //    var incompleteStories = stories
-    //        .Where(s => !s.IsComplete)
-    //        .Select(s =>
-    //        {
-    //            var assigned = s.DeveloperAssigned != null
-    //                ? s.DeveloperAssigned.Name
-    //                : "Unassigned";
-    //            return $"- \"{s.UserStory.Title}\" ({s.UserStory.StoryPoints} pts), assigned to: {assigned}";
-    //        })
-    //        .ToList();
-
-    //    // Sprint performance: average completed stories per sprint
-    //    var completedInPastSprints = sprints
-    //        .Where(s => s.IsCompleted)
-    //        .Select(s => s.ProjectInstance.UserStoryInstances.Count(us => us.IsComplete))
-    //        .ToList();
-
-    //    var averageStoryCompletion = completedInPastSprints.Count != 0
-    //        ? completedInPastSprints.Average()
-    //        : 0;
-
-    //    var absentDevs = team.Where(t => t.IsPermanentlyAbsent || t.IsSick).ToList();
-    //    var activeDevs = team.Where(t => !t.IsPermanentlyAbsent || !t.IsSick).ToList();
-
-    //    return $"""
-    //                Project Overview:
-    //                - {sprints.Count(s => s.IsCompleted)} out of {currentProject.NumOfSprints} sprints completed.
-    //                - {stories.Count(s => s.IsComplete)} of {stories.Count} stories completed.
-    //                - Remaining budget: £{budget:N0} of £{budget:N0}.
-    //                - Avg stories completed per sprint: {averageStoryCompletion:N2}
-
-    //                Team Info:
-    //                - Active team: {string.Join(", ", activeDevs.Select(t => $"{t.Name} ({t.ExperienceLevel})"))}
-    //                - Absent team members: {(absentDevs.Any() ? string.Join(", ", absentDevs.Select(t => t.Name)) : "None")}
-
-    //                Incomplete Stories:
-    //                {string.Join("\n", incompleteStories)}
-    //            """;
-    //}
-
     private string BuildProjectContext()
     {
         var sprints = projectStateService.Sprints;
@@ -206,19 +153,19 @@ public class ProjectAiService(ProjectStateService projectStateService, IConfigur
 
         // Returning structured project context
         return $"""
-                **Project Overview**:
-                - {sprints.Count(s => s.IsCompleted)} of {currentProject.NumOfSprints} sprints completed.
-                - {stories.Count(s => s.IsComplete)} of {stories.Count} user stories completed.
-                - Remaining budget: {remainingBudget}.
-                - Average stories completed per sprint: {averageStoryCompletion:N2}
-                
-                **Team Info**:
-                - Active team: {activeDevsInfo}
-                - Absent team members: {absentDevsInfo}
-                
-                **Incomplete User Stories**:
-                {string.Join("\n", incompleteStories)}
-            """;
+                    **Project Overview**:
+                    - {sprints.Count(s => s.IsCompleted)} of {currentProject.NumOfSprints} sprints completed.
+                    - {stories.Count(s => s.IsComplete)} of {stories.Count} user stories completed.
+                    - Remaining budget: {remainingBudget}.
+                    - Average stories completed per sprint: {averageStoryCompletion:N2}
+                    
+                    **Team Info**:
+                    - Active team: {activeDevsInfo}
+                    - Absent team members: {absentDevsInfo}
+                    
+                    **Incomplete User Stories**:
+                    {string.Join("\n", incompleteStories)}
+                """;
     }
 
 

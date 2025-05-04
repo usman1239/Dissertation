@@ -9,7 +9,7 @@ public class UserProfileManagementViewModel(
     IProjectService projectService)
 {
     public List<UserBadge> UserBadges { get; set; } = [];
-    public List<ProjectInstance> ActiveProjects { get; private set; } = new();
+    public List<ProjectInstance> ActiveProjects { get; private set; } = [];
 
     public async Task GetUserBadges()
     {
