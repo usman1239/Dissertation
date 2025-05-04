@@ -6,21 +6,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Dissertation.Migrations
 {
     /// <inheritdoc />
-    public partial class projectinstancedailychallenge : Migration
+    public partial class init1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "AppliedChallengeKey",
+                name: "LastAppliedChallengeKey",
                 table: "ProjectInstances",
                 type: "text",
                 nullable: true);
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "LastChallengeAppliedDate",
+            migrationBuilder.AddColumn<DateOnly>(
+                name: "LastChallengeDate",
                 table: "ProjectInstances",
-                type: "timestamp with time zone",
+                type: "date",
                 nullable: true);
         }
 
@@ -28,11 +28,11 @@ namespace Dissertation.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AppliedChallengeKey",
+                name: "LastAppliedChallengeKey",
                 table: "ProjectInstances");
 
             migrationBuilder.DropColumn(
-                name: "LastChallengeAppliedDate",
+                name: "LastChallengeDate",
                 table: "ProjectInstances");
         }
     }

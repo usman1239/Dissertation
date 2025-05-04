@@ -337,7 +337,9 @@ public class SprintManagementViewModel(
 
     private int GetTotalSalary()
     {
-        return projectStateService.Team.Sum(dev => dev.Cost);
+        return projectStateService.ActiveChallenge?.Id == "CostSurge"
+            ? projectStateService.Team.Sum(dev => dev.GetEffectiveCost(true))
+            : projectStateService.Team.Sum(dev => dev.GetEffectiveCost(false));
     }
 
     private async Task SaveSprint()

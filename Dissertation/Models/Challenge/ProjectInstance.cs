@@ -11,6 +11,7 @@ public class ProjectInstance
     public int Budget { get; set; }
     public ICollection<Sprint> Sprints { get; set; } = [];
     public ICollection<UserStoryInstance> UserStoryInstances { get; set; } = [];
-    public DateTime? LastChallengeAppliedDate { get; set; }
-    public string? AppliedChallengeKey { get; set; }
+    public string? LastAppliedChallengeKey { get; set; }
+    public DateOnly? LastChallengeDate { get; set; }
+
 }

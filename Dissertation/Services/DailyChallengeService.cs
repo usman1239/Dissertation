@@ -31,24 +31,18 @@ public class DailyChallengeService : IDailyChallengeService
                     state.CurrentProjectInstance.Budget = (int)(state.CurrentProjectInstance.Budget * 0.5);
                 }
             },
-            ["LegacyCode"] = new()
+
+            ["CostSurge"] = new()
             {
-                Id = "LegacyCode",
-                Description = "All user stories are at least 6 story points.",
-                Apply = state =>
-                {
-                    foreach (var usi in state.UserStoryInstances)
-                        if (usi.UserStory.StoryPoints < 6)
-                            usi.UserStory.StoryPoints = 6;
-                }
+                Id = "CostSurge",
+                Description = "Developer costs are temporarily inflated by 50%.",
+                Apply = _ => { }
             }
-            // Add more as desired
         };
     }
 
     public ChallengeModifier GetTodayChallenge()
     {
-        // Deterministic rotation based on day of year
         var keys = _challenges.Keys.ToList();
         var index = DateTime.UtcNow.DayOfYear % keys.Count;
         var key = keys[index];

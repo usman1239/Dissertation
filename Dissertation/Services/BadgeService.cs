@@ -82,7 +82,24 @@ public class BadgeService(AppDbContext dbContext) : IBadgeService
             BadgeType.MasterArchitect => ("Completed 10 high-quality projects!", "🏗️"),
             BadgeType.Versatile => ("Worked with junior, mid, and senior developers!", "🔀"),
             BadgeType.ProblemSlayer => ("Completed 30 user stories across projects!", "⚔️"),
+            BadgeType.FirstDailyChallenge => ("Completed your first daily challenge!", "🏅"),
+            BadgeType.DailyGrinder => ("Completed 5 daily challenges!", "📅"),
             _ => ("Unknown Badge", "❓")
         };
+    }
+
+    public async Task CheckDailyBadges(string userId)
+    {
+        var totalCompletions = await dbContext.DailyChallengeCompletions.CountAsync(d => d.UserId == userId);
+
+        switch (totalCompletions)
+        {
+            case 1:
+                await AwardUserBadgeAsync(userId, BadgeType.FirstDailyChallenge);
+                break;
+            case 5:
+                await AwardUserBadgeAsync(userId, BadgeType.DailyGrinder);
+                break;
+        }
     }
 }

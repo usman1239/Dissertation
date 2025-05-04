@@ -22,6 +22,33 @@ namespace Dissertation.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Dissertation.Models.Challenge.DailyChallengeCompletion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChallengeKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ProjectInstanceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailyChallengeCompletions");
+                });
+
             modelBuilder.Entity("Dissertation.Models.Challenge.Developer", b =>
                 {
                     b.Property<int>("Id")
@@ -100,14 +127,14 @@ namespace Dissertation.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppliedChallengeKey")
-                        .HasColumnType("text");
-
                     b.Property<int>("Budget")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("LastChallengeAppliedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("LastAppliedChallengeKey")
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly?>("LastChallengeDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");

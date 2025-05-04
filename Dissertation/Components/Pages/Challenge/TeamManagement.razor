@@ -19,7 +19,12 @@
 		<MudSelect T="DeveloperExperienceLevel" Label="Experience Level" @bind-Value="ViewModel.DeveloperViewModel.SelectedDeveloperExperienceLevel">
 			@foreach (var role in Enum.GetValues(typeof(DeveloperExperienceLevel)).Cast<DeveloperExperienceLevel>())
 			{
-				<MudSelectItem T="DeveloperExperienceLevel" Value="@role">@role.ToString()</MudSelectItem>
+				var isDisabled = ViewModel.ProjectStateService.ActiveChallenge?.Id == "NoSeniorDevs" &&
+				                 role == DeveloperExperienceLevel.Senior;
+
+				<MudSelectItem T="DeveloperExperienceLevel" Value="@role" Disabled="@isDisabled">
+					@role.ToString()
+				</MudSelectItem>
 			}
 		</MudSelect>
 

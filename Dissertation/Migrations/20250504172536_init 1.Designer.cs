@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250502164708_morale boost property")]
-    partial class moraleboostproperty
+    [Migration("20250504172536_init 1")]
+    partial class init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,33 @@ namespace Dissertation.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.DailyChallengeCompletion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChallengeKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ProjectInstanceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailyChallengeCompletions");
+                });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.Developer", b =>
                 {
@@ -105,6 +132,12 @@ namespace Dissertation.Migrations
 
                     b.Property<int>("Budget")
                         .HasColumnType("integer");
+
+                    b.Property<string>("LastAppliedChallengeKey")
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly?>("LastChallengeDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");

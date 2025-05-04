@@ -12,6 +12,7 @@ public class ProjectManagementViewModel(
     IUserService userService,
     IUserStoryService userStoryService,
     IDailyChallengeService dailyChallengeService,
+    IBadgeService badgeService,
     ISnackbar snackbar,
     INavigationService navigationService)
 {
@@ -49,9 +50,8 @@ public class ProjectManagementViewModel(
         if (isSavedProject && existingProjectInstance != null)
         {
             LoadExistingProject(existingProjectInstance);
+            await GetDailyChallenge();
             navigationService.NavigateTo("/challenge/dashboard");
-
-            GetDailyChallenge();
 
             return;
         }
@@ -138,25 +138,33 @@ public class ProjectManagementViewModel(
         await LoadProjectsWithSavedProgress();
     }
 
-    public void GetDailyChallenge()
+    public async Task GetDailyChallenge()
     {
-        var today = DateTime.UtcNow.Date;
-        var currentProject = projectStateService.CurrentProjectInstance;
-
-        if (currentProject.LastChallengeAppliedDate == today)
-        {
-            CurrentChallengeDescription = $"Already applied: {currentProject.AppliedChallengeKey}";
-            return;
-        }
-
         var challenge = dailyChallengeService.GetTodayChallenge();
 
-        challenge.Apply(projectStateService);
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        currentProject.LastChallengeAppliedDate = today;
-        currentProject.AppliedChallengeKey = challenge.Id;
-        CurrentChallengeDescription = challenge.Description;
+        var alreadyCompleted = await projectService.HasCompletedChallengeAsync(
+            projectStateService.UserId!,
+            projectStateService.CurrentProjectInstance.Id,
+            today);
 
-        _ = projectService.UpdateProjectInstance(currentProject);
+        if (!alreadyCompleted)
+        {
+            challenge.Apply(projectStateService);
+            projectStateService.ActiveChallenge = challenge;
+
+            await projectService.UpdateProjectInstance(projectStateService.CurrentProjectInstance);
+
+            await projectService.MarkChallengeCompletedAsync(
+                projectStateService.UserId!,
+                projectStateService.CurrentProjectInstance.Id,
+                today,
+                challenge.Id);
+
+            await badgeService.CheckDailyBadges(projectStateService.UserId!);
+
+            CurrentChallengeDescription = challenge.Description;
+        }
     }
 }

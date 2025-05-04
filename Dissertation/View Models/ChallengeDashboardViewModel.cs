@@ -17,7 +17,7 @@ public class ChallengeDashboardViewModel(
     INavigationService navigationService)
 {
     public ProjectManagementViewModel ProjectViewModel { get; } =
-        new(projectStateService, projectService, userService, userStoryService, dailyChallengeService, snackbar,
+        new(projectStateService, projectService, userService, userStoryService, dailyChallengeService, badgeService, snackbar,
             navigationService);
 
     public UserProfileManagementViewModel UserProfileManagementViewModel { get; } =

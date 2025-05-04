@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250504141004_project instance - daily challenge")]
-    partial class projectinstancedailychallenge
+    [Migration("20250504162424_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,33 @@ namespace Dissertation.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.DailyChallengeCompletion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChallengeKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ProjectInstanceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailyChallengeCompletions");
+                });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.Developer", b =>
                 {
@@ -103,14 +130,8 @@ namespace Dissertation.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppliedChallengeKey")
-                        .HasColumnType("text");
-
                     b.Property<int>("Budget")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime?>("LastChallengeAppliedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");

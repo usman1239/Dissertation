@@ -8,4 +8,5 @@ public interface IBadgeService
     Task<List<UserBadge>> GetUserBadgesAsync(string userId);
     Task AwardUserBadgeAsync(string userId, BadgeType badgeType);
     Task CheckAndAwardBadgesAsync(string userId);
+    Task CheckDailyBadges(string userId);
 }
