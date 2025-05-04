@@ -71,4 +71,9 @@ public class ProjectService(AppDbContext dbContext) : IProjectService
             .ToListAsync();
     }
 
+    public async Task UpdateProjectInstance(ProjectInstance instance)
+    {
+        dbContext.ProjectInstances.Update(instance);
+        await dbContext.SaveChangesAsync();
+    }
 }

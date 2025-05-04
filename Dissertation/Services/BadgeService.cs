@@ -59,14 +59,14 @@ public class BadgeService(AppDbContext dbContext) : IBadgeService
         var exists = await dbContext.UserBadges.AnyAsync(b => b.UserId == userId && b.BadgeType == badgeType);
         if (!exists)
         {
-            var badgeDetails = GetBadgeDetails(badgeType);
+            var (description, icon) = GetBadgeDetails(badgeType);
 
             dbContext.UserBadges.Add(new UserBadge
             {
                 UserId = userId,
                 BadgeType = badgeType,
-                Description = badgeDetails.Description,
-                Icon = badgeDetails.Icon
+                Description = description,
+                Icon = icon
             });
 
             await dbContext.SaveChangesAsync();

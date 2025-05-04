@@ -11,12 +11,13 @@ public class ChallengeDashboardViewModel(
     IUserStoryService userStoryService,
     ISprintService sprintService,
     IBadgeService badgeService,
+    IDailyChallengeService dailyChallengeService,
     ProjectStateService projectStateService,
     ISnackbar snackbar,
     INavigationService navigationService)
 {
     public ProjectManagementViewModel ProjectViewModel { get; } =
-        new(projectStateService, projectService, userService, userStoryService, snackbar,
+        new(projectStateService, projectService, userService, userStoryService, dailyChallengeService, snackbar,
             navigationService);
 
     public UserProfileManagementViewModel UserProfileManagementViewModel { get; } =

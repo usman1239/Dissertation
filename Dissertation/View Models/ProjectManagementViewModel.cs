@@ -11,12 +11,14 @@ public class ProjectManagementViewModel(
     IProjectService projectService,
     IUserService userService,
     IUserStoryService userStoryService,
+    IDailyChallengeService dailyChallengeService,
     ISnackbar snackbar,
     INavigationService navigationService)
 {
     public string ErrorMessage { get; set; } = string.Empty;
     public ObservableCollection<Project?> AvailableProjects { get; set; } = [];
     public ObservableCollection<ProjectInstance> SavedProjects { get; set; } = [];
+    public string CurrentChallengeDescription { get; set; } = "";
 
     public async Task GetUser()
     {
@@ -48,6 +50,9 @@ public class ProjectManagementViewModel(
         {
             LoadExistingProject(existingProjectInstance);
             navigationService.NavigateTo("/challenge/dashboard");
+
+            GetDailyChallenge();
+
             return;
         }
 
@@ -131,5 +136,27 @@ public class ProjectManagementViewModel(
             snackbar.Add("Failed to delete the project.", Severity.Error);
 
         await LoadProjectsWithSavedProgress();
+    }
+
+    public void GetDailyChallenge()
+    {
+        var today = DateTime.UtcNow.Date;
+        var currentProject = projectStateService.CurrentProjectInstance;
+
+        if (currentProject.LastChallengeAppliedDate == today)
+        {
+            CurrentChallengeDescription = $"Already applied: {currentProject.AppliedChallengeKey}";
+            return;
+        }
+
+        var challenge = dailyChallengeService.GetTodayChallenge();
+
+        challenge.Apply(projectStateService);
+
+        currentProject.LastChallengeAppliedDate = today;
+        currentProject.AppliedChallengeKey = challenge.Id;
+        CurrentChallengeDescription = challenge.Description;
+
+        _ = projectService.UpdateProjectInstance(currentProject);
     }
 }

@@ -36,7 +36,6 @@
 	private List<ChatMessage> _shownMessages = [];
 	private Timer? _messageTimer;
 	private bool _isTyping;
-	private ChatMessage? _fullSummary;
 	private List<ChatMessage> _summaryChunks = [];
 
 
@@ -78,9 +77,7 @@
 		var builder = new StringBuilder();
 
 		// Header
-		builder.AppendLine("🎯 <b>Project Summary Assistant</b><br>");
 		builder.AppendLine($"📄 Project: <b>{instance.Project.Title}</b><br>");
-		builder.AppendLine($"👤 User ID: {instance.UserId}<br><br>");
 
 		// Progress
 		builder.AppendLine($"✅ <b>Sprints Completed:</b> {completedSprints} / {totalSprints}<br>");
@@ -137,7 +134,7 @@
 		// Risk Assessment
 		builder.AppendLine("🚨 <b>Risk Assessment:</b><br>");
 		builder.AppendLine(sickDevelopers.Count > team.Count / 2
-			? "⚠️ High sick rate impacting sprint efficiency.<br>"
+			? "⚠️ High absence rate impacting sprint efficiency.<br>"
 			: "✅ Staffing looks stable.<br>");
 		builder.AppendLine(moraleAvg < -2
 			? "⚠️ Low morale. Consider balancing workloads or team rewards.<br><br>"

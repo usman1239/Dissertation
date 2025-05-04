@@ -20,5 +20,4 @@ public class UserProfileManagementViewModel(
     {
         ActiveProjects = await projectService.GetUserProjectsAsync(projectStateService.UserId!);
     }
-
 }

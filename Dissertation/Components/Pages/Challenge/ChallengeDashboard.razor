@@ -50,6 +50,16 @@
 	<MudButton OnClick="@ViewModel.SprintViewModel.StartSprint" Variant="Variant.Filled" Color="Color.Secondary" FullWidth Disabled="!ViewModel.SprintViewModel.CanStartSprint()" Class="mud-button">Start Sprint</MudButton>
 </MudPaper>
 
+<div>
+	@if (!string.IsNullOrEmpty(ViewModel.ProjectViewModel.CurrentChallengeDescription))
+	{
+		<MudAlert Severity="Severity.Info">
+			🏆 Today's Challenge: @ViewModel.ProjectViewModel.CurrentChallengeDescription
+		</MudAlert>
+	}
+
+</div>
+
 <div class="ai-chatbot-container">
 	<AIChatbot/>
 </div>

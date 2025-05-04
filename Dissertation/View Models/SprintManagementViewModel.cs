@@ -132,6 +132,8 @@ public class SprintManagementViewModel(
     {
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
+        if (completedSprintsCount < 2) return;
+
         Random random = new();
         var eventChoice = random.Next(1, 7);
 

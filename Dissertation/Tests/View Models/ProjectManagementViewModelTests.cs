@@ -14,6 +14,8 @@ public class ProjectManagementViewModelTests
     private readonly Mock<ISnackbar> _mockSnackbar;
     private readonly Mock<IUserService> _mockUserService;
     private readonly Mock<IUserStoryService> _mockUserStoryService;
+    private readonly Mock<IDailyChallengeService> _mockDailyChallengeService;
+
     private readonly ProjectStateService _projectStateService;
     private readonly ProjectManagementViewModel _viewModel;
 
@@ -31,12 +33,14 @@ public class ProjectManagementViewModelTests
         _mockUserStoryService = new Mock<IUserStoryService>();
         _mockSnackbar = new Mock<ISnackbar>();
         _mockNavigationService = new Mock<INavigationService>();
+        _mockDailyChallengeService = new Mock<IDailyChallengeService>();
 
         _viewModel = new ProjectManagementViewModel(
             _projectStateService,
             _mockProjectService.Object,
             _mockUserService.Object,
             _mockUserStoryService.Object,
+            _mockDailyChallengeService.Object,
             _mockSnackbar.Object,
             _mockNavigationService.Object
         );

@@ -20,6 +20,8 @@ public static class ServiceExtensions
         services.AddScoped<IBadgeService, BadgeService>();
         services.AddScoped<IProjectAiService, ProjectAiService>();
 
+        services.AddSingleton<IDailyChallengeService, DailyChallengeService>();
+
         services.AddSingleton<ProjectStateService>();
         services.AddScoped<ProjectManagementViewModel>();
         services.AddScoped<DeveloperManagementViewModel>();
