@@ -22,13 +22,13 @@ public class DailyChallengeService : IDailyChallengeService
                     foreach (var senior in seniors) state.Team.Remove(senior);
                 }
             },
-            ["HalfBudget"] = new()
+            ["ReducedBudget"] = new()
             {
-                Id = "HalfBudget",
-                Description = "Budget has been slashed by 50%.",
+                Id = "ReducedBudget",
+                Description = "Budget has been slashed by 5%.",
                 Apply = state =>
                 {
-                    state.CurrentProjectInstance.Budget = (int)(state.CurrentProjectInstance.Budget * 0.5);
+                    state.CurrentProjectInstance.Budget = (int)(state.CurrentProjectInstance.Budget * 0.95);
                 }
             },
 

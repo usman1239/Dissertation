@@ -16,6 +16,7 @@ public class ProjectManagementViewModel(
     ISnackbar snackbar,
     INavigationService navigationService)
 {
+    public bool IsNewProject { get; set; } = true;
     public string ErrorMessage { get; set; } = string.Empty;
     public ObservableCollection<Project?> AvailableProjects { get; set; } = [];
     public ObservableCollection<ProjectInstance> SavedProjects { get; set; } = [];
@@ -50,6 +51,7 @@ public class ProjectManagementViewModel(
         if (isSavedProject && existingProjectInstance != null)
         {
             LoadExistingProject(existingProjectInstance);
+            IsNewProject = false;
             await GetDailyChallenge();
             navigationService.NavigateTo("/challenge/dashboard");
 
@@ -67,6 +69,7 @@ public class ProjectManagementViewModel(
             }
 
             await InitializeNewProjectInstance(selectedProject);
+            IsNewProject = true;
             navigationService.NavigateTo("/challenge/dashboard");
         }
     }
@@ -163,8 +166,12 @@ public class ProjectManagementViewModel(
                 challenge.Id);
 
             await badgeService.CheckDailyBadges(projectStateService.UserId!);
-
             CurrentChallengeDescription = challenge.Description;
+            snackbar.Add("Daily challenge applied: " + challenge.Description, Severity.Info);
+        }
+        else if (!IsNewProject)
+        {
+            CurrentChallengeDescription = $"Challenge Already Applied ({challenge.Description})";
         }
     }
 }
