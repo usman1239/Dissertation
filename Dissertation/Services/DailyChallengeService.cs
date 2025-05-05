@@ -35,7 +35,7 @@ public class DailyChallengeService : IDailyChallengeService
             ["CostSurge"] = new()
             {
                 Id = "CostSurge",
-                Description = "Developer costs are temporarily inflated by 50%.",
+                Description = "Developer costs are temporarily inflated by 5%.",
                 Apply = _ => { }
             }
         };

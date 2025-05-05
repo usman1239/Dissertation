@@ -15,5 +15,5 @@ public class Developer
     public int MoraleBoost { get; set; } = 0;
 
     public int GetEffectiveCost(bool applyModifiers) =>
-        applyModifiers ? (int)(Cost * 1.5) : Cost;
+        applyModifiers ? (int)(Cost * 1.05) : Cost;
 }
