@@ -1,10 +1,13 @@
 ﻿@page "/challenge/dashboard"
+@using Dissertation.Components.Dialogs
 @using Dissertation.View_Models
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.IdentityModel.Tokens
 @inherits LayoutComponentBase
 @attribute [Authorize]
+@inject IDialogService DialogService
 
 <link href="Styles/Home.css" rel="stylesheet"/>
 <link rel="stylesheet" href="Styles/Challenge/SelectProject.css"/>
@@ -66,6 +69,16 @@
 	           Class="mud-button color-secondary orbitron-text">
 		Start Sprint
 	</MudButton>
+	
+	<MudButton OnClick="ConfirmAsync"
+	           Variant="Variant.Filled"
+	           Color="Color.Secondary"
+	           FullWidth
+	           Disabled="_isChallengeActive"
+	           Class="mud-button color-secondary orbitron-text">
+		Daily Challenge!
+	</MudButton>
+
 </MudPaper>
 
 @if (!string.IsNullOrEmpty(ViewModel.ProjectViewModel.CurrentChallengeDescription))
@@ -78,3 +91,34 @@
 <div>
 	<AIChatbot/>
 </div>
+
+@code {
+
+	private bool _isChallengeActive;
+
+	protected override async Task OnInitializedAsync()
+	{
+		_isChallengeActive = await ViewModel.ProjectViewModel.IsChallengeActive();
+	}
+
+	private async Task ConfirmAsync()
+	{
+		var parameters = new DialogParameters<DailyChallengeDialog>
+		{
+			{ x => x.ContentText, "Are you sure you want to take on the Daily Challenge? This action cannot be undone" },
+			{ x => x.ButtonText, "Yes" },
+			{ x => x.Color, Color.Success }
+		};
+
+		var options = new DialogOptions { CloseOnEscapeKey = true };
+
+		var dialog = await DialogService.ShowAsync<DailyChallengeDialog>("Confirm", parameters, options);
+		var result = await dialog.Result;
+
+		if (result is { Canceled: false })
+		{
+			await ViewModel.ProjectViewModel.GetDailyChallenge();
+		}
+	}
+
+}

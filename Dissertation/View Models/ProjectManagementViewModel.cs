@@ -52,7 +52,6 @@ public class ProjectManagementViewModel(
         {
             LoadExistingProject(existingProjectInstance);
             IsNewProject = false;
-            await GetDailyChallenge();
             navigationService.NavigateTo("/challenge/dashboard");
 
             return;
@@ -139,6 +138,23 @@ public class ProjectManagementViewModel(
             snackbar.Add("Failed to delete the project.", Severity.Error);
 
         await LoadProjectsWithSavedProgress();
+    }
+
+    public async Task<bool> IsChallengeActive()
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var alreadyCompleted = await projectService.HasCompletedChallengeAsync(
+            projectStateService.UserId!,
+            projectStateService.CurrentProjectInstance.Id,
+            today);
+
+        if (alreadyCompleted)
+        {
+            snackbar.Add("Challenge was already taken on!");
+            CurrentChallengeDescription = dailyChallengeService.GetTodayChallenge().Description;
+        }
+        return alreadyCompleted;
     }
 
     public async Task GetDailyChallenge()
