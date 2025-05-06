@@ -31,6 +31,15 @@ public class TopicContentProvider : ITopicContentProvider
                     "- **Sprint Retrospective**: A reflection meeting where the team discusses what went well, what didn’t, and how to improve next time.",
                     "Scrum promotes *transparency*, *inspection*, and *adaptation*. Everyone can see the work, progress is reviewed frequently, and the plan is adjusted accordingly — this keeps the team responsive, not rigid.",
                     "Beyond software, Scrum has proven successful in industries such as marketing, education, product design, and more. Its emphasis on teamwork, fast feedback, and flexibility makes it a go-to choice for any team navigating complexity."
+                ],
+
+                SummaryPoints =
+                [
+                    "Scrum is an Agile framework built around short, iterative cycles called Sprints.",
+                    "Key roles: Product Owner, Scrum Master, and Development Team.",
+                    "Ceremonies include Sprint Planning, Daily Stand-up, Sprint Review, and Retrospective.",
+                    "Focuses on transparency, inspection, and adaptation.",
+                    "Encourages continuous feedback and delivery."
                 ]
             }
         },
@@ -50,6 +59,15 @@ public class TopicContentProvider : ITopicContentProvider
                     "A core idea in Kanban is to *limit work in progress* (WIP). By capping how many tasks are being worked on at once, teams avoid overload, improve focus, and deliver higher-quality outcomes faster.",
                     "Kanban encourages *evolutionary change*. Rather than overhauling everything at once, it promotes small, gradual improvements. Teams regularly review the flow of work to find ways to increase efficiency and reduce delays.",
                     "Originating in Toyota’s manufacturing system, Kanban has grown beyond its roots. It’s now used in software, healthcare, education, marketing — essentially, anywhere tasks need to move from idea to completion with clarity and flow."
+                ],
+
+                SummaryPoints =
+                [
+                    "Kanban uses a visual board to show work and its progress.",
+                    "Work moves through columns like To Do, In Progress, and Done.",
+                    "Limits the amount of work in progress (WIP) to avoid overload.",
+                    "Supports continuous delivery without fixed sprints.",
+                    "Helps teams improve flow and reduce delays."
                 ]
             }
         },
@@ -69,6 +87,14 @@ public class TopicContentProvider : ITopicContentProvider
                     "Effective planning considers time, scope, budget, risks, and team capabilities. Milestones are identified, deadlines set, and dependencies clarified. The plan acts like a map — guiding the team through the twists and turns of delivery.",
                     "Planning isn’t just a one-time event. As projects progress, conditions change. Revisiting the plan regularly allows for adjustments and keeps the team aligned with evolving goals.",
                     "Risk management is a key aspect. Anticipating potential problems and preparing fallback strategies helps the team stay calm under pressure and respond proactively rather than reactively."
+                ],
+                SummaryPoints =
+                [
+                    "Planning sets clear goals, timelines, and tasks for the project.",
+                    "Helps the team stay on track and use resources well.",
+                    "Includes estimating time, budget, and developer capacity.",
+                    "Should consider risks, scope, and changing needs.",
+                    "Strong planning leads to smoother execution."
                 ]
             }
         },
@@ -88,6 +114,15 @@ public class TopicContentProvider : ITopicContentProvider
                     "Modern development often uses Agile practices like Scrum or Kanban during execution. These methods help manage priorities and adjust quickly to changes. Daily check-ins and sprint reviews provide constant feedback loops.",
                     "Execution requires attention to quality. Continuous testing, code reviews, and integration practices ensure that problems are caught early — not at the end. Risk management is ongoing, and regular performance checks help prevent delays.",
                     "The team’s ability to adapt is crucial. If something isn’t working, plans can be revisited. Flexibility, clear communication, and teamwork are what drive successful execution."
+                ],
+
+                SummaryPoints =
+                [
+                    "Execution is when the planned work is carried out.",
+                    "Tasks are assigned, started, and tracked for progress.",
+                    "Regular updates help catch issues early.",
+                    "Focuses on teamwork, quality, and meeting goals.",
+                    "Adapts when changes or blockers appear."
                 ]
             }
         },

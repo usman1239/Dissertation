@@ -83,6 +83,17 @@
 			}
 		</div>
 	}
+
+	@if (_content.SummaryPoints?.Any() == true)
+	{
+		<h3>Key Takeaways</h3>
+		<ul class="summary-points">
+			@foreach (var point in _content.SummaryPoints)
+			{
+				<li>@point</li>
+			}
+		</ul>
+	}
 }
 else
 {
