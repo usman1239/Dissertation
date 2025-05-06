@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using Dissertation.Models.Interfaces
 @using Dissertation.Models.Learn
+@using Microsoft.IdentityModel.Tokens
 @inherits QuizCardBase
 
 @inject ITopicContentProvider ContentProvider
@@ -35,46 +36,53 @@
 		}
 	</section>
 
-	<h2>Video Lesson</h2>
+	@if (!_content.VideoPath.IsNullOrEmpty())
+	{
+		<h2>Video Lesson</h2>
 
-	<iframe width="100" height="100"
-	        src="@_content.VideoPath"
-	        title="YouTube video player" frameborder="0"
-	        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-	        allowfullscreen>
-	</iframe>
-
-	<h2>@_content.TopicName Quiz</h2>
-	<div class="quiz">
-		@if (QuestionIndex < Questions.Count)
-		{
-			<div class="quiz-header">
-				<h4>@Questions[QuestionIndex].QuestionTitle</h4>
-			</div>
-			<div class="xp-bar-container">
-				<div class="xp-bar" style="width: @(ScorePercentage)%"></div>
-			</div>
-			<div class="quiz-body">
-				@foreach (var option in Questions[QuestionIndex].PossibleOptions)
-				{
-					<button class="quiz-option" @onclick="() => OptionSelected(option)">
-						@option
-					</button>
-				}
-			</div>
-		}
-		else
-		{
-			<div class="display-score">
-				<h4>Your score: @Score / @(Questions.Count)</h4>
-			</div>
+		<iframe width="100" height="100"
+		        src="@_content.VideoPath"
+		        title="YouTube video player" frameborder="0"
+		        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		        allowfullscreen>
+		</iframe>
+	}
 
 
-			<div class="quiz-footer">
-				<button class="restart-btn" @onclick="RestartQuiz">Restart Quiz</button>
-			</div>
-		}
-	</div>
+	@if (Questions.Any())
+	{
+		<h2>@_content.TopicName Quiz</h2>
+		<div class="quiz">
+			@if (QuestionIndex < Questions.Count)
+			{
+				<div class="quiz-header">
+					<h4>@Questions[QuestionIndex].QuestionTitle</h4>
+				</div>
+				<div class="xp-bar-container">
+					<div class="xp-bar" style="width: @(ScorePercentage)%"></div>
+				</div>
+				<div class="quiz-body">
+					@foreach (var option in Questions[QuestionIndex].PossibleOptions)
+					{
+						<button class="quiz-option" @onclick="() => OptionSelected(option)">
+							@option
+						</button>
+					}
+				</div>
+			}
+			else
+			{
+				<div class="display-score">
+					<h4>Your score: @Score / @(Questions.Count)</h4>
+				</div>
+
+
+				<div>
+					<button class="restart-btn" @onclick="RestartQuiz">Restart Quiz</button>
+				</div>
+			}
+		</div>
+	}
 }
 else
 {
