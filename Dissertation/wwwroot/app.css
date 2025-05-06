@@ -1,4 +1,6 @@
-html, body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+html, body { font-family: 'Orbitron' }
 
 a, .btn-link { color: #006bb7; }
 

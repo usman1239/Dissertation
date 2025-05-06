@@ -1,92 +1,214 @@
-﻿/* General Text Styling */
-h2, .mud-typography-h2 {
-    color: #2c3e50;
-    font-size: 2.25rem;
-    font-weight: 600;
+﻿/* === Container === */
+.mud-paper {
+    background-color: transparent;
+    border-radius: 16px;
+    box-shadow: none;
+    margin: 2rem auto;
+    max-width: 1000px;
+    padding: 2rem;
 }
 
-h5, .mud-typography-h5 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-}
+/* === Headings === */
 
-.mud-typography-h6 {
-    color: #555;
-    font-size: 1.125rem;
+.mud-text h2 {
+    color: #1a202c;
+    font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 0.5rem;
 }
 
-/* Alert Box Styling */
-
-.alert-info, .mud-alert {
-    background-color: #e9f7fe;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px #000000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    color: #31708f;
-    margin: 1.5rem auto;
-    padding: 1rem;
+.mud-text h5 {
+    color: #2d3748;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
-/* Sprint List Items */
+/* === Sprint Summary Alert === */
+
+.mud-alert {
+    background-color: #e3f2fd;
+    border-left: 5px solid #2196f3;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    padding: 1rem 1.2rem;
+}
+
+.mud-alert .mud-text h6 {
+    color: #0d47a1;
+    font-weight: 600;
+}
+
+/* === Previous Sprint Header === */
+
+.mud-text h6 {
+    color: #374151;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+}
+
+/* === Sprint List Items === */
 
 .mud-list-item {
-    background-color: #fdfdfd;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
+    background-color: transparent;
+    border-left: 4px solid gold;
+    border-radius: 8px;
     margin-bottom: 1rem;
     padding: 1rem;
     transition: background-color 0.3s ease;
 }
 
-.mud-list-item:hover { background-color: #f1f9ff; }
+.mud-list-item:hover {
+    background-color: #ffd700;
+    background-color: rgba(255, 215, 0, 0.05); /* Very soft gold glow on hover */
+}
 
-/* Sprint Chart Card */
+.mud-list-item .mud-text h6 {
+    color: #b7791f; /* Golden brown */
+    font-weight: 700;
+}
+
+.mud-list-item .mud-text {
+    color: #4b5563;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* === Chart === */
 
 .mud-card {
+    background-color: #f4f6f9;
     border-radius: 12px;
-    box-shadow: 0 3px 6px #000000;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 18px #000000;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
     margin-top: 2rem;
+    padding: 1rem;
 }
 
-.mud-card-content { padding: 1.5rem; }
+.mud-card-content { padding: 1rem 1.5rem; }
 
+.mud-chart { margin-top: 1rem; }
 
+/* === Button === */
 
-.active {
-    background-color: #f0f8ff;
-    border-color: #007BFF;
-    font-weight: bold;
+.action-button {
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    padding: 0.9rem 1.4rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Text Wrapping for Summaries */
-
-pre, .mud-typography-body2 {
-    white-space: pre-wrap;
-    word-wrap: break-word;
+.action-button:hover {
+    background-color: #1e40af;
+    transform: translateY(-2px);
 }
 
-/* Divider Styling */
+/* === Divider === */
 
-.mud-divider {
-    background-color: #e0e0e0;
-    height: 1px;
-    margin: 2rem 0;
+.mud-divider { margin: 2.5rem 0; }
+
+/* === Body2 Small Text === */
+
+.mud-text.body2 {
+    color: #6b7280;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
 }
 
-/* Responsive */
+/* === Manage Sprints and Sprints Left Text (Gold Theme) === */
+
+.mud-text.manage-sprints,
+.mud-text.sprints-left {
+    color: #ffcc00; /* Gold theme */
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 6px #ffcc00;
+    text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
+}
+
+/* === Responsive === */
 
 @media (max-width: 768px) {
-    .mud-typography-h2 { font-size: 1.75rem; }
-
-    .mud-typography-h5 { font-size: 1.25rem; }
-
-    .mud-card-content { padding: 1rem; }
-
-    .nav-link {
-        text-align: center;
-        width: 100%;
+    .mud-paper {
+        margin: 1rem;
+        padding: 1.25rem;
     }
+
+    .mud-text h2 { font-size: 1.5rem; }
+
+    .mud-text h5 { font-size: 1.1rem; }
+
+    .mud-text h6 { font-size: 1.1rem; }
+
+    .action-button {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+    }
+}
+
+/* === Gold Theme */
+
+.sprint-header-text {
+    color: #ffcc00; /* Gold theme */
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 6px #ffcc00;
+    text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
+}
+
+.sprint-summary-alert {
+    background-color: #fff9e6;
+    border-left: 5px solid #ffcc00; /* Gold border */
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    padding: 1rem;
+}
+
+.previous-sprints-header {
+    color: #ffcc00; /* Gold theme (updated) */
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.action-button {
+    background-color: #b7791f;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 0.9rem 1.4rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-button:hover {
+    background-color: #9c6d2e;
+    transform: translateY(-2px);
+}
+
+.mud-card {
+    background-color: #f9f4e6;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px #000000;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.sprint-summary-text {
+    color: #ffcc00; /* Gold theme */
+    font-size: 1rem; /* Adjust size if necessary */
+    font-weight: 400;
 }

@@ -3,14 +3,12 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
-<link href="Styles/Main.css" rel="stylesheet"/>
 <link href="Styles/Home.css" rel="stylesheet"/>
-<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/SprintManagement.css"/>
 
 <MudPaper>
-	<MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary">Manage Sprints</MudText>
-	<MudText Typo="Typo.h2" Align="Align.Center" Color="Color.Primary">
+
+	<MudText Typo="Typo.h2" Align="Align.Center" Class="mud-text manage-sprints orbitron-text">
 		Sprints Left: @(ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints - ViewModel.ProjectStateService.CurrentProjectInstance.Sprints.Count)
 	</MudText>
 
@@ -23,8 +21,7 @@
 		</MudAlert>
 	}
 
-	<MudText Typo="Typo.h6" Color="Color.Secondary">📌 Previous Sprints</MudText>
-
+	<MudText Typo="Typo.h6" Class="previous-sprints-header orbitron-text">📌 Previous Sprints</MudText>
 	@if (ViewModel.ProjectStateService.Sprints.Any())
 	{
 		<MudList T="string">
@@ -32,10 +29,11 @@
 			{
 				<MudListItem>
 					<MudText Typo="Typo.h6">🚀 Sprint @sprint.SprintNumber Complete!</MudText>
-					<MudText Typo="Typo.body2" Color="Color.Inherit">@sprint.Summary</MudText>
+					<MudText Typo="Typo.body2" Class="sprint-summary-text">@sprint.Summary</MudText>
 				</MudListItem>
 			}
 		</MudList>
+
 
 		<MudCard>
 			<MudCardContent>
@@ -49,7 +47,7 @@
 	}
 	else
 	{
-		<MudText Typo="Typo.body2" Color="Color.Secondary">No completed sprints yet.</MudText>
+		<MudText Typo="Typo.h6" Class="mud-text manage-sprints orbitron-text">No completed sprints yet.</MudText>
 	}
 
 	<MudDivider/>

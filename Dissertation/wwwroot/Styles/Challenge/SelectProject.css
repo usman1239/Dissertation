@@ -1,101 +1,198 @@
-﻿/* Container for the MudPaper */
-.mud-paper {
-    background-color: #ffffff; /* White background */
-    border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 4px 10px #000000;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    margin: 20px; /* Margin around the MudPaper */
-    padding: 30px; /* Spacing inside the paper */
+﻿/* General Page Styling */
+.select-project-paper {
+    background-color: #1a202c;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px #000000;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 2rem;
 }
 
-/* Title Styling */
-
-.mud-text.typography-h4 {
-    color: #333333; /* Dark grey color */
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-/* Subtitle Styling (for project difficulty) */
-
-.mud-text.typography-h5 {
-    color: #555555; /* Medium grey */
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-}
-
-/* Subheading styling */
-
-.mud-text.typography-h6 {
-    color: #444444; /* Darker grey for emphasis */
-    font-size: 1rem;
+.dashboard-title {
+    color: #ffcc00;
+    font-size: 2.5rem;
     font-weight: bold;
 }
 
-/* Description and Budget Text Styling */
-
-.mud-text.typography-body2 {
-    color: #777777; /* Lighter grey */
-    font-size: 0.9rem;
-    margin-bottom: 10px;
+.dashboard-subtitle, .select-project-subtitle {
+    color: #cbd5e0;
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
 }
 
-/* Button Styling */
-
-.mud-button {
-    border-radius: 8px; /* Rounded corners for buttons */
-    margin-top: 10px; /* Space between buttons */
-    transition: background-color 0.3s ease; /* Smooth transition for button hover */
+.dashboard-description {
+    color: #cbd5e0;
+    font-size: 1.1rem;
+    margin-top: 1rem;
 }
-
-/* Primary Button (Select / Continue) */
-
-.mud-button.color-primary {
-    background-color: #1976D2; /* Blue color for primary buttons */
-    color: #ffffff;
-}
-
-.mud-button.color-primary:hover {
-    background-color: #1565C0; /* Darker blue on hover */
-}
-
-/* Error Button (Delete) */
-
-.mud-button.color-error {
-    background-color: #D32F2F; /* Red color for delete buttons */
-    color: #ffffff;
-}
-
-.mud-button.color-error:hover {
-    background-color: #C62828; /* Darker red on hover */
-}
-
-/* MudList Styling (List of Projects) */
-
-.mud-list-item {
-    background-color: #f9f9f9; /* Light grey background for list items */
-    border-radius: 8px;
-    margin: 10px 0;
-    padding: 15px;
-    transition: background-color 0.3s ease;
-}
-
-.mud-list-item:hover {
-    background-color: #eeeeee; /* Light hover effect */
-}
-
-/* Divider Styling */
 
 .mud-divider {
-    border-top: 1px solid #eeeeee; /* Light grey divider line */
-    margin: 20px 0; /* Space above and below the divider */
+    border-color: #333;
+    margin: 2rem 0;
 }
 
-/* Text Alignment */
+.mud-button {
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    transition: all 0.3s ease;
+}
 
-.mud-text.align-center { text-align: center; }
+/* Button hover effects */
 
-/* MudList Styling for Available Projects */
+.mud-button.color-primary:hover {
+    background-color: #f6ad55;
+    transform: scale(1.05);
+}
 
-.mud-list { margin-top: 20px; }
+.mud-button.color-primary:active {
+    background-color: #eab308;
+    transform: scale(0.98);
+}
+
+.mud-button.color-secondary {
+    background-color: #ffcc00;
+    color: #1a202c;
+}
+
+.mud-button.color-secondary:hover { background-color: #f6ad55; }
+
+.mud-button.color-secondary:active { background-color: #eab308; }
+
+/* Select Project Page Styling */
+
+.select-project-title {
+    color: #ffcc00;
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.project-list {
+    list-style: none;
+    margin-top: 1rem;
+    padding: 0;
+}
+
+.project-item {
+    background-color: #2d3748;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px #000000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.project-item:hover {
+    background-color: #434f5b;
+    box-shadow: 0 6px 20px #000000;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.project-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.project-title {
+    color: #ffcc00;
+    font-size: 1.75rem;
+    font-weight: bold;
+    text-shadow: 0 0 6px #ffcc00;
+    text-shadow: 0 0 6px rgba(255, 204, 0, 0.6);
+}
+
+.project-description {
+    color: #cbd5e0;
+    font-size: 1.1rem;
+}
+
+.project-details {
+    color: #cbd5e0;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.project-difficulty, .project-budget { margin-bottom: 0.5rem; }
+
+.project-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.project-action-btn {
+    background-color: #ffcc00;
+    border: none;
+    border-radius: 8px;
+    color: #1a202c;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.8rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.project-action-btn:hover { background-color: #f6ad55; }
+
+.project-action-btn:active { background-color: #eab308; }
+
+.continue-btn { background-color: #38b2ac; }
+
+.continue-btn:hover { background-color: #4fd1c5; }
+
+.delete-btn { background-color: #e53e3e; }
+
+.delete-btn:hover { background-color: #fc8181; }
+
+/* Divider Between Sections */
+
+.divider {
+    border-top: 1px solid #333;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+/* Challenge Alert */
+
+.challenge-alert {
+    background-color: #ffcc00;
+    background-color: rgba(255, 204, 0, 0.1);
+    border-left: 5px solid #ffcc00;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px #ffcc00;
+    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.2);
+    color: #ffcc00;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    padding: 1rem;
+    text-shadow: 0 0 6px #ffcc00;
+}
+
+.challenge-alert svg { color: #ffcc00; }
+
+/* Mobile Responsiveness */
+
+@media (max-width: 768px) {
+    .select-project-title { font-size: 1.75rem; }
+
+    .project-title { font-size: 1.5rem; }
+
+    .project-description { font-size: 0.95rem; }
+
+    .project-details { font-size: 0.9rem; }
+
+    .mud-button { font-size: 1rem; }
+
+    .project-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .divider { margin: 1rem 0; }
+}

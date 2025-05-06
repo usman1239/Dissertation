@@ -13,16 +13,24 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Scrum",
                 Description =
-                    "Scrum is a simple but powerful Agile framework that helps teams work together to solve complex problems and deliver valuable products. It focuses on teamwork, continuous progress, and adapting to change quickly.",
+                    "Scrum is a powerful yet lightweight Agile framework that enables teams to tackle complex challenges while delivering high-value products. Rooted in collaboration, adaptability, and rapid feedback, Scrum is ideal for teams looking to improve continuously and thrive in dynamic environments.",
 
                 VideoPath = "https://www.youtube.com/embed/b02ZkndLk1Y",
 
                 Paragraphs =
                 [
-                    "Scrum organizes work into short cycles called Sprints, usually lasting two to four weeks. At the end of each Sprint, the team delivers a usable piece of the product, allowing for regular feedback and fast improvements.",
-                    "The Scrum team includes three important roles: the Product Owner, who sets the vision and priorities; the Scrum Master, who helps the team stay focused and removes obstacles; and the Development Team, who builds the product together.",
-                    "Scrum uses regular events — called ceremonies — to keep everyone aligned. These include Sprint Planning (to set goals), Daily Stand-ups (quick daily check-ins), Sprint Reviews (to demo work and gather feedback), and Sprint Retrospectives (to reflect and improve).",
-                    "Scrum is used in many industries beyond software, such as marketing, education, and product design. Its focus on collaboration, quick learning, and flexibility makes it a popular choice for teams that want to adapt and succeed in changing environments."
+                    "At its heart, Scrum breaks down work into timeboxed iterations called *Sprints*, which usually last between two to four weeks. Each Sprint results in a potentially shippable product increment — meaning something real, testable, and valuable. This frequent delivery encourages constant feedback and learning.",
+                    "Scrum defines three key roles to keep the process smooth and focused:",
+                    "- **Product Owner**: Represents the voice of the customer. They define the vision, manage the product backlog, and ensure the team is working on what brings the most value.",
+                    "- **Scrum Master**: The team's coach. They guide the team in following Scrum principles, remove blockers, and help the team stay productive and focused.",
+                    "- **Development Team**: A cross-functional group of professionals who collaborate to design, build, and test the product. Everyone on the team is equally accountable for delivery.",
+                    "Scrum is structured around *ceremonies* — regular events that keep everyone aligned and moving forward:",
+                    "- **Sprint Planning**: The team selects which backlog items they will complete in the Sprint and define a goal.",
+                    "- **Daily Scrum (Stand-up)**: A quick daily meeting to synchronise progress and address any blockers.",
+                    "- **Sprint Review**: The team demonstrates what they've built, and feedback is gathered from stakeholders.",
+                    "- **Sprint Retrospective**: A reflection meeting where the team discusses what went well, what didn’t, and how to improve next time.",
+                    "Scrum promotes *transparency*, *inspection*, and *adaptation*. Everyone can see the work, progress is reviewed frequently, and the plan is adjusted accordingly — this keeps the team responsive, not rigid.",
+                    "Beyond software, Scrum has proven successful in industries such as marketing, education, product design, and more. Its emphasis on teamwork, fast feedback, and flexibility makes it a go-to choice for any team navigating complexity."
                 ]
             }
         },
@@ -32,16 +40,16 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Kanban",
                 Description =
-                    "Kanban is a flexible and visual method for managing work. It helps teams organize tasks, focus on what matters most, and deliver work more smoothly and efficiently.",
+                    "Kanban is a visual, flow-based approach to managing tasks and improving team performance. It helps teams focus on the most important work, reduce waste, and deliver results continuously and efficiently.",
 
                 VideoPath = "https://www.youtube.com/embed/iVaFVa7HYj4",
 
                 Paragraphs =
                 [
-                    "Kanban is built around a simple idea: make work visible. Teams create a board with columns like 'To Do', 'In Progress', and 'Done' to track the journey of every task. This makes it easy for everyone to see what’s happening at a glance.",
-                    "One of Kanban’s key strengths is limiting how much work is happening at once. By setting limits, teams avoid multitasking, reduce stress, and complete work faster and with higher quality.",
-                    "Kanban encourages continuous improvement. Teams regularly review how work flows through the board, looking for ways to remove bottlenecks and make small changes that lead to big improvements over time.",
-                    "Originally developed to improve manufacturing at Toyota, Kanban is now used across many industries — from software development to marketing, healthcare, and education — wherever there’s a need to organize work and keep teams moving forward."
+                    "Kanban is built on the principle of *visualising work*. Teams create a board with columns like ‘To Do’, ‘In Progress’, and ‘Done’, allowing everyone to see where each task is in its journey. This simple method reveals bottlenecks and helps teams stay organised.",
+                    "A core idea in Kanban is to *limit work in progress* (WIP). By capping how many tasks are being worked on at once, teams avoid overload, improve focus, and deliver higher-quality outcomes faster.",
+                    "Kanban encourages *evolutionary change*. Rather than overhauling everything at once, it promotes small, gradual improvements. Teams regularly review the flow of work to find ways to increase efficiency and reduce delays.",
+                    "Originating in Toyota’s manufacturing system, Kanban has grown beyond its roots. It’s now used in software, healthcare, education, marketing — essentially, anywhere tasks need to move from idea to completion with clarity and flow."
                 ]
             }
         },
@@ -51,31 +59,36 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Planning",
                 Description =
-                    "Planning is a crucial aspect of project management that involves defining goals, outlining tasks, and determining the necessary resources to achieve objectives. Effective planning ensures that projects are completed on time, within budget, and meet the desired outcomes. It requires careful consideration of potential risks, available resources, and stakeholder expectations.",
+                    "Planning is a vital part of project management. It involves setting clear objectives, breaking them down into tasks, and ensuring the right resources are in place. Good planning keeps a project on track, within budget, and aligned with expectations.",
+
+                VideoPath = "Videos/Planning.mp4",
+
                 Paragraphs =
                 [
-                    "In project management, planning is the first and most critical step in ensuring the success of a project. By clearly defining the objectives and breaking down the necessary tasks, a well-structured plan serves as a roadmap that guides the team through each stage of the project. It helps in identifying any potential obstacles or challenges early on, allowing for proactive solutions.",
-                    "An effective plan takes into account the project scope, timeline, and available resources. It also involves identifying key milestones and setting realistic deadlines to keep the project on track. Additionally, planning requires collaboration among team members and stakeholders to ensure alignment with the overall vision and goals.",
-                    "A key component of planning is risk management. By anticipating potential risks, project managers can develop mitigation strategies to minimise their impact. Regular review and adjustments to the plan throughout the project lifecycle are essential to ensure that the project stays aligned with its objectives."
-                ],
-                VideoPath = "Videos/Planning.mp4"
+                    "The planning phase sets the stage for everything that follows. It defines what success looks like, outlines who will do what, and establishes timelines. Without a solid plan, even great ideas can quickly fall apart.",
+                    "Effective planning considers time, scope, budget, risks, and team capabilities. Milestones are identified, deadlines set, and dependencies clarified. The plan acts like a map — guiding the team through the twists and turns of delivery.",
+                    "Planning isn’t just a one-time event. As projects progress, conditions change. Revisiting the plan regularly allows for adjustments and keeps the team aligned with evolving goals.",
+                    "Risk management is a key aspect. Anticipating potential problems and preparing fallback strategies helps the team stay calm under pressure and respond proactively rather than reactively."
+                ]
             }
         },
-
         {
             "EXECUTION",
             new TopicContent
             {
                 TopicName = "Execution",
                 Description =
-                    "Execution in software development project management refers to the phase where the plans and strategies outlined during the planning phase are put into action. It involves coordinating teams, managing resources, and ensuring that tasks are completed efficiently and effectively to meet the project's objectives. During execution, continuous monitoring and adjustments are necessary to keep the project on track and ensure quality delivery within the specified timelines.",
+                    "Execution is where the project plan turns into reality. It’s the phase where tasks are carried out, software is built, and progress is actively tracked. During execution, effective communication and regular adjustments are essential to keep things moving in the right direction.",
+
+                VideoPath = "Videos/Execution.mp4",
+
                 Paragraphs =
                 [
-                    "In the execution phase, the development team begins to implement the tasks defined during the planning phase. This includes writing code, conducting testing, and deploying features or updates. The project manager must ensure that resources are allocated properly and that any issues or obstacles are addressed swiftly. Effective communication and collaboration between team members, stakeholders, and other departments are key to keeping the project moving forward.",
-                    "A crucial part of execution is managing the development cycle. This involves tracking progress against milestones, managing scope creep, and adjusting resources as necessary. Scrum or Kanban methodologies, for instance, can be utilised to manage tasks and sprints in an iterative manner, ensuring that the team remains focused on delivering small, incremental improvements over time.",
-                    "Risk management and quality assurance play an integral experienceLevel during execution. As development progresses, unforeseen challenges may arise. Continuous integration and testing help to identify issues early, preventing defects from accumulating. By monitoring performance, reviewing code regularly, and making necessary adjustments, teams can ensure that the final product meets both user requirements and project goals."
-                ],
-                VideoPath = "Videos/Execution.mp4"
+                    "In this phase, the team implements the tasks defined during planning. This might involve coding, testing, designing, or releasing features. The project manager plays a key role in coordinating activities, tracking progress, and ensuring deadlines are met.",
+                    "Modern development often uses Agile practices like Scrum or Kanban during execution. These methods help manage priorities and adjust quickly to changes. Daily check-ins and sprint reviews provide constant feedback loops.",
+                    "Execution requires attention to quality. Continuous testing, code reviews, and integration practices ensure that problems are caught early — not at the end. Risk management is ongoing, and regular performance checks help prevent delays.",
+                    "The team’s ability to adapt is crucial. If something isn’t working, plans can be revisited. Flexibility, clear communication, and teamwork are what drive successful execution."
+                ]
             }
         }
     };

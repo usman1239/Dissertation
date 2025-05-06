@@ -164,8 +164,7 @@ public class QuestionProvider : IQuestionProvider
                     PossibleOptions = new List<string>
                     {
                         "To deliver a product increment", "To deliver a product",
-                        "To deliver a product increment and a product",
-                        "To deliver a product increment and a product increment"
+                        "To deliver a product increment and a product"
                     }
                 });
                 break;
@@ -178,13 +177,11 @@ public class QuestionProvider : IQuestionProvider
                     PossibleOptions = new List<string>
                     {
                         "To deliver the project", "To deliver the project increment",
-                        "To deliver the project increment and the project",
-                        "To deliver the project increment and the project increment"
+                        "To deliver the project increment and the project"
                     }
                 });
                 break;
         }
-
 
         return questions;
     }

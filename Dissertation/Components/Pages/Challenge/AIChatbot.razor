@@ -12,31 +12,31 @@
 	{
 		<div class="ai-assistant" @ref="_chatBoxRef">
 			<MudPaper Class="ai-chat-box p-3">
-				<MudText Typo="Typo.h6" Class="ai-title">AI Assistant</MudText>
+				<MudText Typo="Typo.h6" Class="ai-title orbitron-text">AI Assistant</MudText>
 
-				<MudSelect T="AssistantMode" @bind-Value="_selectedMode" Label="Assistant Mode" Dense Class="mb-2 ai-select">
-					<MudSelectItem Value="AssistantMode.Coach">Coach Mode</MudSelectItem>
-					<MudSelectItem Value="AssistantMode.Planner">Planner Mode</MudSelectItem>
-					<MudSelectItem Value="AssistantMode.BudgetAnalyst">Budget Analyst Mode</MudSelectItem>
-					<MudSelectItem Value="AssistantMode.Crisis">Crisis Mode</MudSelectItem>
+				<MudSelect T="AssistantMode" @bind-Value="_selectedMode" Label="Assistant Mode" Dense Class="mb-2 ai-select orbitron-text">
+					<MudSelectItem Value="AssistantMode.Coach" Class="orbitron-text">Coach Mode</MudSelectItem>
+					<MudSelectItem Value="AssistantMode.Planner" Class="orbitron-text">Planner Mode</MudSelectItem>
+					<MudSelectItem Value="AssistantMode.BudgetAnalyst" Class="orbitron-text">Budget Analyst Mode</MudSelectItem>
+					<MudSelectItem Value="AssistantMode.Crisis" Class="orbitron-text">Crisis Mode</MudSelectItem>
 				</MudSelect>
 
-				<MudTextField @bind-Value="_userQuestion" Label="Ask the Assistant a Question" Variant="Variant.Outlined" Class="mb-2 ai-textfield"/>
+				<MudTextField @bind-Value="_userQuestion" Label="Ask the Assistant a Question" Variant="Variant.Outlined" Class="mb-2 ai-textfield orbitron-text"/>
 
-				<MudButton Variant="Variant.Filled" OnClick="GetCustomResponse" Disabled="@_isLoading" Class="ai-btn">Get Response</MudButton>
-				<MudButton OnClick="ToggleChat" Color="Color.Secondary" Class="ai-close-btn">Close</MudButton>
+				<MudButton Variant="Variant.Filled" OnClick="GetCustomResponse" Disabled="@_isLoading" Class="ai-btn orbitron-text">Get Response</MudButton>
+				<MudButton OnClick="ToggleChat" Color="Color.Secondary" Class="ai-close-btn orbitron-text">Close</MudButton>
 
 				<MudCard Class="ai-response-card mt-3 p-3">
 					<MudText Typo="Typo.subtitle1" GutterBottom="true">🧠 Assistant Response</MudText>
 					<MudDivider Class="mb-2"/>
-					<MudText Typo="Typo.body1" Style="white-space: pre-wrap;" class="ai-response-text">
+					<MudText Typo="Typo.body1" Style="white-space: pre-wrap;" class="ai-response-text orbitron-text">
 						@((MarkupString)FormatResponse(_response))
 					</MudText>
 				</MudCard>
 
 				@if (_response.Contains("urgent", StringComparison.OrdinalIgnoreCase))
 				{
-					<MudText Color="Color.Error" Typo="Typo.subtitle2" Class="ai-urgent-warning">⚠ Urgent issue detected!</MudText>
+					<MudText Color="Color.Error" Typo="Typo.subtitle2" Class="ai-urgent-warning orbitron-text">⚠ Urgent issue detected!</MudText>
 				}
 
 				@if (!string.IsNullOrWhiteSpace(_error))

@@ -5,6 +5,7 @@
 @implements IDisposable
 @inject ChallengeDashboardViewModel ViewModel
 
+<link rel="stylesheet" href="Styles/Home.css"/>
 <link rel="stylesheet" href="Styles/Challenge/Summary.css"/>
 
 <MudPaper Class="ai-chat-box p-3">
@@ -28,7 +29,7 @@
 			}
 		</div>
 
-		<MudButton class="btn btn-primary mt-3" @onclick="Restart">🔁 Replay Summary</MudButton>
+		<MudButton class="btn btn-primary mt-3 orbitron-text" @onclick="Restart">🔁 Replay Summary</MudButton>
 	</div>
 </MudPaper>
 

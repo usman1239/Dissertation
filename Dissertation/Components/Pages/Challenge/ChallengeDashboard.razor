@@ -6,59 +6,74 @@
 @inherits LayoutComponentBase
 @attribute [Authorize]
 
-<link href="Styles/Main.css" rel="stylesheet"/>
 <link href="Styles/Home.css" rel="stylesheet"/>
-<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/SelectProject.css"/>
 
+<MudPaper Class="select-project-paper">
 
-<MudPaper Class="mud-paper">
-	<MudText Typo="Typo.h4" Align="Align.Center" Class="mud-text typography-h4">Project Dashboard</MudText>
+	<MudText Class="dashboard-title orbitron-text ">Project Dashboard</MudText>
 
-	<MudText Typo="Typo.h5" Align="Align.Center" Class="mud-text typography-h5">
+	<MudText Class="dashboard-subtitle orbitron-text">
 		Project Difficulty:
-		@(
-		ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 5 ? "Easy" :
-		ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 10 ? "Medium" :
-		"Hard"
-		)
+		@(ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 5 ? "Easy" :
+		ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 10 ? "Medium" : "Hard")
 	</MudText>
 
-	<MudText Typo="Typo.h6" Align="Align.Center" Class="mud-text typography-h6">@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Title</MudText>
-	<MudText Typo="Typo.body1" Align="Align.Center" Class="mud-text">@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Description</MudText>
-	<MudText Typo="Typo.body1" Align="Align.Center" Class="mud-text"><strong>Budget:</strong> £@(ViewModel.ProjectStateService.CurrentProjectInstance.Budget)</MudText>
+	<MudText Class="dashboard-subtitle orbitron-text">
+		@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Title
+	</MudText>
+
+	<MudText Class="dashboard-description orbitron-text">
+		@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Description
+	</MudText>
+
+	<MudText Class="dashboard-description orbitron-text">
+		<strong>Budget:</strong> £@(ViewModel.ProjectStateService.CurrentProjectInstance.Budget)
+	</MudText>
 
 	<MudDivider Class="mud-divider"/>
 
 	<MudGrid>
 		<MudItem xs="12" sm="6" md="3">
-			<MudButton Href="/challenge/team" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary">Manage Development Team</MudButton>
+			<MudButton Href="/challenge/team" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
+				Manage Development Team
+			</MudButton>
 		</MudItem>
 		<MudItem xs="12" sm="6" md="3">
-			<MudButton Href="/challenge/stories" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary">Manage User Stories</MudButton>
+			<MudButton Href="/challenge/stories" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
+				Manage User Stories
+			</MudButton>
 		</MudItem>
 		<MudItem xs="12" sm="6" md="3">
-			<MudButton Href="/challenge/sprints" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary">Manage Sprints</MudButton>
+			<MudButton Href="/challenge/sprints" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
+				Manage Sprints
+			</MudButton>
 		</MudItem>
 		<MudItem xs="12" sm="6" md="3">
-			<MudButton Class="mud-button color-primary" Color="Color.Primary" Disabled="!ViewModel.SprintViewModel.CanShowSummary()" FullWidth Href="/challenge/summary" Variant="Variant.Filled">View Project Summary</MudButton>
+			<MudButton Href="/challenge/summary" Variant="Variant.Filled" Color="Color.Primary" FullWidth Disabled="!ViewModel.SprintViewModel.CanShowSummary()" Class="mud-button color-primary orbitron-text">
+				View Project Summary
+			</MudButton>
 		</MudItem>
 	</MudGrid>
 
 	<MudDivider Class="mud-divider"/>
 
-	<MudButton OnClick="@ViewModel.SprintViewModel.StartSprint" Variant="Variant.Filled" Color="Color.Secondary" FullWidth Disabled="!ViewModel.SprintViewModel.CanStartSprint()" Class="mud-button">Start Sprint</MudButton>
+	<MudButton OnClick="@ViewModel.SprintViewModel.StartSprint"
+	           Variant="Variant.Filled"
+	           Color="Color.Secondary"
+	           FullWidth
+	           Disabled="!ViewModel.SprintViewModel.CanStartSprint()"
+			   Class="mud-button color-secondary orbitron-text">
+		Start Sprint
+	</MudButton>
 </MudPaper>
 
-<div>
-	@if (!string.IsNullOrEmpty(ViewModel.ProjectViewModel.CurrentChallengeDescription))
-	{
-		<MudAlert Severity="Severity.Info">
-			🏆 Today's Challenge: @ViewModel.ProjectViewModel.CurrentChallengeDescription
-		</MudAlert>
-	}
-
-</div>
+@if (!string.IsNullOrEmpty(ViewModel.ProjectViewModel.CurrentChallengeDescription))
+{
+	<MudAlert Class="challenge-alert">
+		🏆 Today's Challenge: @ViewModel.ProjectViewModel.CurrentChallengeDescription
+	</MudAlert>
+}
 
 <div>
 	<AIChatbot/>

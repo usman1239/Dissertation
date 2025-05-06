@@ -6,66 +6,73 @@
 @inherits LayoutComponentBase
 @attribute [Authorize]
 
-<link href="Styles/Main.css" rel="stylesheet"/>
 <link href="Styles/Home.css" rel="stylesheet"/>
-<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/SelectProject.css"/>
 
-
-<MudPaper Class="mud-paper">
-	<MudText Typo="Typo.h4" Align="Align.Center" Class="mud-text typography-h4">Select a Project</MudText>
+<MudPaper Class="select-project-paper">
+	<MudText Class="select-project-title orbitron-text">Select a Project</MudText>
 
 	@if (ViewModel.ProjectViewModel.SavedProjects.Any())
 	{
-		<MudText Typo="Typo.h5" Align="Align.Center" Class="mud-text typography-h5">Continue Saved Projects</MudText>
+		<MudText Class="select-project-subtitle orbitron-text">Continue Saved Projects</MudText>
 
-		<MudList T="string" Class="mud-list">
+		<ul class="project-list">
 			@foreach (var project in ViewModel.ProjectViewModel.SavedProjects)
 			{
-				<MudListItem Class="mud-list-item">
-					<MudText Typo="Typo.h6" Class="mud-text typography-h6">@project.Project.Title</MudText>
-					<MudText Typo="Typo.body2" Class="mud-text typography-body2">@project.Project.Description</MudText>
-					<MudText Typo="Typo.body2" Class="mud-text typography-body2">
-						<strong>Difficulty:</strong>
-						@(project.Project.NumOfSprints <= 5 ? "Easy" :
-						project.Project.NumOfSprints <= 10 ? "Medium" : "Hard")
-					</MudText>
-					<MudText Typo="Typo.body2" Class="mud-text typography-body2"><strong>Budget:</strong> £@project.Budget</MudText>
+				<li class="project-item">
+					<div class="project-header">
+						<span class="project-title">@project.Project.Title</span>
+						<span class="project-description">@project.Project.Description</span>
+					</div>
+					<div class="project-details">
+						<span class="project-difficulty">
+							<strong>Difficulty:</strong>
+							@(project.Project.NumOfSprints <= 5 ? "Easy" :
+							project.Project.NumOfSprints <= 10 ? "Medium" : "Hard")
+						</span>
+						<span class="project-budget"><strong>| Budget:</strong> £@project.Budget</span>
+					</div>
 
-					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => ViewModel.ProjectViewModel.SelectProject(project.ProjectId, true)" Class="mud-button color-primary">
-						Continue
-					</MudButton>
-					<MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => ViewModel.ProjectViewModel.DeleteSavedProjectInstanceAsync(project.ProjectId)" Class="mud-button color-error">
-						Delete
-					</MudButton>
-				</MudListItem>
+					<div class="project-actions">
+						<button class="project-action-btn continue-btn" @onclick="() => ViewModel.ProjectViewModel.SelectProject(project.ProjectId, true)">
+							Continue
+						</button>
+						<button class="project-action-btn delete-btn" @onclick="() => ViewModel.ProjectViewModel.DeleteSavedProjectInstanceAsync(project.ProjectId)">
+							Delete
+						</button>
+					</div>
+				</li>
 			}
-		</MudList>
+		</ul>
 	}
 
-	<MudDivider Class="mud-divider"/>
+	<div class="divider"></div>
 
-	<MudText Typo="Typo.h5" Align="Align.Center" Class="mud-text typography-h5">Choose A New Project</MudText>
+	<MudText Class="select-project-subtitle orbitron-text">Choose A New Project</MudText>
 
-	<MudList T="string" Class="mud-list">
+	<ul class="project-list">
 		@foreach (var project in ViewModel.ProjectViewModel.AvailableProjects)
 		{
-			<MudListItem Class="mud-list-item">
-				<MudText Typo="Typo.h6" Class="mud-text typography-h6">@project!.Title</MudText>
-				<MudText Typo="Typo.body2" Class="mud-text typography-body2">@project!.Description</MudText>
-				<MudText Typo="Typo.body2" Class="mud-text typography-body2">
-					<strong>Difficulty:</strong>
-					@(project!.NumOfSprints <= 5 ? "Easy" :
-					project.NumOfSprints <= 10 ? "Medium" : "Hard")
-				</MudText>
-				<MudText Typo="Typo.body2" Class="mud-text typography-body2"><strong>Budget:</strong> £@project!.Budget</MudText>
+			<li class="project-item">
+				<div class="project-header">
+					<span class="project-title">@project!.Title</span>
+					<span class="project-description">@project.Description</span>
+				</div>
+				<div class="project-details">
+					<span class="project-difficulty">
+						<strong>Difficulty:</strong>
+						@(project.NumOfSprints <= 5 ? "Easy" :
+						project.NumOfSprints <= 10 ? "Medium" : "Hard")
+					</span>
+					<span class="project-budget"><strong>| Budget:</strong> £@(project.Budget)</span>
+				</div>
 
-				<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => ViewModel.ProjectViewModel.SelectProject(project.Id, false)" Class="mud-button color-primary">
+				<button class="project-action-btn" @onclick="() => ViewModel.ProjectViewModel.SelectProject(project.Id, false)">
 					Select
-				</MudButton>
-			</MudListItem>
+				</button>
+			</li>
 		}
-	</MudList>
+	</ul>
 </MudPaper>
 
 @code {
