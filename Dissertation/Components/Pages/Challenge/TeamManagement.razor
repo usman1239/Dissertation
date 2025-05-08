@@ -39,9 +39,9 @@
 			{
 				<MudListItem T="string">
 					<MudText Typo="Typo.h6" Class="mb-1">
-						<strong>@dev.Name</strong>
+						<strong class="content-paragraphs">@dev.Name</strong>
 					</MudText>
-					<MudText Typo="Typo.body2" Class="mb-2">
+					<MudText Typo="Typo.body2" Class="mb-2 content-paragraphs">
 						@dev.ExperienceLevel | £@dev.Cost
 					</MudText>
 					<MudButton OnClick="() => ViewModel.DeveloperViewModel.RemoveDeveloper(dev)" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">

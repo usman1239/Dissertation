@@ -27,7 +27,6 @@
 				<MudButton OnClick="ToggleChat" Color="Color.Secondary" Class="ai-close-btn orbitron-text">Close</MudButton>
 
 				<MudCard Class="ai-response-card mt-3 p-3">
-					<MudText Typo="Typo.subtitle1" GutterBottom="true">🧠 Assistant Response</MudText>
 					<MudDivider Class="mb-2"/>
 					<MudText Typo="Typo.body1" Style="white-space: pre-wrap;" class="ai-response-text orbitron-text">
 						@((MarkupString)FormatResponse(_response))

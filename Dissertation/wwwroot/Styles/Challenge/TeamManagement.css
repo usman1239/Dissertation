@@ -86,19 +86,26 @@
 }
 
 .mud-list-item .mud-text {
-    color: #4b5563;
+    color: #ffffff;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.4;
 }
 
 .mud-text.body2 {
-    color: #6b7280;
+    color: #ffffff;
     font-size: 0.95rem;
     font-weight: 400;
     line-height: 1.5;
 }
 
+
+.content-paragraphs {
+    color: #ffffff;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
 
 /* === Developer Delete Button === */
 
