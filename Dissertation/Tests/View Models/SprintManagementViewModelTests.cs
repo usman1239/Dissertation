@@ -229,7 +229,7 @@ public class SprintManagementViewModelTests
 
         _mockSnackbar.Verify(
             s => s.Add(
-                $"{developer.Name} is sick and will miss until sprint ${completedSprintsCount + 1}",
+                $"{developer.Name} is sick and will miss until sprint {completedSprintsCount + 1}",
                 Severity.Warning, null, null),
             Times.Once);
 
