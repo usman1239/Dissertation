@@ -135,27 +135,30 @@ public class SprintManagementViewModel(
         if (completedSprintsCount < 2) return;
 
         Random random = new();
-        var eventChoice = random.Next(1, 7);
+        var eventChoice = random.Next(1, 10);
 
         switch (eventChoice)
         {
             case 1:
-                return;
-            case 2:
                 await HandleSickOrAbsentDeveloperEvent(random, completedSprintsCount);
                 break;
-            case 3:
+            case 2:
                 await HandleNewRandomUserStory();
                 break;
-            case 4:
+            case 3:
                 HandleRandomBudgetCut();
                 break;
-            case 5:
+            case 4:
                 await HandleBugInjectionEvent();
                 break;
-            case 6:
+            case 5:
                 HandleTeamMoraleBoost();
                 break;
+            case 6:
+            case 7:
+            case 8: 
+            case 9:
+                return;
         }
     }
 
