@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     /// <inheritdoc />
-    public partial class Init1 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +52,22 @@ namespace Dissertation.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DailyChallengeCompletions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ProjectInstanceId = table.Column<int>(type: "integer", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    ChallengeKey = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyChallengeCompletions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Developers",
                 columns: table => new
                 {
@@ -63,7 +79,8 @@ namespace Dissertation.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     IsSick = table.Column<bool>(type: "boolean", nullable: false),
                     IsPermanentlyAbsent = table.Column<bool>(type: "boolean", nullable: false),
-                    SickUntilSprint = table.Column<int>(type: "integer", nullable: false)
+                    SickUntilSprint = table.Column<int>(type: "integer", nullable: false),
+                    MoraleBoost = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -293,7 +310,8 @@ namespace Dissertation.Migrations
                     ProjectInstanceId = table.Column<int>(type: "integer", nullable: false),
                     Progress = table.Column<int>(type: "integer", nullable: false),
                     DeveloperAssignedId = table.Column<int>(type: "integer", nullable: true),
-                    IsComplete = table.Column<bool>(type: "boolean", nullable: false)
+                    IsComplete = table.Column<bool>(type: "boolean", nullable: false),
+                    UserStoryType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -408,6 +426,9 @@ namespace Dissertation.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "DailyChallengeCompletions");
 
             migrationBuilder.DropTable(
                 name: "Sprints");

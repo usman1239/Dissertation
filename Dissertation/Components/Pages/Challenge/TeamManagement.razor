@@ -4,9 +4,7 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 
-<link href="Styles/Main.css" rel="stylesheet"/>
 <link href="Styles/Home.css" rel="stylesheet"/>
-<link rel="stylesheet" href="Styles/Challenge/Shared.css"/>
 <link rel="stylesheet" href="Styles/Challenge/TeamManagement.css"/>
 
 <MudPaper Elevation="4" Square="true" Class="team-management-paper">
@@ -14,15 +12,21 @@
 	<div class="team-management-form">
 		<h4>Team</h4>
 
+		<!-- Developer Name Input -->
 		<MudInput T="string" Label="Developer Name" @bind-Value="ViewModel.DeveloperViewModel.DeveloperName"/>
 
+		<!-- Developer Experience Level Dropdown -->
 		<MudSelect T="DeveloperExperienceLevel" Label="Experience Level" @bind-Value="ViewModel.DeveloperViewModel.SelectedDeveloperExperienceLevel">
 			@foreach (var role in Enum.GetValues(typeof(DeveloperExperienceLevel)).Cast<DeveloperExperienceLevel>())
 			{
-				<MudSelectItem T="DeveloperExperienceLevel" Value="@role">@role.ToString()</MudSelectItem>
+				var isDisabled = ViewModel.ProjectStateService.ActiveChallenge?.Id == "NoSeniorDevs" && role == DeveloperExperienceLevel.Senior;
+				<MudSelectItem T="DeveloperExperienceLevel" Value="@role" Disabled="@isDisabled">
+					@role.ToString()
+				</MudSelectItem>
 			}
 		</MudSelect>
 
+		<!-- Add Developer Button -->
 		<MudButton OnClick="@ViewModel.DeveloperViewModel.AddDeveloper" Disabled="!ViewModel.DeveloperViewModel.CanAddDeveloper()" Class="mud-button">
 			Add Developer
 		</MudButton>
@@ -35,9 +39,9 @@
 			{
 				<MudListItem T="string">
 					<MudText Typo="Typo.h6" Class="mb-1">
-						<strong>@dev.Name</strong>
+						<strong class="content-paragraphs">@dev.Name</strong>
 					</MudText>
-					<MudText Typo="Typo.body2" Class="text-muted">
+					<MudText Typo="Typo.body2" Class="mb-2 content-paragraphs">
 						@dev.ExperienceLevel | £@dev.Cost
 					</MudText>
 					<MudButton OnClick="() => ViewModel.DeveloperViewModel.RemoveDeveloper(dev)" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small">
@@ -48,8 +52,9 @@
 		</MudList>
 	</div>
 
-	<div >
-		<MudNavLink Href="/challenge/dashboard" Class="nav-link" ActiveClass="active">⬅ Back to Dashboard</MudNavLink>
+	<!-- Back to Dashboard Button -->
+	<div>
+		<MudButton Href="/challenge/dashboard" Class="action-button">⬅ Back to Dashboard</MudButton>
 	</div>
 
 </MudPaper>

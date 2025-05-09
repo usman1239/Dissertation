@@ -6,5 +6,8 @@ public enum BadgeType
     SeasonedDeveloper,
     MasterArchitect,
     Versatile,
-    ProblemSlayer
+    ProblemSlayer,
+
+    FirstDailyChallenge,
+    DailyGrinder
 }

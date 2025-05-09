@@ -13,16 +13,33 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Scrum",
                 Description =
-                    "Scrum is a simple but powerful Agile framework that helps teams work together to solve complex problems and deliver valuable products. It focuses on teamwork, continuous progress, and adapting to change quickly.",
+                    "Scrum is a powerful yet lightweight Agile framework that enables teams to tackle complex challenges while delivering high-value products. Rooted in collaboration, adaptability, and rapid feedback, Scrum is ideal for teams looking to improve continuously and thrive in dynamic environments.",
 
                 VideoPath = "https://www.youtube.com/embed/b02ZkndLk1Y",
 
                 Paragraphs =
                 [
-                    "Scrum organizes work into short cycles called Sprints, usually lasting two to four weeks. At the end of each Sprint, the team delivers a usable piece of the product, allowing for regular feedback and fast improvements.",
-                    "The Scrum team includes three important roles: the Product Owner, who sets the vision and priorities; the Scrum Master, who helps the team stay focused and removes obstacles; and the Development Team, who builds the product together.",
-                    "Scrum uses regular events — called ceremonies — to keep everyone aligned. These include Sprint Planning (to set goals), Daily Stand-ups (quick daily check-ins), Sprint Reviews (to demo work and gather feedback), and Sprint Retrospectives (to reflect and improve).",
-                    "Scrum is used in many industries beyond software, such as marketing, education, and product design. Its focus on collaboration, quick learning, and flexibility makes it a popular choice for teams that want to adapt and succeed in changing environments."
+                    "At its heart, Scrum breaks down work into time-boxed iterations called *Sprints*, which usually last between two to four weeks. Each Sprint results in a potentially shippable product increment — meaning something real, testable, and valuable. This frequent delivery encourages constant feedback and learning.",
+                    "Scrum defines three key roles to keep the process smooth and focused:",
+                    "- **Product Owner**: Represents the voice of the customer. They define the vision, manage the product backlog, and ensure the team is working on what brings the most value.",
+                    "- **Scrum Master**: The team's coach. They guide the team in following Scrum principles, remove blockers, and help the team stay productive and focused.",
+                    "- **Development Team**: A cross-functional group of professionals who collaborate to design, build, and test the product. Everyone on the team is equally accountable for delivery.",
+                    "Scrum is structured around *ceremonies* — regular events that keep everyone aligned and moving forward:",
+                    "- **Sprint Planning**: The team selects which backlog items they will complete in the Sprint and define a goal.",
+                    "- **Daily Scrum (Stand-up)**: A quick daily meeting to synchronise progress and address any blockers.",
+                    "- **Sprint Review**: The team demonstrates what they've built, and feedback is gathered from stakeholders.",
+                    "- **Sprint Retrospective**: A reflection meeting where the team discusses what went well, what didn’t, and how to improve next time.",
+                    "Scrum promotes *transparency*, *inspection*, and *adaptation*. Everyone can see the work, progress is reviewed frequently, and the plan is adjusted accordingly — this keeps the team responsive, not rigid.",
+                    "Beyond software, Scrum has proven successful in industries such as marketing, education, product design, and more. Its emphasis on teamwork, fast feedback, and flexibility makes it a go-to choice for any team navigating complexity."
+                ],
+
+                SummaryPoints =
+                [
+                    "Scrum is an Agile framework built around short, iterative cycles called Sprints.",
+                    "Key roles: Product Owner, Scrum Master, and Development Team.",
+                    "Ceremonies include Sprint Planning, Daily Stand-up, Sprint Review, and Retrospective.",
+                    "Focuses on transparency, inspection, and adaptation.",
+                    "Encourages continuous feedback and delivery."
                 ]
             }
         },
@@ -32,16 +49,25 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Kanban",
                 Description =
-                    "Kanban is a flexible and visual method for managing work. It helps teams organize tasks, focus on what matters most, and deliver work more smoothly and efficiently.",
+                    "Kanban is a visual, flow-based approach to managing tasks and improving team performance. It helps teams focus on the most important work, reduce waste, and deliver results continuously and efficiently.",
 
                 VideoPath = "https://www.youtube.com/embed/iVaFVa7HYj4",
 
                 Paragraphs =
                 [
-                    "Kanban is built around a simple idea: make work visible. Teams create a board with columns like 'To Do', 'In Progress', and 'Done' to track the journey of every task. This makes it easy for everyone to see what’s happening at a glance.",
-                    "One of Kanban’s key strengths is limiting how much work is happening at once. By setting limits, teams avoid multitasking, reduce stress, and complete work faster and with higher quality.",
-                    "Kanban encourages continuous improvement. Teams regularly review how work flows through the board, looking for ways to remove bottlenecks and make small changes that lead to big improvements over time.",
-                    "Originally developed to improve manufacturing at Toyota, Kanban is now used across many industries — from software development to marketing, healthcare, and education — wherever there’s a need to organize work and keep teams moving forward."
+                    "Kanban is built on the principle of *visualising work*. Teams create a board with columns like ‘To Do’, ‘In Progress’, and ‘Done’, allowing everyone to see where each task is in its journey. This simple method reveals bottlenecks and helps teams stay organised.",
+                    "A core idea in Kanban is to *limit work in progress* (WIP). By capping how many tasks are being worked on at once, teams avoid overload, improve focus, and deliver higher-quality outcomes faster.",
+                    "Kanban encourages *evolutionary change*. Rather than overhauling everything at once, it promotes small, gradual improvements. Teams regularly review the flow of work to find ways to increase efficiency and reduce delays.",
+                    "Originating in Toyota’s manufacturing system, Kanban has grown beyond its roots. It’s now used in software, healthcare, education, marketing — essentially, anywhere tasks need to move from idea to completion with clarity and flow."
+                ],
+
+                SummaryPoints =
+                [
+                    "Kanban uses a visual board to show work and its progress.",
+                    "Work moves through columns like To Do, In Progress, and Done.",
+                    "Limits the amount of work in progress (WIP) to avoid overload.",
+                    "Supports continuous delivery without fixed sprints.",
+                    "Helps teams improve flow and reduce delays."
                 ]
             }
         },
@@ -51,34 +77,99 @@ public class TopicContentProvider : ITopicContentProvider
             {
                 TopicName = "Planning",
                 Description =
-                    "Planning is a crucial aspect of project management that involves defining goals, outlining tasks, and determining the necessary resources to achieve objectives. Effective planning ensures that projects are completed on time, within budget, and meet the desired outcomes. It requires careful consideration of potential risks, available resources, and stakeholder expectations.",
+                    "Planning is a vital part of project management. It involves setting clear objectives, breaking them down into tasks, and ensuring the right resources are in place. Good planning keeps a project on track, within budget, and aligned with expectations.",
+
+                VideoPath = "Videos/Planning.mp4",
+
                 Paragraphs =
                 [
-                    "In project management, planning is the first and most critical step in ensuring the success of a project. By clearly defining the objectives and breaking down the necessary tasks, a well-structured plan serves as a roadmap that guides the team through each stage of the project. It helps in identifying any potential obstacles or challenges early on, allowing for proactive solutions.",
-                    "An effective plan takes into account the project scope, timeline, and available resources. It also involves identifying key milestones and setting realistic deadlines to keep the project on track. Additionally, planning requires collaboration among team members and stakeholders to ensure alignment with the overall vision and goals.",
-                    "A key component of planning is risk management. By anticipating potential risks, project managers can develop mitigation strategies to minimise their impact. Regular review and adjustments to the plan throughout the project lifecycle are essential to ensure that the project stays aligned with its objectives."
+                    "The planning phase sets the stage for everything that follows. It defines what success looks like, outlines who will do what, and establishes timelines. Without a solid plan, even great ideas can quickly fall apart.",
+                    "Effective planning considers time, scope, budget, risks, and team capabilities. Milestones are identified, deadlines set, and dependencies clarified. The plan acts like a map — guiding the team through the twists and turns of delivery.",
+                    "Planning isn’t just a one-time event. As projects progress, conditions change. Revisiting the plan regularly allows for adjustments and keeps the team aligned with evolving goals.",
+                    "Risk management is a key aspect. Anticipating potential problems and preparing fallback strategies helps the team stay calm under pressure and respond proactively rather than reactively."
                 ],
-                VideoPath = "Videos/Planning.mp4"
+                SummaryPoints =
+                [
+                    "Planning sets clear goals, timelines, and tasks for the project.",
+                    "Helps the team stay on track and use resources well.",
+                    "Includes estimating time, budget, and developer capacity.",
+                    "Should consider risks, scope, and changing needs.",
+                    "Strong planning leads to smoother execution."
+                ]
             }
         },
-
         {
             "EXECUTION",
             new TopicContent
             {
                 TopicName = "Execution",
                 Description =
-                    "Execution in software development project management refers to the phase where the plans and strategies outlined during the planning phase are put into action. It involves coordinating teams, managing resources, and ensuring that tasks are completed efficiently and effectively to meet the project's objectives. During execution, continuous monitoring and adjustments are necessary to keep the project on track and ensure quality delivery within the specified timelines.",
+                    "Execution is where the project plan turns into reality. It’s the phase where tasks are carried out, software is built, and progress is actively tracked. During execution, effective communication and regular adjustments are essential to keep things moving in the right direction.",
+
+                VideoPath = "Videos/Execution.mp4",
+
                 Paragraphs =
                 [
-                    "In the execution phase, the development team begins to implement the tasks defined during the planning phase. This includes writing code, conducting testing, and deploying features or updates. The project manager must ensure that resources are allocated properly and that any issues or obstacles are addressed swiftly. Effective communication and collaboration between team members, stakeholders, and other departments are key to keeping the project moving forward.",
-                    "A crucial part of execution is managing the development cycle. This involves tracking progress against milestones, managing scope creep, and adjusting resources as necessary. Scrum or Kanban methodologies, for instance, can be utilised to manage tasks and sprints in an iterative manner, ensuring that the team remains focused on delivering small, incremental improvements over time.",
-                    "Risk management and quality assurance play an integral experienceLevel during execution. As development progresses, unforeseen challenges may arise. Continuous integration and testing help to identify issues early, preventing defects from accumulating. By monitoring performance, reviewing code regularly, and making necessary adjustments, teams can ensure that the final product meets both user requirements and project goals."
+                    "In this phase, the team implements the tasks defined during planning. This might involve coding, testing, designing, or releasing features. The project manager plays a key role in coordinating activities, tracking progress, and ensuring deadlines are met.",
+                    "Modern development often uses Agile practices like Scrum or Kanban during execution. These methods help manage priorities and adjust quickly to changes. Daily check-ins and sprint reviews provide constant feedback loops.",
+                    "Execution requires attention to quality. Continuous testing, code reviews, and integration practices ensure that problems are caught early — not at the end. Risk management is ongoing, and regular performance checks help prevent delays.",
+                    "The team’s ability to adapt is crucial. If something isn’t working, plans can be revisited. Flexibility, clear communication, and teamwork are what drive successful execution."
                 ],
-                VideoPath = "Videos/Execution.mp4"
+
+                SummaryPoints =
+                [
+                    "Execution is when the planned work is carried out.",
+                    "Tasks are assigned, started, and tracked for progress.",
+                    "Regular updates help catch issues early.",
+                    "Focuses on teamwork, quality, and meeting goals.",
+                    "Adapts when changes or blockers appear."
+                ]
+            }
+        },
+
+
+        {
+            "GLOSSARY",
+            new TopicContent
+            {
+                TopicName = "Agile Glossary",
+                Description =
+                    "This glossary explains common terms used in Agile project management using clear, simple language. It's ideal for students learning how modern teams plan, build, and deliver software projects.",
+
+                Paragraphs =
+                [
+                    "- **Agile**: A flexible way of managing projects that focuses on small steps, regular feedback, and constant improvement.\n  *Example: Instead of planning the whole thing at once, the team builds and tests in short cycles.*",
+
+                    "- **Scrum**: A popular Agile method where teams work in short timeframes (called Sprints) to complete tasks and deliver value.\n  *Example: A team delivers a working feature every two weeks.*",
+
+                    "- **Sprint**: A short period (usually 1–4 weeks) where a team works to finish a specific set of tasks.\n  *Example: “We’ll finish the login system in this 2-week sprint.”*",
+
+                    "- **User Story**: A simple statement describing what a user wants and why, often written from the user’s point of view.\n  *Example: “As a user, I want to reset my password so I don’t get locked out.”*",
+
+                    "- **Product Owner**: The person who decides what features the product needs and the order they should be done in.\n  *Example: They choose which stories are most important for the next sprint.*",
+
+                    "- **Scrum Master**: A helper who makes sure the team follows Scrum rules and removes any blockers.\n  *Example: If a developer is stuck waiting on something, the Scrum Master helps sort it out.*",
+
+                    "- **Daily Stand-up**: A quick meeting (usually 15 minutes) where team members say what they did, what they’ll do, and if they have any issues.\n  *Example: “Yesterday I fixed a bug; today I’ll start the payment form.”*",
+
+                    "- **Sprint Planning**: A meeting at the start of the sprint where the team chooses which work to do.\n  *Example: “Let’s pick 5 stories to complete in this sprint.”*",
+
+                    "- **Sprint Review**: A meeting at the end of a sprint to show what the team built and get feedback.\n  *Example: “Here’s the new homepage—does this match what you expected?”*",
+
+                    "- **Sprint Retrospective**: A team discussion about what went well, what didn’t, and how to improve for next time.\n  *Example: “Let’s try using clearer task names going forward.”*",
+
+                    "- **Backlog**: A list of everything that could be worked on in the future, like features, fixes, or improvements.\n  *Example: The team picks tasks from the backlog during sprint planning.*",
+
+                    "- **Burndown Chart**: A simple graph that shows how much work is left to do in the sprint.\n  *Example: If the line is flat, the team might be stuck.*",
+
+                    "- **Velocity**: The average amount of work a team can finish in one sprint.\n  *Example: “We usually complete about 20 points of work each sprint.”*",
+
+                    "- **Increment**: A working part of the product delivered at the end of the sprint. It should be usable and testable.\n  *Example: A finished shopping cart feature is an increment.*"
+                ]
             }
         }
     };
+
 
     public TopicContent GetContent(string topic)
     {

@@ -10,4 +10,5 @@ public class ProjectStateService
     public ObservableCollection<Developer> Team { get; set; } = [];
     public ObservableCollection<UserStoryInstance> UserStoryInstances { get; set; } = [];
     public ObservableCollection<Sprint> Sprints { get; set; } = [];
+    public ChallengeModifier? ActiveChallenge { get; set; }
 }

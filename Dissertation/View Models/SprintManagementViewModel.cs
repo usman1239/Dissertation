@@ -88,7 +88,6 @@ public class SprintManagementViewModel(
 
     private bool CanAffordSprint()
     {
-        
         var totalSalary = GetTotalSalary();
         if (projectStateService.CurrentProjectInstance.Budget >= totalSalary) return true;
 
@@ -111,6 +110,8 @@ public class SprintManagementViewModel(
         await userStoryService.SaveUserStoryInstancesAsync([.. projectStateService.UserStoryInstances]);
         await SaveSprint();
 
+        ClearMoraleBoosts();
+
         await ShowSummaryOrSprints();
     }
 
@@ -131,23 +132,64 @@ public class SprintManagementViewModel(
     {
         var completedSprintsCount = projectStateService.Sprints.Count(s => s.IsCompleted);
 
+        if (completedSprintsCount < 2) return;
+
         Random random = new();
-        var eventChoice = random.Next(1, 5);
+        var eventChoice = random.Next(1, 10);
 
         switch (eventChoice)
         {
             case 1:
-                return;
-            case 2:
                 await HandleSickOrAbsentDeveloperEvent(random, completedSprintsCount);
                 break;
-            case 3:
+            case 2:
                 await HandleNewRandomUserStory();
                 break;
-            case 4:
+            case 3:
                 HandleRandomBudgetCut();
                 break;
+            case 4:
+                await HandleBugInjectionEvent();
+                break;
+            case 5:
+                HandleTeamMoraleBoost();
+                break;
+            case 6:
+            case 7:
+            case 8: 
+            case 9:
+                return;
         }
+    }
+
+    public void HandleTeamMoraleBoost()
+    {
+        var eligibleDevs = projectStateService.Team
+            .Where(d => d is { IsSick: false, IsPermanentlyAbsent: false })
+            .ToList();
+
+        if (eligibleDevs.Count == 0)
+            return;
+
+        var random = new Random();
+        var boostCount = Math.Min(2, eligibleDevs.Count);
+        var selected = eligibleDevs.OrderBy(_ => random.Next()).Take(boostCount).ToList();
+
+        foreach (var dev in selected)
+            dev.MoraleBoost = 25;
+
+        snackbar.Add("✨ Morale boost! Some developers will be 25% more productive this sprint.", Severity.Success);
+    }
+
+
+    public async Task HandleBugInjectionEvent()
+    {
+        var bugInstance =
+            await userStoryService.CreateAndAssignBugToProjectAsync(projectStateService.CurrentProjectInstance);
+
+        projectStateService.UserStoryInstances.Add(bugInstance);
+
+        snackbar.Add($"🐞 A new bug appeared: {bugInstance.UserStory.Title}", Severity.Error);
     }
 
     public void HandleRandomBudgetCut()
@@ -160,7 +202,8 @@ public class SprintManagementViewModel(
 
         projectStateService.CurrentProjectInstance.Budget = Math.Max(currentBudget - cutAmount, 0);
 
-        snackbar.Add($"Budget cut! Project lost £{cutAmount:N0} ({percentageCut}% of current budget).", Severity.Warning);
+        snackbar.Add($"Budget cut! Project lost £{cutAmount:N0} ({percentageCut}% of current budget).",
+            Severity.Warning);
     }
 
 
@@ -183,11 +226,12 @@ public class SprintManagementViewModel(
         var sickDeveloper = GetRandomSickDeveloper();
         if (random.Next(0, 2) == 0)
         {
-            var sickDeveloperSickUntilSprint = completedSprintsCount + random.Next(1,3);
+            var sickDeveloperSickUntilSprint = completedSprintsCount + random.Next(1, 3);
             sickDeveloper.SickUntilSprint = sickDeveloperSickUntilSprint;
             sickDeveloper.IsSick = true;
             sickDeveloper.IsPermanentlyAbsent = false;
-            snackbar.Add($"{sickDeveloper.Name} is sick and will miss until sprint ${sickDeveloperSickUntilSprint}", Severity.Warning);
+            snackbar.Add($"{sickDeveloper.Name} is sick and will miss until sprint ${sickDeveloperSickUntilSprint}",
+                Severity.Warning);
         }
         else
         {
@@ -236,7 +280,15 @@ public class SprintManagementViewModel(
             _ => 0
         };
 
-        return (int)(baseProgress * workloadPenalty);
+        var moraleMultiplier = 1 + dev.MoraleBoost / 100.0;
+
+        return (int)(baseProgress * workloadPenalty * moraleMultiplier);
+    }
+
+    private void ClearMoraleBoosts()
+    {
+        foreach (var dev in projectStateService.Team)
+            dev.MoraleBoost = 0;
     }
 
     public int UpdateStoryProgress(List<UserStoryInstance> stories, int totalProgressIncrease)
@@ -288,7 +340,9 @@ public class SprintManagementViewModel(
 
     private int GetTotalSalary()
     {
-        return projectStateService.Team.Sum(dev => dev.Cost);
+        return projectStateService.ActiveChallenge?.Id == "CostSurge"
+            ? projectStateService.Team.Sum(dev => dev.GetEffectiveCost(true))
+            : projectStateService.Team.Sum(dev => dev.GetEffectiveCost(false));
     }
 
     private async Task SaveSprint()

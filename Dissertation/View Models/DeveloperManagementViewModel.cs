@@ -16,7 +16,12 @@ public class DeveloperManagementViewModel(
 
     public bool CanAddDeveloper()
     {
-        return !DeveloperName.IsNullOrEmpty();
+        if (projectStateService.ActiveChallenge?.Id != "NoSeniorDevs" ||
+            SelectedDeveloperExperienceLevel != DeveloperExperienceLevel.Senior)
+            return !DeveloperName.IsNullOrEmpty();
+
+        snackbar.Add("You can't hire Senior developers today due to the active challenge!", Severity.Error);
+        return false;
     }
 
     public async Task AddDeveloper()
@@ -33,13 +38,13 @@ public class DeveloperManagementViewModel(
             return;
         }
 
-        var cost = GetDeveloperCost();
+        var baseCost = GetDeveloperCost();
 
         var dev = new Developer
         {
             Name = DeveloperName,
             ExperienceLevel = SelectedDeveloperExperienceLevel,
-            Cost = cost,
+            Cost = baseCost,
             UserId = projectStateService.UserId!
         };
 
@@ -52,7 +57,7 @@ public class DeveloperManagementViewModel(
 
     private int GetDeveloperCost()
     {
-        var cost = SelectedDeveloperExperienceLevel switch
+        return SelectedDeveloperExperienceLevel switch
         {
             DeveloperExperienceLevel.Junior => projectStateService.CurrentProjectInstance.Project.DeveloperCosts
                 .TryGetValue(DeveloperExperienceLevel.Junior, out var juniorCost)
@@ -60,8 +65,8 @@ public class DeveloperManagementViewModel(
                 : 0,
 
             DeveloperExperienceLevel.MidLevel => projectStateService.CurrentProjectInstance.Project.DeveloperCosts
-                .TryGetValue(DeveloperExperienceLevel.MidLevel, out var midLevelCost)
-                ? midLevelCost
+                .TryGetValue(DeveloperExperienceLevel.MidLevel, out var midCost)
+                ? midCost
                 : 0,
 
             DeveloperExperienceLevel.Senior => projectStateService.CurrentProjectInstance.Project.DeveloperCosts
@@ -71,8 +76,8 @@ public class DeveloperManagementViewModel(
 
             _ => throw new ArgumentOutOfRangeException(nameof(SelectedDeveloperExperienceLevel))
         };
-        return cost;
     }
+
 
     public async Task RemoveDeveloper(Developer dev)
     {

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dissertation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250402162558_Init1")]
-    partial class Init1
+    [Migration("20250506130431_presentation")]
+    partial class presentation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,33 @@ namespace Dissertation.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Dissertation.Models.Challenge.DailyChallengeCompletion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChallengeKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ProjectInstanceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailyChallengeCompletions");
+                });
 
             modelBuilder.Entity("Dissertation.Models.Challenge.Developer", b =>
                 {
@@ -44,6 +71,9 @@ namespace Dissertation.Migrations
 
                     b.Property<bool>("IsSick")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("MoraleBoost")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -102,6 +132,12 @@ namespace Dissertation.Migrations
 
                     b.Property<int>("Budget")
                         .HasColumnType("integer");
+
+                    b.Property<string>("LastAppliedChallengeKey")
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly?>("LastChallengeDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
@@ -234,6 +270,9 @@ namespace Dissertation.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("UserStoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserStoryType")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

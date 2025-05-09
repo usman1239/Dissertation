@@ -152,4 +152,106 @@ public class ProjectServiceTests
         // Assert
         Assert.False(result);
     }
+
+
+    [Fact]
+    public async Task GetUserProjectsAsync_ShouldReturnUserProjectInstances()
+    {
+        // Arrange
+        const string userId = "user1";
+        var project = new Project { Id = 1 };
+        var sprint = new Sprint { Id = 1 };
+        var instance = new ProjectInstance
+        {
+            UserId = userId,
+            ProjectId = 1,
+            Project = project,
+            Sprints = [sprint]
+        };
+        await _dbContext.Projects.AddAsync(project);
+        await _dbContext.ProjectInstances.AddAsync(instance);
+        await _dbContext.SaveChangesAsync();
+
+        // Act
+        var result = await _projectService.GetUserProjectsAsync(userId);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal(userId, result.First().UserId);
+        Assert.NotNull(result.First().Project);
+        Assert.NotEmpty(result.First().Sprints);
+    }
+
+    [Fact]
+    public async Task UpdateProjectInstance_ShouldUpdateData()
+    {
+        // Arrange
+        var instance = new ProjectInstance { ProjectId = 1, UserId = "user1", Budget = 100 };
+        await _dbContext.ProjectInstances.AddAsync(instance);
+        await _dbContext.SaveChangesAsync();
+
+        // Act
+        instance.Budget = 2000;
+        await _projectService.UpdateProjectInstance(instance);
+        var updated = await _dbContext.ProjectInstances.FindAsync(instance.Id);
+
+        // Assert
+        Assert.Equal(2000, updated?.Budget);
+    }
+
+    [Fact]
+    public async Task HasCompletedChallengeAsync_ShouldReturnTrueIfExists()
+    {
+        // Arrange
+        const string userId = "user1";
+        const int projectId = 1;
+        var date = DateOnly.FromDateTime(DateTime.Today);
+        var completion = new DailyChallengeCompletion
+        {
+            UserId = userId,
+            ProjectInstanceId = projectId,
+            Date = date,
+            ChallengeKey = "TestChallenge"
+        };
+        await _dbContext.DailyChallengeCompletions.AddAsync(completion);
+        await _dbContext.SaveChangesAsync();
+
+        // Act
+        var result = await _projectService.HasCompletedChallengeAsync(userId, projectId, date);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task HasCompletedChallengeAsync_ShouldReturnFalseIfNotExists()
+    {
+        // Act
+        var result =
+            await _projectService.HasCompletedChallengeAsync("user1", 1, DateOnly.FromDateTime(DateTime.Today));
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task MarkChallengeCompletedAsync_ShouldAddNewEntry()
+    {
+        // Arrange
+        const string userId = "user1";
+        const int projectId = 1;
+        var date = DateOnly.FromDateTime(DateTime.Today);
+        const string key = "ChallengeKey";
+
+        // Act
+        await _projectService.MarkChallengeCompletedAsync(userId, projectId, date, key);
+
+        // Assert
+        var entry = await _dbContext.DailyChallengeCompletions.FirstOrDefaultAsync();
+        Assert.NotNull(entry);
+        Assert.Equal(userId, entry.UserId);
+        Assert.Equal(projectId, entry.ProjectInstanceId);
+        Assert.Equal(date, entry.Date);
+        Assert.Equal(key, entry.ChallengeKey);
+    }
 }

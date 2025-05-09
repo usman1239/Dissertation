@@ -12,4 +12,8 @@ public class Developer
     public bool IsSick { get; set; }
     public bool IsPermanentlyAbsent { get; set; }
     public int SickUntilSprint { get; set; }
+    public int MoraleBoost { get; set; } = 0;
+
+    public int GetEffectiveCost(bool applyModifiers) =>
+        applyModifiers ? (int)(Cost * 1.05) : Cost;
 }

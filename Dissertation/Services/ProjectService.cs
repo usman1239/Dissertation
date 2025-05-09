@@ -71,4 +71,28 @@ public class ProjectService(AppDbContext dbContext) : IProjectService
             .ToListAsync();
     }
 
+    public async Task UpdateProjectInstance(ProjectInstance instance)
+    {
+        dbContext.ProjectInstances.Update(instance);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> HasCompletedChallengeAsync(string userId, int projectId, DateOnly date)
+    {
+        return await dbContext.DailyChallengeCompletions
+            .AnyAsync(d => d.UserId == userId && d.ProjectInstanceId == projectId && d.Date == date);
+    }
+
+    public async Task MarkChallengeCompletedAsync(string userId, int projectId, DateOnly date, string challengeKey)
+    {
+        dbContext.DailyChallengeCompletions.Add(new DailyChallengeCompletion
+        {
+            UserId = userId,
+            ProjectInstanceId = projectId,
+            Date = date,
+            ChallengeKey = challengeKey
+        });
+
+        await dbContext.SaveChangesAsync();
+    }
 }

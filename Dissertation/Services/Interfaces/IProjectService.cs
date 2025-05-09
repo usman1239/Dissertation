@@ -10,4 +10,7 @@ public interface IProjectService
     Task SaveNewProjectInstance(ProjectInstance projectInstance);
     Task<bool> DeleteSavedProjectInstanceAsync(int projectId, string? userId);
     Task<List<ProjectInstance>> GetUserProjectsAsync(string userId);
+    Task UpdateProjectInstance(ProjectInstance instance);
+    Task<bool> HasCompletedChallengeAsync(string userId, int projectId, DateOnly date);
+    Task MarkChallengeCompletedAsync(string userId, int projectId, DateOnly date, string challengeKey);
 }

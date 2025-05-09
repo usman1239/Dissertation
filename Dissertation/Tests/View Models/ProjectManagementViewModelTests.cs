@@ -14,6 +14,9 @@ public class ProjectManagementViewModelTests
     private readonly Mock<ISnackbar> _mockSnackbar;
     private readonly Mock<IUserService> _mockUserService;
     private readonly Mock<IUserStoryService> _mockUserStoryService;
+    private readonly Mock<IDailyChallengeService> _mockDailyChallengeService;
+    private readonly Mock<IBadgeService> _mockBadgeService;
+
     private readonly ProjectStateService _projectStateService;
     private readonly ProjectManagementViewModel _viewModel;
 
@@ -31,12 +34,16 @@ public class ProjectManagementViewModelTests
         _mockUserStoryService = new Mock<IUserStoryService>();
         _mockSnackbar = new Mock<ISnackbar>();
         _mockNavigationService = new Mock<INavigationService>();
+        _mockDailyChallengeService = new Mock<IDailyChallengeService>();
+        _mockBadgeService = new Mock<IBadgeService>();
 
         _viewModel = new ProjectManagementViewModel(
             _projectStateService,
             _mockProjectService.Object,
             _mockUserService.Object,
             _mockUserStoryService.Object,
+            _mockDailyChallengeService.Object,
+            _mockBadgeService.Object,
             _mockSnackbar.Object,
             _mockNavigationService.Object
         );
@@ -170,6 +177,8 @@ public class ProjectManagementViewModelTests
 
         _mockUserStoryService.Setup(us => us.GetInitialUserStoriesForProject(projectId))
             .ReturnsAsync(mockUserStories);
+        _mockDailyChallengeService.Setup(x => x.GetTodayChallenge()).Returns(
+            new ChallengeModifier());
 
         // Act
         _viewModel.AvailableProjects.Add(project);

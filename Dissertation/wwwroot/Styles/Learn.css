@@ -1,10 +1,84 @@
-﻿@import url(Animations.css);
+﻿/* General Layout */
+.learn-container {
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #000000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    text-align: center;
+}
 
-.section-container {
-    animation: fadeInUp 1.5s ease-in-out;
+/* Section Header Styles */
+
+.section-container h2 {
+    color: #2d3748;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 3px #000000;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Button Container */
+
+.button-container {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    gap: 2rem;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 1.5rem;
+}
+
+/* MudButton Styling */
+
+.action-button {
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    overflow: hidden;
+    padding: 1rem 2.2rem;
+    position: relative;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+/* Hover Effect for Buttons */
+
+.action-button::before {
+    background: linear-gradient(135deg, #00fff0, #7c4dff, #ff4d4d);
+    border-radius: 16px;
+    bottom: -2px;
+    content: '';
+    filter: blur(10px);
+    left: -2px;
+    opacity: 0.6;
+    position: absolute;
+    right: -2px;
+    top: -2px;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.action-button:hover::before { opacity: 1; }
+
+.action-button:hover {
+    box-shadow: 0 0 30px #00fff0, 0 0 20px #7c4dff;
+    transform: scale(1.08);
+}
+
+/* Responsive Design */
+
+@media (max-width: 600px) {
+    .learn-container { padding: 1rem; }
+
+    .section-container h2 { font-size: 1.5rem; }
+
+    .action-button {
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+    }
 }

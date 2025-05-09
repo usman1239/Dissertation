@@ -16,8 +16,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public virtual DbSet<UserStory> UserStories { get; set; }
     public virtual DbSet<UserStoryInstance> UserStoryInstances { get; set; }
     public virtual DbSet<Developer> Developers { get; set; }
-
     public virtual DbSet<UserBadge> UserBadges { get; set; }
+    public virtual DbSet<DailyChallengeCompletion> DailyChallengeCompletions { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

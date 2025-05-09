@@ -2,11 +2,12 @@
 @rendermode InteractiveServer
 @using Dissertation.Models.Interfaces
 @using Dissertation.Models.Learn
+@using Microsoft.IdentityModel.Tokens
 @inherits QuizCardBase
 
 @inject ITopicContentProvider ContentProvider
 
-<link href="Styles/Main.css" rel="stylesheet"/>
+<link href="Styles/Home.css" rel="stylesheet"/>
 <link href="Styles/DisplayLearnTopic.css" rel="stylesheet"/>
 
 @code {
@@ -28,51 +29,84 @@
 	<h1>@_content.TopicName</h1>
 	<p>@_content.Description</p>
 
-	@foreach (var paragraph in _content.Paragraphs)
+	<section class="content-paragraphs">
+		@foreach (var paragraph in _content.Paragraphs)
+		{
+			<p>@paragraph</p>
+		}
+	</section>
+
+	@if (!_content.VideoPath.IsNullOrEmpty())
 	{
-		<p>@paragraph</p>
+		<h2>Video Lesson</h2>
+		<iframe width="100" height="100"
+		        src="@_content.VideoPath"
+		        title="YouTube video player" frameborder="0"
+		        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		        allowfullscreen>
+		</iframe>
+		<MudText>
+			Video Link: 
+			<MudLink Href="@_content.VideoPath" Target="_blank" Color="Color.Primary">
+				@_content.VideoPath
+			</MudLink>
+		</MudText>
 	}
 
-	<h2>Video Lesson</h2>
+	@if (Questions.Any())
+	{
+		<h2>@_content.TopicName Quiz</h2>
+		<div class="quiz">
+			@if (QuestionIndex < Questions.Count)
+			{
+				<div class="quiz-header">
+					<h4>@Questions[QuestionIndex].QuestionTitle</h4>
+				</div>
+				<div class="xp-bar-container">
+					<div class="xp-bar" style="width: @(ScorePercentage)%"></div>
+				</div>
+				<div class="quiz-body">
+					@foreach (var option in Questions[QuestionIndex].PossibleOptions)
+					{
+						<button class="quiz-option" @onclick="() => OptionSelected(option)">
+							@option
+						</button>
+					}
+				</div>
+			}
+			else
+			{
+				<div class="display-score">
+					<h4>Your score: @Score / @(Questions.Count)</h4>
+				</div>
 
-	<iframe  width="100" height="100" 
-	         src="@_content.VideoPath"
-	        title="YouTube video player" frameborder="0" 
-	        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-	        allowfullscreen>
-	</iframe>
 
-	<h2>@_content.TopicName Quiz</h2>
-	<div class="quiz">
-		@if (QuestionIndex < Questions.Count)
-		{
-			<div class="quiz-header">
-				<h4>@Questions[QuestionIndex].QuestionTitle</h4>
-			</div>
+				<div>
+					<button class="restart-btn" @onclick="RestartQuiz">Restart Quiz</button>
+				</div>
+			}
+		</div>
+	}
 
-			<div class="quiz-body">
-				@foreach (var option in Questions[QuestionIndex].PossibleOptions)
-				{
-					<button class="quiz-option" @onclick="() => OptionSelected(option)">
-						@option
-					</button>
-				}
-			</div>
-		}
-		else
-		{
-			<div class="display-score">
-				<h4>Your score: @Score / @(Questions.Count)</h4>
-			</div>
-
-			<div class="quiz-footer">
-				<button class="restart-btn" @onclick="RestartQuiz">Restart Quiz</button>
-			</div>
-		}
-	</div>
+	@if (_content.SummaryPoints?.Any() == true)
+	{
+		<h3>Key Takeaways</h3>
+		<ul class="summary-points">
+			@foreach (var point in _content.SummaryPoints)
+			{
+				<li>@point</li>
+			}
+		</ul>
+	}
 }
 else
 {
 	<h1>Topic not found</h1>
 	<p>Please check the topic name and try again.</p>
+}
+
+@code{
+
+	private int ScorePercentage => (int)((double)Score / Questions.Count * 100);
+
 }

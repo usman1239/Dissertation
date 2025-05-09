@@ -11,12 +11,16 @@ public class ProjectManagementViewModel(
     IProjectService projectService,
     IUserService userService,
     IUserStoryService userStoryService,
+    IDailyChallengeService dailyChallengeService,
+    IBadgeService badgeService,
     ISnackbar snackbar,
     INavigationService navigationService)
 {
+    public bool IsNewProject { get; set; } = true;
     public string ErrorMessage { get; set; } = string.Empty;
     public ObservableCollection<Project?> AvailableProjects { get; set; } = [];
     public ObservableCollection<ProjectInstance> SavedProjects { get; set; } = [];
+    public string CurrentChallengeDescription { get; set; } = "";
 
     public async Task GetUser()
     {
@@ -47,7 +51,9 @@ public class ProjectManagementViewModel(
         if (isSavedProject && existingProjectInstance != null)
         {
             LoadExistingProject(existingProjectInstance);
+            IsNewProject = false;
             navigationService.NavigateTo("/challenge/dashboard");
+
             return;
         }
 
@@ -62,6 +68,7 @@ public class ProjectManagementViewModel(
             }
 
             await InitializeNewProjectInstance(selectedProject);
+            IsNewProject = true;
             navigationService.NavigateTo("/challenge/dashboard");
         }
     }
@@ -131,5 +138,56 @@ public class ProjectManagementViewModel(
             snackbar.Add("Failed to delete the project.", Severity.Error);
 
         await LoadProjectsWithSavedProgress();
+    }
+
+    public async Task<bool> IsChallengeActive()
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var alreadyCompleted = await projectService.HasCompletedChallengeAsync(
+            projectStateService.UserId!,
+            projectStateService.CurrentProjectInstance.Id,
+            today);
+
+        if (alreadyCompleted)
+        {
+            snackbar.Add("Challenge was already taken on!");
+            CurrentChallengeDescription = dailyChallengeService.GetTodayChallenge().Description;
+        }
+        return alreadyCompleted;
+    }
+
+    public async Task GetDailyChallenge()
+    {
+        var challenge = dailyChallengeService.GetTodayChallenge();
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var alreadyCompleted = await projectService.HasCompletedChallengeAsync(
+            projectStateService.UserId!,
+            projectStateService.CurrentProjectInstance.Id,
+            today);
+
+        if (!alreadyCompleted)
+        {
+            challenge.Apply(projectStateService);
+            projectStateService.ActiveChallenge = challenge;
+
+            await projectService.UpdateProjectInstance(projectStateService.CurrentProjectInstance);
+
+            await projectService.MarkChallengeCompletedAsync(
+                projectStateService.UserId!,
+                projectStateService.CurrentProjectInstance.Id,
+                today,
+                challenge.Id);
+
+            await badgeService.CheckDailyBadges(projectStateService.UserId!);
+            CurrentChallengeDescription = challenge.Description;
+            snackbar.Add("Daily challenge applied: " + challenge.Description, Severity.Info);
+        }
+        else if (!IsNewProject)
+        {
+            CurrentChallengeDescription = $"Challenge Already Applied ({challenge.Description})";
+        }
     }
 }

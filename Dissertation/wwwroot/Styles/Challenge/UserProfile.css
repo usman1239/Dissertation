@@ -1,123 +1,35 @@
-﻿/* Container Styles */
-.container {
-    font-family: 'Arial', sans-serif;
-    margin: 0 auto;
-    max-width: 1200px;
-    padding: 40px;
-}
+﻿/* UserProfile.css */
 
-/* Title Styles */
-
-h2 {
-    color: #333;
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
+body {
+    background-color: #0d1b2a;
+    color: #e0e1dd;
 }
 
 h3 {
-    color: #0056b3;
+    border-bottom: 2px solid #778da9;
+    color: #e0e1dd;
     font-size: 1.8rem;
-    margin-bottom: 10px;
-    margin-top: 20px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
 }
-
-/* Active Projects Section */
 
 ul {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    list-style-type: none;
-    margin-top: 20px;
-    padding: 0;
+    list-style: none;
+    padding-left: 0;
 }
 
-ul li {
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px #000000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+li {
+    background-color: #1b263b;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1rem;
+    padding: 1rem;
 }
 
-ul li:hover {
-    box-shadow: 0 6px 12px #000000;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-5px);
+strong {
+    color: #f4a261;
+    font-weight: bold;
 }
 
-ul li strong {
-    color: #333;
-    display: block;
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-}
-
-ul li em {
-    color: #666;
-    font-style: italic;
-}
-
-ul li .project-info {
-    color: #555;
-    font-size: 1rem;
-    margin-top: 10px;
-}
-
-/* Badge Section */
-
-.badge-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: flex-start;
-    margin-top: 30px;
-}
-
-.badge-list li {
-    background-color: #ff6f61;
-    border-radius: 25px;
-    color: white;
-    display: inline-block;
-    font-size: 1.2rem;
-    padding: 12px 25px;
-    text-align: center;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.badge-list li:hover {
-    background-color: #ff4e42;
-    transform: scale(1.05);
-}
-
-.badge-list li span { margin-right: 10px; }
-
-/* No content fallback */
-
-p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-top: 20px;
-    text-align: center;
-}
-
-/* Button Styles (for any action buttons if needed) */
-
-.button {
-    background-color: #28a745;
-    border: none;
-    border-radius: 30px;
-    color: white;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 1rem;
-    margin-top: 20px;
-    padding: 12px 20px;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.button:hover { background-color: #218838; }
+em { color: #a9bcd0; }
