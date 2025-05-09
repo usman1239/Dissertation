@@ -36,17 +36,22 @@
 		}
 	</section>
 
-	@* @if (!_content.VideoPath.IsNullOrEmpty()) *@
-	@* { *@
-	@* 	<h2>Video Lesson</h2> *@
-
-	@* 	<iframe width="100" height="100" *@
-	@* 	        src="@_content.VideoPath" *@
-	@* 	        title="YouTube video player" frameborder="0" *@
-	@* 	        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" *@
-	@* 	        allowfullscreen> *@
-	@* 	</iframe> *@
-	@* } *@
+	@if (!_content.VideoPath.IsNullOrEmpty())
+	{
+		<h2>Video Lesson</h2>
+		<iframe width="100" height="100"
+		        src="@_content.VideoPath"
+		        title="YouTube video player" frameborder="0"
+		        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		        allowfullscreen>
+		</iframe>
+		<MudText>
+			Video Link: 
+			<MudLink Href="@_content.VideoPath" Target="_blank" Color="Color.Primary">
+				@_content.VideoPath
+			</MudLink>
+		</MudText>
+	}
 
 	@if (Questions.Any())
 	{
