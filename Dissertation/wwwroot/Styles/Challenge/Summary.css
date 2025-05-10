@@ -1,5 +1,4 @@
-﻿/* Container styling */
-.ai-chat-box {
+﻿.ai-chat-box {
     background-color: #1e1e2f;
     border-radius: 16px;
     box-shadow: 0 6px 20px #000000;
@@ -10,7 +9,6 @@
     padding: 30px;
 }
 
-/* Chat container */
 
 .chat-container {
     display: flex;
@@ -18,7 +16,6 @@
     gap: 20px;
 }
 
-/* Chat box styling */
 
 .chat-box {
     display: flex;
@@ -26,7 +23,6 @@
     gap: 12px;
 }
 
-/* Chat bubble base */
 
 .chat-bubble {
     background-color: #2b2b40;
@@ -40,7 +36,6 @@
     padding: 15px 20px;
 }
 
-/* Role-based styling */
 
 .chat-bubble.user {
     align-self: flex-end;
@@ -54,7 +49,6 @@
     color: #fff8dc;
 }
 
-/* Typing animation */
 
 .typing {
     align-items: center;
@@ -81,7 +75,6 @@
     100% { opacity: 0; }
 }
 
-/* Button styling */
 
 .btn-primary {
     align-self: center;

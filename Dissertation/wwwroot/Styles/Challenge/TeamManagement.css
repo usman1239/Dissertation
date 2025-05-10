@@ -1,5 +1,4 @@
-﻿/* === Team Management Paper === */
-.team-management-paper {
+﻿.team-management-paper {
     background-color: transparent;
     border-radius: 16px;
     box-shadow: none;
@@ -8,11 +7,10 @@
     padding: 2rem;
 }
 
-/* === Headings === */
 
 .team-management-form h4,
 .current-team-list h4 {
-    color: #ffcc00; /* Gold theme */
+    color: #ffcc00;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -20,7 +18,6 @@
     text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
 }
 
-/* === Input Fields === */
 
 .mud-input,
 .mud-select {
@@ -31,7 +28,6 @@
 .mud-input .mud-label,
 .mud-select .mud-label { color: #374151; }
 
-/* === Developer Management Form === */
 
 .team-management-form {
     background-color: #f9f4e6;
@@ -41,7 +37,6 @@
     padding: 1.5rem;
 }
 
-/* === Add Developer Button === */
 
 .mud-button {
     background-color: #b7791f;
@@ -62,13 +57,12 @@
     transform: translateY(-2px);
 }
 
-/* === Current Team List === */
 
 .current-team-list { margin-top: 2rem; }
 
 .mud-list-item {
     background-color: transparent;
-    border-left: 4px solid #ffcc00; /* Gold left border */
+    border-left: 4px solid #ffcc00;
     border-radius: 8px;
     margin-bottom: 1rem;
     padding: 1rem;
@@ -77,11 +71,11 @@
 
 .mud-list-item:hover {
     background-color: #ffd700;
-    background-color: rgba(255, 215, 0, 0.05); /* Soft gold glow on hover */
+    background-color: rgba(255, 215, 0, 0.05);
 }
 
 .mud-list-item .mud-text h6 {
-    color: #ffcc00; /* Gold theme */
+    color: #ffcc00;
     font-weight: 700;
 }
 
@@ -107,7 +101,6 @@
     margin-bottom: 2rem;
 }
 
-/* === Developer Delete Button === */
 
 .mud-button[color="Color.Error"] {
     background-color: #ef4444;
@@ -119,7 +112,6 @@
 
 .mud-button[color="Color.Error"]:hover { background-color: #d92d2a; }
 
-/* === Back Button === */
 
 .action-button {
     background-color: #2563eb;
@@ -140,7 +132,6 @@
     transform: translateY(-2px);
 }
 
-/* === Responsive Design === */
 
 @media (max-width: 768px) {
     .team-management-form,

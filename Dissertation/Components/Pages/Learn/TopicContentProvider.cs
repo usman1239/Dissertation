@@ -19,17 +19,17 @@ public class TopicContentProvider : ITopicContentProvider
 
                 Paragraphs =
                 [
-                    "At its heart, Scrum breaks down work into time-boxed iterations called *Sprints*, which usually last between two to four weeks. Each Sprint results in a potentially shippable product increment — meaning something real, testable, and valuable. This frequent delivery encourages constant feedback and learning.",
+                    "At its heart, Scrum breaks down work into time-boxed iterations called Sprints, which usually last between two to four weeks. Each Sprint results in a potentially shippable product increment — meaning something real, testable, and valuable. This frequent delivery encourages constant feedback and learning.",
                     "Scrum defines three key roles to keep the process smooth and focused:",
-                    "- **Product Owner**: Represents the voice of the customer. They define the vision, manage the product backlog, and ensure the team is working on what brings the most value.",
-                    "- **Scrum Master**: The team's coach. They guide the team in following Scrum principles, remove blockers, and help the team stay productive and focused.",
-                    "- **Development Team**: A cross-functional group of professionals who collaborate to design, build, and test the product. Everyone on the team is equally accountable for delivery.",
-                    "Scrum is structured around *ceremonies* — regular events that keep everyone aligned and moving forward:",
-                    "- **Sprint Planning**: The team selects which backlog items they will complete in the Sprint and define a goal.",
-                    "- **Daily Scrum (Stand-up)**: A quick daily meeting to synchronise progress and address any blockers.",
-                    "- **Sprint Review**: The team demonstrates what they've built, and feedback is gathered from stakeholders.",
-                    "- **Sprint Retrospective**: A reflection meeting where the team discusses what went well, what didn’t, and how to improve next time.",
-                    "Scrum promotes *transparency*, *inspection*, and *adaptation*. Everyone can see the work, progress is reviewed frequently, and the plan is adjusted accordingly — this keeps the team responsive, not rigid.",
+                    "- Product Owner: Represents the voice of the customer. They define the vision, manage the product backlog, and ensure the team is working on what brings the most value.",
+                    "- Scrum Master: The team's coach. They guide the team in following Scrum principles, remove blockers, and help the team stay productive and focused.",
+                    "- Development Team: A cross-functional group of professionals who collaborate to design, build, and test the product. Everyone on the team is equally accountable for delivery.",
+                    "Scrum is structured around ceremonies — regular events that keep everyone aligned and moving forward:",
+                    "- Sprint Planning: The team selects which backlog items they will complete in the Sprint and define a goal.",
+                    "- Daily Scrum (Stand-up): A quick daily meeting to synchronise progress and address any blockers.",
+                    "- Sprint Review: The team demonstrates what they've built, and feedback is gathered from stakeholders.",
+                    "- Sprint Retrospective: A reflection meeting where the team discusses what went well, what didn’t, and how to improve next time.",
+                    "Scrum promotes transparency, inspection, and adaptation. Everyone can see the work, progress is reviewed frequently, and the plan is adjusted accordingly — this keeps the team responsive, not rigid.",
                     "Beyond software, Scrum has proven successful in industries such as marketing, education, product design, and more. Its emphasis on teamwork, fast feedback, and flexibility makes it a go-to choice for any team navigating complexity."
                 ],
 
@@ -55,9 +55,9 @@ public class TopicContentProvider : ITopicContentProvider
 
                 Paragraphs =
                 [
-                    "Kanban is built on the principle of *visualising work*. Teams create a board with columns like ‘To Do’, ‘In Progress’, and ‘Done’, allowing everyone to see where each task is in its journey. This simple method reveals bottlenecks and helps teams stay organised.",
-                    "A core idea in Kanban is to *limit work in progress* (WIP). By capping how many tasks are being worked on at once, teams avoid overload, improve focus, and deliver higher-quality outcomes faster.",
-                    "Kanban encourages *evolutionary change*. Rather than overhauling everything at once, it promotes small, gradual improvements. Teams regularly review the flow of work to find ways to increase efficiency and reduce delays.",
+                    "Kanban is built on the principle of visualising work. Teams create a board with columns like ‘To Do’, ‘In Progress’, and ‘Done’, allowing everyone to see where each task is in its journey. This simple method reveals bottlenecks and helps teams stay organised.",
+                    "A core idea in Kanban is to limit work in progress (WIP). By capping how many tasks are being worked on at once, teams avoid overload, improve focus, and deliver higher-quality outcomes faster.",
+                    "Kanban encourages evolutionary change. Rather than overhauling everything at once, it promotes small, gradual improvements. Teams regularly review the flow of work to find ways to increase efficiency and reduce delays.",
                     "Originating in Toyota’s manufacturing system, Kanban has grown beyond its roots. It’s now used in software, healthcare, education, marketing — essentially, anywhere tasks need to move from idea to completion with clarity and flow."
                 ],
 
@@ -138,33 +138,33 @@ public class TopicContentProvider : ITopicContentProvider
 
                 Paragraphs =
                 [
-                    "- **Agile**: A flexible way of managing projects that focuses on small steps, regular feedback, and constant improvement.\n  *Example: Instead of planning the whole thing at once, the team builds and tests in short cycles.*",
+                    "- Agile: A flexible way of managing projects that focuses on small steps, regular feedback, and constant improvement.\n  Example: Instead of planning the whole thing at once, the team builds and tests in short cycles.",
 
-                    "- **Scrum**: A popular Agile method where teams work in short timeframes (called Sprints) to complete tasks and deliver value.\n  *Example: A team delivers a working feature every two weeks.*",
+                    "- Scrum: A popular Agile method where teams work in short timeframes (called Sprints) to complete tasks and deliver value.\n  Example: A team delivers a working feature every two weeks.",
 
-                    "- **Sprint**: A short period (usually 1–4 weeks) where a team works to finish a specific set of tasks.\n  *Example: “We’ll finish the login system in this 2-week sprint.”*",
+                    "- Sprint: A short period (usually 1–4 weeks) where a team works to finish a specific set of tasks.\n  Example: “We’ll finish the login system in this 2-week sprint.”",
 
-                    "- **User Story**: A simple statement describing what a user wants and why, often written from the user’s point of view.\n  *Example: “As a user, I want to reset my password so I don’t get locked out.”*",
+                    "- User Story: A simple statement describing what a user wants and why, often written from the user’s point of view.\n  Example: “As a user, I want to reset my password so I don’t get locked out.”",
 
-                    "- **Product Owner**: The person who decides what features the product needs and the order they should be done in.\n  *Example: They choose which stories are most important for the next sprint.*",
+                    "- Product Owner: The person who decides what features the product needs and the order they should be done in.\n  Example: They choose which stories are most important for the next sprint.",
 
-                    "- **Scrum Master**: A helper who makes sure the team follows Scrum rules and removes any blockers.\n  *Example: If a developer is stuck waiting on something, the Scrum Master helps sort it out.*",
+                    "- Scrum Master: A helper who makes sure the team follows Scrum rules and removes any blockers.\n  Example: If a developer is stuck waiting on something, the Scrum Master helps sort it out.",
 
-                    "- **Daily Stand-up**: A quick meeting (usually 15 minutes) where team members say what they did, what they’ll do, and if they have any issues.\n  *Example: “Yesterday I fixed a bug; today I’ll start the payment form.”*",
+                    "- Daily Stand-up: A quick meeting (usually 15 minutes) where team members say what they did, what they’ll do, and if they have any issues.\n  Example: “Yesterday I fixed a bug; today I’ll start the payment form.”",
 
-                    "- **Sprint Planning**: A meeting at the start of the sprint where the team chooses which work to do.\n  *Example: “Let’s pick 5 stories to complete in this sprint.”*",
+                    "- Sprint Planning: A meeting at the start of the sprint where the team chooses which work to do.\n  Example: “Let’s pick 5 stories to complete in this sprint.”",
 
-                    "- **Sprint Review**: A meeting at the end of a sprint to show what the team built and get feedback.\n  *Example: “Here’s the new homepage—does this match what you expected?”*",
+                    "- Sprint Review: A meeting at the end of a sprint to show what the team built and get feedback.\n  Example: “Here’s the new homepage—does this match what you expected?”",
 
-                    "- **Sprint Retrospective**: A team discussion about what went well, what didn’t, and how to improve for next time.\n  *Example: “Let’s try using clearer task names going forward.”*",
+                    "- Sprint Retrospective: A team discussion about what went well, what didn’t, and how to improve for next time.\n  Example: “Let’s try using clearer task names going forward.”",
 
-                    "- **Backlog**: A list of everything that could be worked on in the future, like features, fixes, or improvements.\n  *Example: The team picks tasks from the backlog during sprint planning.*",
+                    "- Backlog: A list of everything that could be worked on in the future, like features, fixes, or improvements.\n  Example: The team picks tasks from the backlog during sprint planning.",
 
-                    "- **Burndown Chart**: A simple graph that shows how much work is left to do in the sprint.\n  *Example: If the line is flat, the team might be stuck.*",
+                    "- Burndown Chart: A simple graph that shows how much work is left to do in the sprint.\n  Example: If the line is flat, the team might be stuck.",
 
-                    "- **Velocity**: The average amount of work a team can finish in one sprint.\n  *Example: “We usually complete about 20 points of work each sprint.”*",
+                    "- Velocity: The average amount of work a team can finish in one sprint.\n  Example: “We usually complete about 20 points of work each sprint.”",
 
-                    "- **Increment**: A working part of the product delivered at the end of the sprint. It should be usable and testable.\n  *Example: A finished shopping cart feature is an increment.*"
+                    "- Increment: A working part of the product delivered at the end of the sprint. It should be usable and testable.\n  Example: A finished shopping cart feature is an increment."
                 ]
             }
         }
