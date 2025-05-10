@@ -6,56 +6,60 @@
 <link href="Styles/Home.css" rel="stylesheet"/>
 <link rel="stylesheet" href="Styles/Challenge/SprintManagement.css"/>
 
-<MudPaper>
-
-	<MudText Typo="Typo.h2" Align="Align.Center" Class="mud-text manage-sprints orbitron-text">
-		Sprints Left: @(ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints - ViewModel.ProjectStateService.CurrentProjectInstance.Sprints.Count)
-	</MudText>
+<div id="sprint-chart">
 
 
-	@if (!string.IsNullOrEmpty(ViewModel.SprintViewModel.SprintSummary))
-	{
-		<MudAlert Severity="Severity.Info">
-			<MudText Typo="Typo.h6" Color="Color.Inherit">🚀 Sprint Summary</MudText>
-			<MudText>@ViewModel.SprintViewModel.SprintSummary</MudText>
-		</MudAlert>
-	}
+	<MudPaper>
 
-	<MudText Typo="Typo.h6" Class="previous-sprints-header orbitron-text">📌 Previous Sprints</MudText>
-	@if (ViewModel.ProjectStateService.Sprints.Any())
-	{
-		<MudList T="string">
-			@foreach (var sprint in ViewModel.ProjectStateService.Sprints)
-			{
-				<MudListItem>
-					<MudText Typo="Typo.h6">🚀 Sprint @sprint.SprintNumber Complete!</MudText>
-					<MudText Typo="Typo.body2" Class="sprint-summary-text">@sprint.Summary</MudText>
-				</MudListItem>
-			}
-		</MudList>
+		<MudText Typo="Typo.h2" Align="Align.Center" Class="mud-text manage-sprints orbitron-text">
+			Sprints Left: @(ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints - ViewModel.ProjectStateService.CurrentProjectInstance.Sprints.Count)
+		</MudText>
 
 
-		<MudCard>
-			<MudCardContent>
-				<MudChart ChartType="ChartType.Line"
-				          ChartSeries="@ViewModel.SprintViewModel.Series"
-				          XAxisLabels="@ViewModel.SprintViewModel.SprintLabels"
-				          Width="100%"
-				          ChartOptions="@ViewModel.SprintViewModel.ChartOptions"/>
-			</MudCardContent>
-		</MudCard>
-	}
-	else
-	{
-		<MudText Typo="Typo.h6" Class="mud-text manage-sprints orbitron-text">No completed sprints yet.</MudText>
-	}
+		@if (!string.IsNullOrEmpty(ViewModel.SprintViewModel.SprintSummary))
+		{
+			<MudAlert Severity="Severity.Info">
+				<MudText Typo="Typo.h6" Color="Color.Inherit">🚀 Sprint Summary</MudText>
+				<MudText>@ViewModel.SprintViewModel.SprintSummary</MudText>
+			</MudAlert>
+		}
 
-	<MudDivider/>
+		<MudText Typo="Typo.h6" Class="previous-sprints-header orbitron-text">📌 Previous Sprints</MudText>
+		@if (ViewModel.ProjectStateService.Sprints.Any())
+		{
+			<MudList T="string">
+				@foreach (var sprint in ViewModel.ProjectStateService.Sprints)
+				{
+					<MudListItem>
+						<MudText Typo="Typo.h6">🚀 Sprint @sprint.SprintNumber Complete!</MudText>
+						<MudText Typo="Typo.body2" Class="sprint-summary-text">@sprint.Summary</MudText>
+					</MudListItem>
+				}
+			</MudList>
 
-	<div>
-		<MudButton Href="/challenge/dashboard" Class="action-button">⬅ Back to Dashboard</MudButton>
-	</div>
-</MudPaper>
+
+			<MudCard>
+				<MudCardContent>
+					<MudChart ChartType="ChartType.Line"
+					          ChartSeries="@ViewModel.SprintViewModel.Series"
+					          XAxisLabels="@ViewModel.SprintViewModel.SprintLabels"
+					          Width="100%"
+					          ChartOptions="@ViewModel.SprintViewModel.ChartOptions"/>
+				</MudCardContent>
+			</MudCard>
+		}
+		else
+		{
+			<MudText Typo="Typo.h6" Class="mud-text manage-sprints orbitron-text">No completed sprints yet.</MudText>
+		}
+
+		<MudDivider/>
+
+		<div>
+			<MudButton Href="/challenge/dashboard" Class="action-button">⬅ Back to Dashboard</MudButton>
+		</div>
+	</MudPaper>
+</div>
 
 
 @code {
