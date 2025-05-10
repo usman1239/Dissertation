@@ -1,5 +1,4 @@
-﻿/* === Container === */
-.mud-paper {
+﻿.mud-paper {
     background-color: transparent;
     border-radius: 16px;
     box-shadow: none;
@@ -8,7 +7,6 @@
     padding: 2rem;
 }
 
-/* === Headings === */
 
 .mud-text h2 {
     color: #1a202c;
@@ -24,7 +22,6 @@
     margin-bottom: 1rem;
 }
 
-/* === Sprint Summary Alert === */
 
 .mud-alert {
     background-color: #e3f2fd;
@@ -39,7 +36,6 @@
     font-weight: 600;
 }
 
-/* === Previous Sprint Header === */
 
 .mud-text h6 {
     color: #374151;
@@ -49,7 +45,6 @@
     margin-top: 2rem;
 }
 
-/* === Sprint List Items === */
 
 .mud-list-item {
     background-color: transparent;
@@ -62,11 +57,11 @@
 
 .mud-list-item:hover {
     background-color: #ffd700;
-    background-color: rgba(255, 215, 0, 0.05); /* Very soft gold glow on hover */
+    background-color: rgba(255, 215, 0, 0.05);
 }
 
 .mud-list-item .mud-text h6 {
-    color: #b7791f; /* Golden brown */
+    color: #b7791f;
     font-weight: 700;
 }
 
@@ -77,7 +72,6 @@
     line-height: 1.4;
 }
 
-/* === Chart === */
 
 .mud-card {
     background-color: #f4f6f9;
@@ -92,7 +86,6 @@
 
 .mud-chart { margin-top: 1rem; }
 
-/* === Button === */
 
 .action-button {
     background-color: #2563eb;
@@ -114,11 +107,9 @@
     transform: translateY(-2px);
 }
 
-/* === Divider === */
 
 .mud-divider { margin: 2.5rem 0; }
 
-/* === Body2 Small Text === */
 
 .mud-text.body2 {
     color: #6b7280;
@@ -127,11 +118,10 @@
     line-height: 1.5;
 }
 
-/* === Manage Sprints and Sprints Left Text (Gold Theme) === */
 
 .mud-text.manage-sprints,
 .mud-text.sprints-left {
-    color: #ffcc00; /* Gold theme */
+    color: #ffcc00;
     font-size: 1.4rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -139,7 +129,6 @@
     text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
 }
 
-/* === Responsive === */
 
 @media (max-width: 768px) {
     .mud-paper {
@@ -159,10 +148,9 @@
     }
 }
 
-/* === Gold Theme */
 
 .sprint-header-text {
-    color: #ffcc00; /* Gold theme */
+    color: #ffcc00;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -172,14 +160,14 @@
 
 .sprint-summary-alert {
     background-color: #fff9e6;
-    border-left: 5px solid #ffcc00; /* Gold border */
+    border-left: 5px solid #ffcc00;
     border-radius: 10px;
     margin: 1.5rem 0;
     padding: 1rem;
 }
 
 .previous-sprints-header {
-    color: #ffcc00; /* Gold theme (updated) */
+    color: #ffcc00;
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -208,7 +196,7 @@
 }
 
 .sprint-summary-text {
-    color: #ffcc00; /* Gold theme */
-    font-size: 1rem; /* Adjust size if necessary */
+    color: #ffcc00;
+    font-size: 1rem;
     font-weight: 400;
 }

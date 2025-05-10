@@ -1,5 +1,4 @@
-﻿/* General Page Styling */
-.select-project-paper {
+﻿.select-project-paper {
     background-color: #1a202c;
     border-radius: 12px;
     box-shadow: 0 4px 16px #000000;
@@ -39,7 +38,6 @@
     transition: all 0.3s ease;
 }
 
-/* Button hover effects */
 
 .mud-button.color-primary:hover {
     background-color: #f6ad55;
@@ -60,7 +58,6 @@
 
 .mud-button.color-secondary:active { background-color: #eab308; }
 
-/* Select Project Page Styling */
 
 .select-project-title {
     color: #ffcc00;
@@ -149,7 +146,6 @@
 
 .delete-btn:hover { background-color: #fc8181; }
 
-/* Divider Between Sections */
 
 .divider {
     border-top: 1px solid #333;
@@ -157,7 +153,6 @@
     margin-top: 2rem;
 }
 
-/* Challenge Alert */
 
 .challenge-alert {
     background-color: #ffcc00;
@@ -176,7 +171,6 @@
 
 .challenge-alert svg { color: #ffcc00; }
 
-/* Mobile Responsiveness */
 
 @media (max-width: 768px) {
     .select-project-title { font-size: 1.75rem; }

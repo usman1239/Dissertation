@@ -1,5 +1,4 @@
-﻿/* Import Orbitron font */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 body {
     background-color: #0d1b2a;
@@ -14,15 +13,16 @@ h1, h2, h3 {
 
 form {
     background-color: #1b263b;
-    padding: 2rem;
     border-radius: 10px;
+    box-shadow: 0 0 10px #f4a261;
     box-shadow: 0 0 10px rgba(244, 162, 97, 0.3);
+    padding: 2rem;
 }
 
 input.form-control {
     background-color: #415a77;
-    color: #e0e1dd;
     border: 1px solid #778da9;
+    color: #e0e1dd;
 }
 
 input.form-control::placeholder {
@@ -54,18 +54,14 @@ label {
     color: #ffffff;
 }
 
-.text-danger {
-    color: #ef476f;
-}
+.text-danger { color: #ef476f; }
 
 a {
     color: #f4a261;
     text-decoration: underline;
 }
 
-a:hover {
-    color: #e76f51;
-}
+a:hover { color: #e76f51; }
 
 hr {
     border-color: #f4a261;
