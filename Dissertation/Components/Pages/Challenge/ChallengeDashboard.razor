@@ -4,82 +4,107 @@
 @rendermode InteractiveServer
 @inject ChallengeDashboardViewModel ViewModel
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.IdentityModel.Tokens
 @inherits LayoutComponentBase
 @attribute [Authorize]
 @inject IDialogService DialogService
+@inject IJSRuntime Js
 
 <link href="Styles/Home.css" rel="stylesheet"/>
 <link rel="stylesheet" href="Styles/Challenge/SelectProject.css"/>
+<link rel="stylesheet" href="Styles/Challenge/Tour.css"/>
 
-<MudPaper Class="select-project-paper">
+<div>
 
-	<MudText Class="dashboard-title orbitron-text ">Project Dashboard</MudText>
+	<MudPaper Class="select-project-paper">
 
-	<MudText Class="dashboard-subtitle orbitron-text">
-		Project Difficulty:
-		@(ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 5 ? "Easy" :
-		ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 10 ? "Medium" : "Hard")
-	</MudText>
+		<MudText Class="dashboard-title orbitron-text ">Project Dashboard</MudText>
 
-	<MudText Class="dashboard-subtitle orbitron-text">
-		@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Title
-	</MudText>
+		<MudText Class="dashboard-subtitle orbitron-text">
+			Project Difficulty:
+			@(ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 5 ? "Easy" :
+			ViewModel.ProjectStateService.CurrentProjectInstance.Project.NumOfSprints <= 10 ? "Medium" : "Hard")
+		</MudText>
 
-	<MudText Class="dashboard-description orbitron-text">
-		@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Description
-	</MudText>
+		<MudText Class="dashboard-subtitle orbitron-text">
+			@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Title
+		</MudText>
 
-	<MudText Class="dashboard-description orbitron-text">
-		<strong>Budget:</strong> £@(ViewModel.ProjectStateService.CurrentProjectInstance.Budget)
-	</MudText>
+		<MudText Class="dashboard-description orbitron-text">
+			@ViewModel.ProjectStateService.CurrentProjectInstance.Project.Description
+		</MudText>
 
-	<MudDivider Class="mud-divider"/>
+		<MudText Class="dashboard-description orbitron-text">
+			<strong>Budget:</strong> £@(ViewModel.ProjectStateService.CurrentProjectInstance.Budget)
+		</MudText>
 
-	<MudGrid>
-		<MudItem xs="12" sm="6" md="3">
-			<MudButton Href="/challenge/team" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
-				Manage Development Team
+		<MudDivider Class="mud-divider"/>
+
+		<MudGrid>
+			<MudItem xs="12" sm="6" md="3">
+				<div id="manage-dev-team">
+					<MudButton Href="/challenge/team" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
+						Manage Development Team
+					</MudButton>
+				</div>
+			</MudItem>
+			<MudItem xs="12" sm="6" md="3">
+				<div id="manage-user-stories">
+					<MudButton Href="/challenge/stories" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
+						Manage User Stories
+					</MudButton>
+				</div>
+			</MudItem>
+			<MudItem xs="12" sm="6" md="3">
+				<div id="manage-sprints">
+					<MudButton Href="/challenge/sprints" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
+						Manage Sprints
+					</MudButton>
+				</div>
+			</MudItem>
+			<MudItem xs="12" sm="6" md="3">
+				<div id="view-project-summary">
+					<MudButton Href="/challenge/summary" Variant="Variant.Filled" Color="Color.Primary" FullWidth Disabled="!ViewModel.SprintViewModel.CanShowSummary()" Class="mud-button color-primary orbitron-text">
+						View Project Summary
+					</MudButton>
+				</div>
+			</MudItem>
+		</MudGrid>
+
+		<MudDivider Class="mud-divider"/>
+
+		<br/>
+		<MudButton OnClick="@ViewModel.SprintViewModel.StartSprint"
+		           Variant="Variant.Filled"
+		           Color="Color.Secondary"
+		           FullWidth
+		           Disabled="!ViewModel.SprintViewModel.CanStartSprint()"
+		           Class="mud-button color-secondary orbitron-text">
+			Start Sprint
+		</MudButton>
+
+		<div id="challenge_section_tour">
+			<br/>
+			<MudButton OnClick="ConfirmAsync"
+			           Variant="Variant.Filled"
+			           Color="Color.Secondary"
+			           FullWidth
+			           Disabled="_isChallengeActive"
+			           Class="mud-button color-secondary orbitron-text">
+				Daily Challenge!
 			</MudButton>
-		</MudItem>
-		<MudItem xs="12" sm="6" md="3">
-			<MudButton Href="/challenge/stories" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
-				Manage User Stories
-			</MudButton>
-		</MudItem>
-		<MudItem xs="12" sm="6" md="3">
-			<MudButton Href="/challenge/sprints" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mud-button color-primary orbitron-text">
-				Manage Sprints
-			</MudButton>
-		</MudItem>
-		<MudItem xs="12" sm="6" md="3">
-			<MudButton Href="/challenge/summary" Variant="Variant.Filled" Color="Color.Primary" FullWidth Disabled="!ViewModel.SprintViewModel.CanShowSummary()" Class="mud-button color-primary orbitron-text">
-				View Project Summary
-			</MudButton>
-		</MudItem>
-	</MudGrid>
+		</div>
 
-	<MudDivider Class="mud-divider"/>
+		<br/>
+		<MudButton OnClick="StartTour" Color="Color.Primary" Variant="Variant.Filled"
+		           Class="mud-button color-secondary orbitron-text"
+		           FullWidth>
 
-	<MudButton OnClick="@ViewModel.SprintViewModel.StartSprint"
-	           Variant="Variant.Filled"
-	           Color="Color.Secondary"
-	           FullWidth
-	           Disabled="!ViewModel.SprintViewModel.CanStartSprint()"
-	           Class="mud-button color-secondary orbitron-text">
-		Start Sprint
-	</MudButton>
-	
-	<MudButton OnClick="ConfirmAsync"
-	           Variant="Variant.Filled"
-	           Color="Color.Secondary"
-	           FullWidth
-	           Disabled="_isChallengeActive"
-	           Class="mud-button color-secondary orbitron-text">
-		Daily Challenge!
-	</MudButton>
+			Start Tour
+		</MudButton>
 
-</MudPaper>
+
+	</MudPaper>
+</div>
 
 @if (!string.IsNullOrEmpty(ViewModel.ProjectViewModel.CurrentChallengeDescription))
 {
@@ -99,6 +124,11 @@
 	protected override async Task OnInitializedAsync()
 	{
 		_isChallengeActive = await ViewModel.ProjectViewModel.IsChallengeActive();
+	}
+
+	private async Task StartTour()
+	{
+		await Js.InvokeVoidAsync("startTour");
 	}
 
 	private async Task ConfirmAsync()

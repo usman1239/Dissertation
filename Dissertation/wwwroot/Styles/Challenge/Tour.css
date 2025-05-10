@@ -1,0 +1,82 @@
+﻿.shepherd-theme-arrows .shepherd-popover {
+    background-color: #ffffff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px #000000 !important;
+    font-size: 16px !important;
+    max-width: 300px !important;
+}
+
+
+.shepherd-theme-arrows .shepherd-button {
+    background-color: #3f51b5 !important;
+    border-radius: 5px !important;
+    color: white !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    padding: 10px 20px !important;
+}
+
+
+.shepherd-theme-arrows .shepherd-button:hover { background-color: #303f9f !important; }
+
+
+.shepherd-theme-arrows .shepherd-button.cancel { background-color: #f44336 !important; }
+
+
+.shepherd-theme-arrows .shepherd-button.cancel:hover { background-color: #d32f2f !important; }
+
+
+.shepherd-theme-arrows .shepherd-arrow { border-color: #3f51b5 !important; }
+
+
+.mud-button.color-primary {
+    background-color: #3f51b5 !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.mud-button.color-primary:hover { background-color: #303f9f !important; }
+
+.mud-button.color-secondary {
+    background-color: #f44336 !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.mud-button.color-secondary:hover { background-color: #d32f2f !important; }
+
+
+.orbitron-text { font-family: 'Orbitron', sans-serif !important; }
+
+
+.challenge-alert {
+    background-color: #ffeb3b !important;
+    border-radius: 8px !important;
+    color: #212121 !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    padding: 15px !important;
+}
+
+
+.mud-divider {
+    margin-bottom: 20px !important;
+    margin-top: 20px !important;
+}
+
+
+#challenge_section_tour .mud-button {
+    background-color: #3f51b5 !important;
+    border-radius: 5px !important;
+    color: white !important;
+    font-weight: bold !important;
+    width: 100% !important;
+}
+
+
+#start-tour-button {
+    background-color: #ff9800 !important;
+    color: white !important;
+}
+
+#start-tour-button:hover { background-color: #f57c00 !important; }
