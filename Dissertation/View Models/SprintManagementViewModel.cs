@@ -230,7 +230,7 @@ public class SprintManagementViewModel(
             sickDeveloper.SickUntilSprint = sickDeveloperSickUntilSprint;
             sickDeveloper.IsSick = true;
             sickDeveloper.IsPermanentlyAbsent = false;
-            snackbar.Add($"{sickDeveloper.Name} is sick and will miss until sprint ${sickDeveloperSickUntilSprint}",
+            snackbar.Add($"{sickDeveloper.Name} is sick and will miss until sprint {sickDeveloperSickUntilSprint}",
                 Severity.Warning);
         }
         else
