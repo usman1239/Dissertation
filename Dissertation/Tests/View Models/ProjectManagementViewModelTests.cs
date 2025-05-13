@@ -250,4 +250,59 @@ public class ProjectManagementViewModelTests
             s => s.Add("You cannot select this project because an instance already exists.", Severity.Warning, null,
                 null), Times.Once);
     }
+
+
+    [Fact]
+    public async Task IsChallengeActive_ShouldReturnFalse_WhenChallengeNotCompleted()
+    {
+        // Arrange
+        const string userId = "testuser";
+        const int projectId = 100;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        _projectStateService.UserId = userId;
+        _projectStateService.CurrentProjectInstance = new ProjectInstance { Id = projectId };
+
+        _mockProjectService.Setup(ps =>
+            ps.HasCompletedChallengeAsync(userId, projectId, today)).ReturnsAsync(false);
+
+        // Act
+        var result = await _viewModel.IsChallengeActive();
+
+        // Assert
+        Assert.False(result);
+        _mockSnackbar.Verify(s => s.Add(It.IsAny<string>(), It.IsAny<Severity>(), null, null), Times.Never);
+    }
+
+    [Fact]
+    public async Task GetDailyChallenge_ShouldApplyChallenge_WhenNotCompleted()
+    {
+        // Arrange
+        const string userId = "testuser";
+        const int projectId = 100;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var challenge = new ChallengeModifier { Description = "Test Challenge" };
+
+        _projectStateService.UserId = userId;
+        _projectStateService.CurrentProjectInstance = new ProjectInstance { Id = projectId };
+
+        _mockProjectService.Setup(ps =>
+            ps.HasCompletedChallengeAsync(userId, projectId, today)).ReturnsAsync(false);
+
+        _mockDailyChallengeService.Setup(dc => dc.GetTodayChallenge()).Returns(challenge);
+
+        // Act
+        await _viewModel.GetDailyChallenge();
+
+        // Assert
+        _mockDailyChallengeService.Verify(dc => dc.GetTodayChallenge(), Times.Once);
+        _mockProjectService.Verify(ps => ps.UpdateProjectInstance(_projectStateService.CurrentProjectInstance),
+            Times.Once);
+        _mockProjectService.Verify(ps => ps.MarkChallengeCompletedAsync(userId, projectId, today, challenge.Id),
+            Times.Once);
+        _mockBadgeService.Verify(bs => bs.CheckDailyBadges(userId), Times.Once);
+        _mockSnackbar.Verify(s => s.Add("Daily challenge applied: Test Challenge", Severity.Info, null, null),
+            Times.Once);
+        Assert.Equal(challenge.Description, _viewModel.CurrentChallengeDescription);
+    }
 }
