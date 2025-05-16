@@ -1,7 +1,7 @@
-﻿using Dissertation.Models.Interfaces;
-using Dissertation.Models.Learn;
+﻿using Dissertation.Models.Learn;
+using Dissertation.Services.Interfaces;
 
-namespace Dissertation.Components.Pages.Learn;
+namespace Dissertation.Services;
 
 public class TopicContentProvider : ITopicContentProvider
 {

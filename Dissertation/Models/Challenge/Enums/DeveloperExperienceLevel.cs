@@ -4,12 +4,12 @@ namespace Dissertation.Models.Challenge.Enums;
 
 public enum DeveloperExperienceLevel
 {
-    [Display(Name = "Junior (£1000 per sprint)")]
+    [Display(Name = "Junior")]
     Junior = 0,
 
-    [Display(Name = "Mid-Level (£4000 per sprint)")]
+    [Display(Name = "Mid-Level")]
     MidLevel = 1,
 
-    [Display(Name = "Senior (£3000 per sprint)")]
+    [Display(Name = "Senior")]
     Senior = 2
 }

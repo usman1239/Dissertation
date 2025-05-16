@@ -1,6 +1,6 @@
 ﻿using Dissertation.Models.Learn;
 
-namespace Dissertation.Models.Interfaces;
+namespace Dissertation.Services.Interfaces;
 
 public interface ITopicContentProvider
 {

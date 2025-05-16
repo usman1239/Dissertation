@@ -1,9 +1,9 @@
 ﻿@page "/learn/{PageTopic}"
 @rendermode InteractiveServer
-@using Dissertation.Models.Interfaces
 @using Dissertation.Models.Learn
+@using Dissertation.Services.Interfaces
 @using Microsoft.IdentityModel.Tokens
-@inherits QuizCardBase
+@inherits Dissertation.Services.QuizCardBase
 
 @inject ITopicContentProvider ContentProvider
 
